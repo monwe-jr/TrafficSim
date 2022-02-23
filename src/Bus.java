@@ -12,7 +12,7 @@ public class Bus extends Vehicle {
 //remove vehicle object
     @Override
     public void remove() {
-        System.out.println("remove");
+
 
     }
 
