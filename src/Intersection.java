@@ -1,25 +1,35 @@
-import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+
 
 public class Intersection {
 
+   private int ID;
+    private ArrayList<Segment> roads = new ArrayList<>();
 
-    private ImageIcon center1;  //Image icon of intersection
-    private ImageIcon center2;
-    private ImageIcon center3;
-    private ImageIcon center4;
-    private ImageIcon center5;
 
-    Intersection(Point p, JPanel panel){
-        add(p,panel);
-
+    Intersection(int i) {
+        this.ID = i;
     }
 
 
-//gui generation
-    private void add(Point p, JPanel panel){
+    private void getSegments(Map m) {
 
+        for (int i = 0; i < m.getMap().get(ID).size() ; i++) {
+            roads.add(m.getMap().get(ID).get(i));
+        }
     }
+
+
+    public boolean canTurn(Map m, Segment s ) {
+
+        if (!s.oneWay(m, s.getLocation())){
+            return true;
+        }
+
+    return false;
+    }
+
 
 
 

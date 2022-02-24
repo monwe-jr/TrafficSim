@@ -1,21 +1,45 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Segment {
-    private ImageIcon oneLane;  //Image icon of road segment
-    private ImageIcon twoLane;
-    private ImageIcon threeLane;
 
+    Point Location;  // this road segment is between intersection x and intersection y
+    private ArrayList<Integer> intersections = new ArrayList<>();
+    ArrayList<Lane> lanes;
 
-    Segment(Point x, Point y, JPanel panel, int lanes) {
-        add(x, y, panel, lanes);
-
+    Segment(Point intersections) {
+        this.Location = intersections;
+        getIntersections(intersections);
     }
 
 
-    //GUI generation
-    public void add(Point x, Point y, JPanel p, int l) {
+    public Point getLocation() {
+        return Location;
+    }
 
+
+    private void getIntersections(Point p) {
+        intersections.add(p.x);
+        intersections.add(p.y);
+    }
+
+
+    public boolean oneWay(Map m, Point p) {
+        Point toFind = new Point(p.y, p.x);
+
+        for (int i = 0; i < m.getMap().get(p.y).size(); i++) {
+            if (m.getMap().get(p.y).get(i).getLocation() == toFind) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    public ArrayList<Integer> getIntersections() {
+        return intersections;
     }
 
 

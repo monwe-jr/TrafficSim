@@ -1,21 +1,44 @@
 import java.awt.*;
+import java.util.ArrayList;
 
-public abstract class Vehicle{
-    Color c;
-    boolean drivable;
+public abstract class Vehicle {
+    private Color c;
+    private boolean drivable;
+    protected Double size;
+    protected Double weight;
+    protected Double maxSpeed;
+    private DamageStatus damageStatus;
+    private double reputation;
 
-    Vehicle(Color c, boolean driveable){
-        this.c = c;
-        this.drivable = driveable;
+    public Vehicle(Color color, boolean drive) {
+        this.c = color;
+        this.drivable = drive;
+
     }
 
-    public abstract void remove();
 
-    public abstract void add();
 
-    public abstract void stop();
 
-    public abstract void acceleration();
+
+
+
+
+    public abstract void move();
+
+
+
+    public Double getSize(){
+        return  size;
+    }
+
+    public Double getWeight(){
+        return weight;
+    }
+
+    public Double getMaxSpeed(){
+        return maxSpeed;
+    }
+
 
 
 }

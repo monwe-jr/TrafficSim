@@ -3,27 +3,15 @@ import java.awt.*;
 public class Truck extends Vehicle {
 
 
-    Truck(Color c, boolean driveable) {
-        super(c, driveable);
+    public Truck(Color color, boolean drive) {
+        super(color, drive);
+        size = 72.0;
+        weight = 36287.0;
+        maxSpeed = 100.0;
     }
 
     @Override
-    public void remove() {
-
-    }
-
-    @Override
-    public void add() {
-
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public void acceleration() {
+    public void move() {
 
     }
 }

@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 
 public class Game {
     JPanel panel;
@@ -7,13 +6,14 @@ public class Game {
 
 
     Game(){
-        prompt();
+
+
+
+
+
     }
 
-    public void prompt(){
 
-
-    }
 
     public static void main(String[] args) {
         new Game();

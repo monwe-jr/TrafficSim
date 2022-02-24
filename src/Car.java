@@ -3,32 +3,21 @@ import java.awt.*;
 public class Car extends Vehicle  {
 
 
-    Car(Color c, boolean driveable){
-        super(c, driveable);
-
+    public Car(Color color, boolean drive) {
+        super(color, drive);
+        size = 14.7;
+        weight = 1624.0;
+        maxSpeed = 160.0;
     }
 
-    //remove vehicle object
     @Override
-    public void remove() {
+    public void move() {
+
 
     }
 
-    //GUI generation
-    @Override
-    public void add() {
 
-    }
 
-    //breaking functionality
-    @Override
-    public void stop() {
 
-    }
 
-    //acceleration functionality
-    @Override
-    public void acceleration() {
-
-    }
 }

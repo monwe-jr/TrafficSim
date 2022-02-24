@@ -1,42 +1,43 @@
+import java.awt.*;
+import java.util.ArrayList;
+
 public class Map {
-    static private int i;  //intersection
-    static private int s;  //segment
-    static private int[][] graph;  //used for generation and method implementation
-    static private int[][] lanes; //keeps track to how many lanes each intersection or road segment has
-    static public int[][] traffic; //keeps track of traffic lights to create realistic functionality
-    static private int[][] intersection;  //intersection data
-    static private int[][] segment;  //segment data
+     private int interCount;
+
+    private ArrayList<ArrayList<Segment>> map = new ArrayList<>();
 
 
-
-    Map(int intersections, int segments) {
-        this.i = intersections;
-        this.s = segments;
-
-    }
-
-    //generates a graph with i nodes and s edges
-    public void generate(int i, int s) {
+    Map(int intersections) {
+        this.interCount = intersections;
+        generate(intersections);
 
     }
 
 
-    //keeps graph data protected
-    static public int[][] getGraph() {
-        return graph;
+     public void generate(int intersections) {
+
+
+        for (int i = 0; i < intersections; i++) {
+            map.add(new ArrayList<Segment>());
+        }
+
     }
 
-    //keeps lane data protected
-    static public int[][] getLanes(){return lanes; }
 
-    //keeps segment data protected
-    static public int[][] getSegments(){return segment; }
+     public void addSegment(Segment s) {
 
-    //keeps intersection data protected
-    static public int[][] getIntersections(){return intersection; }
+        if (s.getLocation().x < interCount && s.getLocation().y < interCount) {
+            int x = s.getLocation().x;
+            int y = s.getLocation().y;
+            map.get(x).add(new Segment(new Point(x, y)));
+        }
+
+    }
 
 
-
+     public ArrayList<ArrayList<Segment>> getMap() {
+        return map;
+    }
 
 
 }
