@@ -8,12 +8,12 @@ public abstract class Vehicle {
     protected Double weight;
     protected Double maxSpeed;
     private DamageStatus damageStatus;
-    private double reputation;
+    private Reputation reputation;
 
     public Vehicle(Color color, boolean drive) {
         this.c = color;
         this.drivable = drive;
-
+        reputation = new Reputation();
     }
 
 
