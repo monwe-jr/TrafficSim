@@ -5,11 +5,15 @@ import java.util.ArrayList;
 public class Intersection {
 
    private int ID;
+   private Map map;
     private ArrayList<Segment> roads = new ArrayList<>();
 
 
-    Intersection(int i) {
+    Intersection(Map m, int i) {
         this.ID = i;
+        this.map = m;
+        getSegments(m);
+
     }
 
 
@@ -21,13 +25,36 @@ public class Intersection {
     }
 
 
-    public boolean canTurn(Map m, Segment s ) {
 
-        if (!s.oneWay(m, s.getLocation())){
-            return true;
+
+
+    private boolean containsSegment(int ID, Point segment){
+        ArrayList<Segment> roads = map.getMap().get(ID);
+
+        for (int i = 0; i < roads.size(); i++) {
+            if(roads.get(i).getLocation().equals(segment) ){
+                return true;
+            }
         }
 
-    return false;
+        return false;
+    }
+
+
+
+    public boolean isDeadEnd(){
+
+        if (roads.size() == 1){
+          Point p = roads.get(0).getLocation();
+
+            if(containsSegment(p.y , new Point(p.y,p.x))){
+                return true;
+            }
+
+        }
+
+        return false;
+
     }
 
 

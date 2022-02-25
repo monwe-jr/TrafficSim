@@ -5,13 +5,13 @@ import java.util.Random;
 
 public class Segment {
 
-    private Point Location;  // this road segment is between intersection x and intersection y
+    private Point location;  // this road segment is between intersection x and intersection y
     private ArrayList<Integer> intersections = new ArrayList<>();
     private ArrayList<Integer> lanes = new ArrayList<>();
     private Random num = new Random();
 
     Segment(Point intersections) {
-        this.Location = intersections;
+        this.location = intersections;
         getIntersections(intersections);
         addLane();
     }
@@ -28,29 +28,29 @@ public class Segment {
 
 
     //fix this
-    public int laneLocation(){
+    public int laneLocation() {
         return lanes.indexOf(1);
     }
 
 
-    private boolean canSwitchLeft(){
-        if(laneLocation() !=0){
+    private boolean canSwitchLeft() {
+        if (laneLocation() != 0) {
             return true;
         }
         return false;
     }
 
 
-    private boolean canSwitchRight(){
-        if(laneLocation() != lanes.size()-1){
+    private boolean canSwitchRight() {
+        if (laneLocation() != lanes.size() - 1) {
             return true;
         }
         return false;
     }
 
 
-    public void switchLeft(){
-        if(canSwitchLeft()) {
+    public void switchLeft() {
+        if (canSwitchLeft()) {
             int location = laneLocation();
             lanes.set(location, 0);
             lanes.set(location - 1, 1);
@@ -58,8 +58,8 @@ public class Segment {
     }
 
 
-    public void switchRight(){
-        if(canSwitchRight()) {
+    public void switchRight() {
+        if (canSwitchRight()) {
             int location = laneLocation();
             lanes.set(location, 0);
             lanes.set(location + 1, 1);
@@ -67,9 +67,8 @@ public class Segment {
     }
 
 
-
     public Point getLocation() {
-        return Location;
+        return location;
     }
 
 
@@ -79,14 +78,31 @@ public class Segment {
     }
 
 
-    public boolean oneWay(Map m, Point p) {
-        Point toFind = new Point(p.y, p.x);
+    //segment is one way
+    public boolean oneWay(Map m) {
+        Point toFind = new Point(location.y, location.x);
 
-        for (int i = 0; i < m.getMap().get(p.y).size(); i++) {
-            if (m.getMap().get(p.y).get(i).getLocation() == toFind) {
+        for (int i = 0; i < m.getMap().get(location.y).size(); i++) {
+            if (m.getMap().get(location.y).get(i).getLocation().equals(toFind)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    //Checks if one way segment has a turn at intersection 'ID'
+    public boolean oneWayTurn(Map m, int ID) {
+        ArrayList<Segment> roads = m.getMap().get(ID);
+
+        for (int i = 0; i < roads.size(); i++) {
+            if(roads.get(i).getLocation().x == location.y){
                 return true;
             }
         }
+
+
 
         return false;
     }
