@@ -1,8 +1,6 @@
-import javax.swing.*;
+
 
 public class Game {
-    JPanel panel;
-    JFrame frame;
 
 
     Game(){
