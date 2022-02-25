@@ -17,6 +17,7 @@ public class Segment {
     }
 
 
+
     private void addLane() {
         int random = num.nextInt(3);
 
@@ -72,7 +73,7 @@ public class Segment {
     }
 
 
-    private void getIntersections(Point p) {
+    private void addIntersections(Point p) {
         intersections.add(p.x);
         intersections.add(p.y);
     }
@@ -93,7 +94,7 @@ public class Segment {
 
 
     //Checks if one way segment has a turn at intersection 'ID'
-    public boolean oneWayTurn(Map m, int ID) {
+    public boolean canTurn(Map m, int ID) {
         ArrayList<Segment> roads = m.getMap().get(ID);
 
         for (int i = 0; i < roads.size(); i++) {

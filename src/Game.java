@@ -3,6 +3,8 @@ import java.awt.*;
 public class Game {
 
 
+
+
     Game(){
 
         Map test = new Map(8);
@@ -25,7 +27,7 @@ public class Game {
 
         Segment in6 = new Segment(new Point(7,3));
 
-        if(in6.oneWayTurn(test,3)){
+        if(in6.canTurn(test,3)){
             System.out.println("yes");
         }
 
