@@ -12,7 +12,7 @@ public class Segment {
 
     Segment(Point intersections) {
         this.location = intersections;
-        getIntersections(intersections);
+        addIntersections(intersections);
         addLane();
     }
 
