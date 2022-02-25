@@ -6,6 +6,9 @@ public class Reputation {
     private double niceness;
     ArrayList<Double> reputationHistory;
 
+    /**
+     * Default constructor, starts with the minimum value for niceness
+     */
     Reputation() {
         niceness = MIN;
         reputationHistory = new ArrayList();
