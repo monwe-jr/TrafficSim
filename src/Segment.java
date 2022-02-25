@@ -5,18 +5,24 @@ import java.util.Random;
 
 public class Segment {
 
+    private Direction direction;
     private Point location;  // this road segment is between intersection x and intersection y
     private ArrayList<Integer> intersections = new ArrayList<>();
     private ArrayList<Integer> lanes = new ArrayList<>();
     private Random num = new Random();
 
-    Segment(Point intersections) {
+
+    Segment(Point intersections, Direction d) {
+        this.direction = d;
         this.location = intersections;
         addIntersections(intersections);
         addLane();
+
     }
 
-
+    public Direction getDirection(){
+        return direction;
+    }
 
     private void addLane() {
         int random = num.nextInt(3);
@@ -93,16 +99,15 @@ public class Segment {
     }
 
 
-    //Checks if one way segment has a turn at intersection 'ID'
+    //from this segment, can we turn at intersection 'ID'
     public boolean canTurn(Map m, int ID) {
         ArrayList<Segment> roads = m.getMap().get(ID);
 
         for (int i = 0; i < roads.size(); i++) {
-            if(roads.get(i).getLocation().x == location.y){
+            if(roads.get(i).getLocation().x == location.y && !direction.equals(direction,roads.get(i).getDirection()) && !roads.get(i).getLocation().equals(new Point(location.y,location.x) )){
                 return true;
             }
         }
-
 
 
         return false;

@@ -29,7 +29,7 @@ public class Map {
         if (s.getLocation().x < interCount && s.getLocation().y < interCount) {
             int x = s.getLocation().x;
             int y = s.getLocation().y;
-            map.get(x).add(new Segment(new Point(x, y)));
+            map.get(x).add(new Segment(new Point(x, y), s.getDirection()));
         }
 
     }
