@@ -33,6 +33,10 @@ public class Game {
 
         System.out.println(l.getSegment().getSegmentLocation());
 
+        Segment n = new Segment(new Point(4,5), Direction.North);
+
+
+
     }
 
 
