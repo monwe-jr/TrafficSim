@@ -32,15 +32,26 @@ public abstract class Vehicle {
     public abstract void move();
 
 
-
+    /**
+     * Returns the size of the vehicle.
+     * @return Double size
+     */
     public Double getSize(){
         return  size;
     }
 
+    /**
+     * Returns the weight of the vehicle.
+     * @return Double weight
+     */
     public Double getWeight(){
         return weight;
     }
 
+    /**
+     * Returns the Max Speed of the vehicle.
+     * @return Double max speed
+     */
     public Double getMaxSpeed(){
         return maxSpeed;
     }
