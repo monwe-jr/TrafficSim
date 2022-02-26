@@ -32,7 +32,7 @@ public class Intersection {
         ArrayList<Segment> roads = map.getMap().get(ID);
 
         for (int i = 0; i < roads.size(); i++) {
-            if(roads.get(i).getLocation().equals(segment) ){
+            if(roads.get(i).getSegmentLocation().equals(segment) ){
                 return true;
             }
         }
@@ -45,7 +45,7 @@ public class Intersection {
     public boolean isDeadEnd(){
 
         if (roads.size() == 1){
-          Point p = roads.get(0).getLocation();
+          Point p = roads.get(0).getSegmentLocation();
 
             if(containsSegment(p.y , new Point(p.y,p.x))){
                 return true;

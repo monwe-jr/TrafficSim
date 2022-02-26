@@ -26,13 +26,12 @@ public class Game {
         test.addSegment(new Segment(new Point(7,5),Direction.West));
 
 
-
+        Intersection name = new Intersection(test,0);
         Segment in6 = new Segment(new Point(5,7), Direction.East);
 
-        if(in6.canTurn(test,7)){
-            System.out.println("yes");
-        }
+        Car l = new Car(Color.blue,true, in6);
 
+        System.out.println(l.getSegment().getSegmentLocation());
 
     }
 

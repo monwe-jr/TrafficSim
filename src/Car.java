@@ -7,11 +7,12 @@ public class Car extends Vehicle  {
      * @param color Color of the Vehicle.
      * @param drive Whether the Vehicle is drivable by a player.
      */
-    public Car(Color color, boolean drive) {
+    public Car(Color color, boolean drive, Segment s) {
         super(color, drive);
         size = 14.7;
         weight = 1624.0;
         maxSpeed = 160.0;
+        addSegment(s);
     }
 
     @Override

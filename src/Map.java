@@ -43,9 +43,9 @@ public class Map {
 
      public void addSegment(Segment s) {
 
-        if (s.getLocation().x < interCount && s.getLocation().y < interCount) {
-            int x = s.getLocation().x;
-            int y = s.getLocation().y;
+        if (s.getSegmentLocation().x < interCount && s.getSegmentLocation().y < interCount) {
+            int x = s.getSegmentLocation().x;
+            int y = s.getSegmentLocation().y;
             map.get(x).add(new Segment(new Point(x, y), s.getDirection()));
         }
 

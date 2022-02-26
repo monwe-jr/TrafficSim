@@ -7,8 +7,10 @@ public abstract class Vehicle {
     protected Double size;
     protected Double weight;
     protected Double maxSpeed;
+    protected ArrayList<Segment> occupied = new ArrayList<>(); //occupied segments
     private DamageStatus damageStatus;
     private Reputation reputation;
+    protected Segment currentSegment;
 
     /**
      * Creates a Vehicle with a specified color and indicator for player vehicle.
@@ -23,13 +25,24 @@ public abstract class Vehicle {
     }
 
 
-
-
-
-
-
-
     public abstract void move();
+
+
+    public void addSegment(Segment s){
+        occupied.add(s);
+        currentSegment = s;
+    }
+
+    public void removeSegment(Segment s){
+        occupied.remove(s);
+        currentSegment = null;
+
+    }
+
+    public Segment getSegment(){
+        return currentSegment;
+    }
+
 
 
     /**
