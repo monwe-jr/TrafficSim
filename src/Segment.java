@@ -41,10 +41,15 @@ public class Segment {
     }
 
 
+    public Lane getLane(){
+        return segmentLanes;
+    }
+
+
     public class Lane {
         private Vehicle[][] lanes;
-        int laneCount;
-        int segmentLength = 5;
+      private  int laneCount;
+      private  int segmentLength = 5;
 
         Lane(int i) {
             this.laneCount = i;
@@ -62,7 +67,7 @@ public class Segment {
          * @param lane
          */
         public void addVehicle(Vehicle v, int lane) {
-            if (laneIsEmpty(lane)) {
+            if (laneIsEmpty(new Point(0,lane))) {
                 lanes[0][lane] = v;
                 onSegment.add(v);
 
@@ -122,9 +127,9 @@ public class Segment {
         }
 
 
-        private boolean laneIsEmpty(int i) {
+        private boolean laneIsEmpty(Point p) {
 
-            if (lanes[i] == null) {
+            if (lanes[p.x][p.y] == null) {
                 return true;
             }
 
@@ -205,6 +210,27 @@ public class Segment {
             }
         }
 
+        /**
+         * Checks if Lane has the same or more amount of 'lanes'
+         * @param l
+         */
+        public boolean compatible(int l){
+
+            if(l >= laneCount){
+                return true;
+            }else{
+                return false;
+            }
+
+        }
+
+
+        public int getLaneCount(){
+            return laneCount;
+        }
+
+
+
     }
 
 
@@ -252,9 +278,9 @@ public class Segment {
     }
 
 
-    //from this segment, can we turn at intersection 'ID'
-    public boolean canTurn(Map m, int ID) {
-        ArrayList<Segment> roads = m.getMap().get(ID);
+    //from this segment, can we turn at intersection the upcoming intersection
+    public boolean canTurn(Map m) {
+        ArrayList<Segment> roads = m.getMap().get(location.y);
 
         for (int i = 0; i < roads.size(); i++) {
             if (roads.get(i).getSegmentLocation().x == location.y && !direction.equals(direction, roads.get(i).getDirection()) && !roads.get(i).getSegmentLocation().equals(new Point(location.y, location.x))) {

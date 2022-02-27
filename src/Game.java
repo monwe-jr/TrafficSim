@@ -26,7 +26,7 @@ public class Game {
         test.addSegment(new Segment(new Point(7,5),Direction.West));
 
 
-        Intersection name = new Intersection(test,0);
+
         Segment in6 = new Segment(new Point(5,7), Direction.East);
 
         Car l = new Car(Color.blue,true, in6);
@@ -35,8 +35,9 @@ public class Game {
 
         Segment n = new Segment(new Point(4,5), Direction.North);
 
-
-
+        if(Intersection.isDeadEnd(test,3)) {
+            System.out.println("yes it is!");
+        }
     }
 
 
