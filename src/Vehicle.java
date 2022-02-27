@@ -18,10 +18,11 @@ public abstract class Vehicle {
      * @param color The color of the vehicle.
      * @param drive True if player vehicle false otherwise.
      */
-    public Vehicle(Color color, boolean drive) {
+    public Vehicle(Color color, boolean drive, Segment s) {
         this.c = color;
         this.drivable = drive;
         reputation = new Reputation();
+        addSegment(s);
     }
 
 
