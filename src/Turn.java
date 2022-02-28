@@ -32,7 +32,13 @@ public class Turn {
   static   private Segment getStraight(Map m, Segment s){
         ArrayList<Segment> options = getTurns(m,s);
 
-        for (int i = 0; i < options.size(); i++) {
+        options.stream()
+                .filter(r -> r.getDirection() == Direction.straightDirection(r.getDirection()))
+                .collect(Collectors.toList());
+        if(options.isEmpty()) return null;
+        return options.get(0);
+
+        /*for (int i = 0; i < options.size(); i++) {
             if(options.get(i).getDirection() == Direction.straightDirection(s.getDirection())){
                     return options.get(i);
             }else{
@@ -40,7 +46,7 @@ public class Turn {
             }
         }
 
-            return null;
+            return null;*/
 
     }
 
