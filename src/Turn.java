@@ -1,11 +1,22 @@
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Turn {
 
 
-  static  private Segment getSegment(Map m, Point segment ){
-        for (int i = 0; i < m.getMap().size(); i++) {
+  static private Segment getSegment(Map m, Point segment ){
+      ArrayList<ArrayList<Segment>> segments = m.getMap();
+      ArrayList<Segment> results = new ArrayList<>();
+      segments.forEach(s -> results.addAll(s));
+      results.stream()
+              .filter(s -> s.getSegmentLocation().equals(segment))
+              .collect(Collectors.toList());
+      if (results.isEmpty()) return null;
+      return results.get(0);
+
+        /*for (int i = 0; i < m.getMap().size(); i++) {
             for (int j = 0; j < m.getMap().get(i).size(); j++) {
                 if(m.getMap().get(i).get(j).getSegmentLocation().equals(segment)){
                     return m.getMap().get(i).get(j);
@@ -13,7 +24,7 @@ public class Turn {
             }
         }
 
-        return null;
+        return null;*/
     }
 
 
