@@ -3,11 +3,10 @@ import java.util.ArrayList;
 
 public abstract class Vehicle {
     private Color c;
-    private boolean drivable;
+    private boolean drivable; //distinguishes humans from AI
     protected Double size;
     protected Double weight;
     protected Double maxSpeed;
-    protected ArrayList<Segment> occupied = new ArrayList<>(); //occupied segments
     private DamageStatus damageStatus;
     private Reputation reputation;
     protected Segment currentSegment;
@@ -29,17 +28,27 @@ public abstract class Vehicle {
     public abstract void move();
 
 
+    /**
+     * Declares a new segment location
+     * @param s
+     */
     public void addSegment(Segment s){
-        occupied.add(s);
         currentSegment = s;
     }
 
+    /**
+     * removes a segment from the occupied arraylist after it has been used by the vehicle
+     * @param s
+     */
     public void removeSegment(Segment s){
-        occupied.remove(s);
         currentSegment = null;
 
     }
 
+    /**
+     * Returns the segment the vehicle object is currently on
+     * @return
+     */
     public Segment getSegment(){
         return currentSegment;
     }
