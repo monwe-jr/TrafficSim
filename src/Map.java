@@ -1,7 +1,8 @@
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Map {
+public class Map implements Serializable{
      private int interCount;
 
     private ArrayList<ArrayList<Segment>> map = new ArrayList<>();
