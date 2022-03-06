@@ -36,4 +36,15 @@ public class Reputation {
             niceness = niceness + amount;
         }
     }
+
+
+
+
+
+
+
+
+
+
+
 }

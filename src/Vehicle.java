@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class Vehicle {
     private Color c;
@@ -10,6 +12,10 @@ public abstract class Vehicle {
     private DamageStatus damageStatus;
     private Reputation reputation;
     protected Segment currentSegment;
+    protected int length;
+    protected Point vehicleLocation; //lane location on segment s
+    protected TimerTask task;
+    protected Timer timer = new Timer();
 
     /**
      * Creates a Vehicle with a specified color and indicator for player vehicle.
@@ -20,8 +26,12 @@ public abstract class Vehicle {
     public Vehicle(Color color, boolean drive, Segment s) {
         this.c = color;
         this.drivable = drive;
+        this.currentSegment = s;
         reputation = new Reputation();
-        addSegment(s);
+        setSegment(s);
+        damageStatus = new DamageStatus();
+        reputation = new Reputation();
+
     }
 
 
@@ -32,18 +42,19 @@ public abstract class Vehicle {
      * Declares a new segment location
      * @param s
      */
-    public void addSegment(Segment s){
+    public void setSegment(Segment s){
         currentSegment = s;
     }
 
+
     /**
      * removes a segment from the occupied arraylist after it has been used by the vehicle
-     * @param s
      */
-    public void removeSegment(Segment s){
+    public void removeSegment(){
         currentSegment = null;
 
     }
+
 
     /**
      * Returns the segment the vehicle object is currently on
@@ -78,6 +89,32 @@ public abstract class Vehicle {
     public Double getMaxSpeed(){
         return maxSpeed;
     }
+
+
+    public DamageStatus getDamageStatus() {
+        return damageStatus;
+    }
+
+
+    public void setVehicleLocation(Point p){
+        if(!damageStatus.isDestroyed()) {
+            vehicleLocation = p;
+        } else{
+            vehicleLocation = null;
+        }
+
+    }
+
+
+   public Point getVehicleLocation(){
+        return vehicleLocation;
+
+   }
+
+
+   public int getLength(){
+        return length;
+   }
 
 
 

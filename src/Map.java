@@ -53,6 +53,9 @@ public class Map implements Serializable{
     }
 
 
+
+
+
      public ArrayList<ArrayList<Segment>> getMap() {
         return map;
     }

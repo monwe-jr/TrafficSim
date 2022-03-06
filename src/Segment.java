@@ -16,21 +16,38 @@ public class Segment {
     Segment(Point intersections, Direction d) {
         this.direction = d;
         this.location = intersections;
-        addIntersections(intersections);
         addLane();
+        addIntersections(intersections);
+    }
 
+    public int laneCount() {
+        return segmentLanes.getLaneCount();
     }
 
 
-    public void addVehicle(Vehicle v, int lane) {
-        segmentLanes.addVehicle(v, lane);
+    public int segmentLength() {
+        return segmentLanes.getSegmentLength();
+    }
+
+
+    public void addVehicle(Map m, Vehicle v, int lane) {
+        segmentLanes.addVehicle(m, v, lane);
+
 
     }
+
 
     public void removeVehicle(Vehicle v) {
         segmentLanes.removeVehicle(v);
     }
 
+
+    /**
+     * Returns true when vehicle v is at the end of a segment
+     *
+     * @param v
+     * @return
+     */
     public boolean atEnd(Vehicle v) {
         if (segmentLanes.atEnd(v)) {
             return true;
@@ -41,74 +58,154 @@ public class Segment {
     }
 
 
-    public Lane getLane(){
+    public void moveVehicle(Point p) {
+        segmentLanes.moveVehicle(p);
+    }
+
+
+    /**
+     * returns a list of vehicles at the end of a segment
+     *
+     * @return
+     */
+    public ArrayList<Vehicle> getVehiclesAtEnd() {
+        ArrayList<Vehicle> temp = new ArrayList<>();
+
+        for (int i = 0; i < onSegment.size(); i++) {
+            if (atEnd(onSegment.get(i))) {
+                temp.add(onSegment.get(i));
+            }
+        }
+
+        return temp;
+    }
+
+
+    public Lane getLane() {
         return segmentLanes;
     }
 
 
+    /**
+     * Inner class that handles lane funtionality
+     */
     public class Lane {
         private Vehicle[][] lanes;
-      private  int laneCount;
-      private  int segmentLength = 5;
+        private int laneCount;
+        private int segmentLength = 12;
 
         Lane(int i) {
             this.laneCount = i;
             lanes = new Vehicle[segmentLength][i];
             for (int k = 0; k < segmentLength; k++) {
                 for (int l = 0; l < i; l++) {
-                    lanes[l] = null;
+                    lanes[k][l] = null;
                 }
             }
         }
 
         /**
          * Adds a vehicle to a segment but adding it to a lane. Note that vehicles are only added at the beginning of segments
-         * @param v the vehicle we want to add
+         *
+         * @param v    the vehicle we want to add
          * @param lane
          */
-        public void addVehicle(Vehicle v, int lane) {
-            if (laneIsEmpty(new Point(0,lane))) {
-                lanes[0][lane] = v;
-                onSegment.add(v);
+        public void addVehicle(Map m, Vehicle v, int lane) {
+
+            if (v instanceof Car) {
+                if (isEmpty(new Point(0, lane))) {
+                    v.setVehicleLocation(new Point(0, lane));
+                    onSegment.add(v);
+                    lanes[v.getVehicleLocation().x][v.getVehicleLocation().y] = v;
 
 
-            } else {
-                System.out.println("Lane is occupied");
+                } else {
+                    System.out.println("Lane is occupied");
+                }
+
+
+            } else if (v instanceof Bus) {
+                if (isEmpty(new Point(0, lane)) && isEmpty(new Point(1, lane))) {
+                    v.setVehicleLocation(new Point(1, lane));
+                    onSegment.add(v);
+
+                    for (int i = v.getLength() - 1; i >= 0; i--) {
+                        lanes[i][v.getVehicleLocation().y] = v;
+                    }
+
+                } else {
+                    System.out.println("Lane is occupied");
+                }
+
+
+            } else if (v instanceof Truck) {
+                if (isEmpty(new Point(0, lane)) && isEmpty(new Point(1, lane)) && isEmpty(new Point(2, lane))) {
+                    v.setVehicleLocation(new Point(2, lane));
+                    onSegment.add(v);
+
+                    for (int i = v.getLength() - 1; i >= 0; i--) {
+                        lanes[i][v.getVehicleLocation().y] = v;
+                    }
+
+                } else {
+                    System.out.println("Lane is occupied");
+                }
+
             }
+
         }
 
 
         public void removeVehicle(Vehicle v) {
-            Point location =  getIndex(v);
-            lanes[location.x][location.y] = null;
+            Point location = v.getVehicleLocation();
+            v.setVehicleLocation(null);
             onSegment.remove(v);
-            v.removeSegment(v.getSegment());
+            v.removeSegment();
 
-        }
 
-        /**
-         * gets the location of a vehicle in the lanes array
-         */
-        public Point getIndex(Vehicle v) {
-
-            if (onSegment.contains(v)) {
-                for (int i = 0; i < segmentLength; i++) {
-                    for (int j = 0; j < laneCount; j++) {
-                        if (lanes[i][j] == v) {
-                            return new Point(i, j);
-
-                        }
-                    }
-
-                }
-            } else {
-
-                System.out.println("Vehicle is not on segment!");
-
+            for (int i = location.x; i >= (location.x - (v.getLength() - 1)); i--) {
+                lanes[location.x][location.y] = null;
             }
-            return null;
+
 
         }
+
+
+        public void moveVehicle(Point p) {
+            Vehicle toMove = lanes[p.x][p.y];
+            toMove.setVehicleLocation(new Point(toMove.getVehicleLocation().x + 1, toMove.getVehicleLocation().y));
+
+            lanes[toMove.getVehicleLocation().x][toMove.vehicleLocation.y] = toMove;
+            lanes[toMove.getVehicleLocation().x - (toMove.getLength())][toMove.vehicleLocation.y] = null;
+
+            System.out.println("Car moved 1mile forward");
+
+        }
+
+
+//        /**
+//         * gets the location of a vehicle in the lanes array
+//         */
+//        public Point getIndex(Vehicle v) {
+//
+//            if (onSegment.contains(v)) {
+//                for (int i = 0; i < segmentLength; i++) {
+//                    for (int j = 0; j < laneCount; j++) {
+//                        if (lanes[i][j] == v) {
+//                            return new Point(i, j);
+//
+//                        }
+//                    }
+//
+//                }
+//            } else {
+//
+//                System.out.println("Vehicle is not on segment!");
+//
+//            }
+//            return null;
+//
+//        }
 
 
         /**
@@ -127,7 +224,7 @@ public class Segment {
         }
 
 
-        private boolean laneIsEmpty(Point p) {
+        public boolean isEmpty(Point p) {
 
             if (lanes[p.x][p.y] == null) {
                 return true;
@@ -153,82 +250,161 @@ public class Segment {
 
         /**
          * Checks if left lane is available
+         *
          * @param v Vehicle that want's to change lane
          * @return
          */
         private boolean canSwitchLeft(Vehicle v) {
-            Point location = getIndex(v);
+            Point location = v.getVehicleLocation();
 
-            if (location.y > 0) {
-                if (lanes[location.x][location.y - 1] == null) {
-                    return true;
+            if (v instanceof Car) {
+                if (location.y > 0) {
+                    if (lanes[location.x][location.y - 1] == null) {
+                        return true;
+                    }
+                }
+            } else if (v instanceof Bus) {
+                if (location.y > 0) {
+                    if (lanes[location.x][location.y - 1] == null && lanes[location.x - 1][location.y - 1] == null) {
+                        return true;
+                    }
+                }
+            } else if (v instanceof Truck) {
+                if (location.y > 0) {
+                    if (lanes[location.x][location.y - 1] == null && lanes[location.x - 1][location.y - 1] == null && lanes[location.x - 2][location.y - 1] == null) {
+                        return true;
+                    }
                 }
             }
+
             return false;
         }
 
 
         /**
-         *Checks if right lane is available
+         * Checks if right lane is available
+         *
          * @param v Vehicle that want's to change lane
          * @return
          */
         private boolean canSwitchRight(Vehicle v) {
-            Point location = getIndex(v);
+            Point location = v.getVehicleLocation();
 
-            if (location.y < laneCount -1) {
-                if (lanes[location.x][location.y + 1] == null) {
-                    return true;
+            if (v instanceof Car) {
+                if (location.y < laneCount - 1) {
+                    if (lanes[location.x][location.y + 1] == null) {
+                        return true;
+                    }
+
                 }
+            } else if (v instanceof Bus) {
+                if (location.y < laneCount - 1) {
+                    if (lanes[location.x][location.y + 1] == null && lanes[location.x - 1][location.y + 1] == null) {
+                        return true;
+                    }
 
+                }
+            } else if (v instanceof Truck) {
+                if (location.y < laneCount - 1) {
+                    if (lanes[location.x][location.y + 1] == null && lanes[location.x - 1][location.y + 1] == null && lanes[location.x - 2][location.y + 1] == null) {
+                        return true;
+                    }
+
+                }
             }
+
             return false;
         }
 
 
         /**
+         * Switch to lane on the left
          *
          * @param v
          */
         public void switchLeft(Vehicle v) {
+            Point location = v.getVehicleLocation();
+
             if (canSwitchLeft(v)) {
-                Point location = getIndex(v);
-                lanes[location.x][location.y] = null;
-                lanes[location.x][location.y-1] = v;
+                v.setVehicleLocation(new Point(location.x, location.y - 1));
+
+
+                for (int i = location.x; i >= (location.x - (v.getLength() - 1)); i--) {
+                    lanes[i][location.y] = null;
+                    if (!v.getDamageStatus().isDestroyed()) {
+                        lanes[i][location.y - 1] = v;
+                    }
+                }
+
+
+            } else {
+                Vehicle hit = lanes[location.x][location.y - 1];
+                v.getDamageStatus().calculatedSuffered(v, hit);
+                v.getDamageStatus().calculateGenerated(v, hit);
+                hit.getDamageStatus().calculatedSuffered(hit, v);
+                hit.getDamageStatus().calculateGenerated(hit, v);
+                //which location after damage
 
             }
+
         }
 
 
+        /**
+         * Switch to lane on the right
+         *
+         * @param v
+         */
         public void switchRight(Vehicle v) {
+            Point location = v.getVehicleLocation();
 
             if (canSwitchRight(v)) {
-                Point location = getIndex(v);
-                lanes[location.x][location.y] = null;
-                lanes[location.x][location.y+1] = v;
+                v.setVehicleLocation(new Point(location.x, location.y + 1));
+
+
+                for (int i = location.x; i >= (location.x - (v.getLength() - 1)); i--) {
+                    lanes[i][location.y] = null;
+                    if (!v.getDamageStatus().isDestroyed()) {
+                        lanes[i][location.y + 1] = v;
+                    }
+                }
+
+
+            } else {
+                Vehicle hit = lanes[location.x][location.y - 1];
+                v.getDamageStatus().calculatedSuffered(v, hit);
+                v.getDamageStatus().calculateGenerated(v, hit);
+                hit.getDamageStatus().calculatedSuffered(hit, v);
+                hit.getDamageStatus().calculateGenerated(hit, v);
+                //which location after damage
 
             }
         }
+
 
         /**
          * Checks if Lane has the same or more amount of 'lanes'
+         *
          * @param l
          */
-        public boolean compatible(int l){
+        public boolean compatible(int l) {
 
-            if(l >= laneCount){
+            if (l >= laneCount) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
 
         }
 
 
-        public int getLaneCount(){
+        public int getLaneCount() {
             return laneCount;
         }
 
+        public int getSegmentLength() {
+            return segmentLength;
+        }
 
 
     }
@@ -275,21 +451,6 @@ public class Segment {
         }
 
         return true;
-    }
-
-
-    //from this segment, can we turn at intersection the upcoming intersection
-    public boolean canTurn(Map m) {
-        ArrayList<Segment> roads = m.getMap().get(location.y);
-
-        for (int i = 0; i < roads.size(); i++) {
-            if (roads.get(i).getSegmentLocation().x == location.y && !direction.equals(direction, roads.get(i).getDirection()) && !roads.get(i).getSegmentLocation().equals(new Point(location.y, location.x))) {
-                return true;
-            }
-        }
-
-
-        return false;
     }
 
 

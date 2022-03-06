@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class DamageStatus {
 
+    private boolean destroyed;
     private double currentStatus = 100.0;
     private ArrayList<Double> sufferedDamageHistory;
     private ArrayList<Double> generatedDamageHistory;
@@ -21,10 +22,22 @@ public class DamageStatus {
             currentStatus -= d;
             sufferedDamageHistory.add(currentStatus);
         }else{
-            
+            destroyed = true;
         }
 
     }
+
+
+    public boolean isDestroyed(){
+        if (destroyed){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
 
 
 

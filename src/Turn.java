@@ -5,8 +5,43 @@ import java.util.stream.Collectors;
 
 public class Turn {
 
+    //from this segment, can we turn at intersection the upcoming intersection
+    public static boolean canTurn(Map m, Segment s) {
+        ArrayList<Segment> roads = m.getMap().get(s.getSegmentLocation().y);
 
-  static private Segment getSegment(Map m, Point segment ){
+        for (int i = 0; i < roads.size(); i++) {
+            if (roads.get(i).getSegmentLocation().x == s.getSegmentLocation().y && !s.getDirection().equals(s.getDirection(), roads.get(i).getDirection()) && !roads.get(i).getSegmentLocation().equals(new Point(s.getSegmentLocation().y, s.getSegmentLocation().x))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+
+
+
+    static public  ArrayList<Segment> getTurns(Map m, Segment s){
+        ArrayList<Segment> availableTurns = new ArrayList<>();
+
+        if(canTurn(m,s)) {
+            for (int j = 0; j < m.getMap().size(); j++) {
+                if (m.getMap().get(s.getSegmentLocation().y).get(j).getSegmentLocation().x == s.getSegmentLocation().y && !m.getMap().get(s.getSegmentLocation().y).get(j).getSegmentLocation().equals(new Point(s.getSegmentLocation().y,s.getSegmentLocation().x)) ) {
+                    availableTurns.add(m.getMap().get(s.getSegmentLocation().y).get(j));
+                }
+            }
+        } else{
+            System.out.println("Can't turn at upcoming intersection");
+            return null;
+        }
+
+        return availableTurns;
+    }
+
+
+
+        static public Segment getSegment(Map m, Point segment ){
       ArrayList<ArrayList<Segment>> segments = m.getMap();
       ArrayList<Segment> results = new ArrayList<>();
       segments.forEach(s -> results.addAll(s));
@@ -83,22 +118,7 @@ public class Turn {
     }
 
 
-    static public  ArrayList<Segment> getTurns(Map m, Segment s){
-       ArrayList<Segment> availableTurns = new ArrayList<>();
 
-       if(s.canTurn(m)) {
-           for (int j = 0; j < m.getMap().size(); j++) {
-               if (m.getMap().get(s.getSegmentLocation().y).get(j).getSegmentLocation().x == s.getSegmentLocation().y && !m.getMap().get(s.getSegmentLocation().y).get(j).getSegmentLocation().equals(new Point(s.getSegmentLocation().y,s.getSegmentLocation().x)) ) {
-                   availableTurns.add(m.getMap().get(s.getSegmentLocation().y).get(j));
-               }
-           }
-       } else{
-           System.out.println("Can't turn at upcoming intersection");
-           return null;
-       }
-
-        return availableTurns;
-    }
 
 
     /**
@@ -113,20 +133,23 @@ public class Turn {
             Segment toGoStraightOn = getStraight(m,s);
             int oldLaneLocation = s.getLane().laneLocation(v);
             s.removeVehicle(v);
-            v.removeSegment(s);
+            v.removeSegment();
 
-            if(toGoStraightOn.getLane().getLaneCount() >1){
-                    if(s.getLane().compatible(toGoStraightOn.getLane().getLaneCount())){
-                        toGoStraightOn.addVehicle(v, oldLaneLocation);
+            if(toGoStraightOn.laneCount() >1){
+                    if(s.getLane().compatible(toGoStraightOn.laneCount())){
+                        toGoStraightOn.addVehicle(m,v, oldLaneLocation);
+                        v.setSegment(toGoStraightOn);
                     }else {
 
 
-                        if (s.getLane().getLaneCount() == 3 && toGoStraightOn.getLane().getLaneCount() == 2) {
+                        if (s.laneCount() == 3 && toGoStraightOn.laneCount() == 2) {
                             if (oldLaneLocation == 2) {
-                                toGoStraightOn.addVehicle(v, 1);
+                                toGoStraightOn.addVehicle(m,v, 1);
+                                v.setSegment(toGoStraightOn);
                                 //add traffic violation
                             } else {
-                                toGoStraightOn.addVehicle(v, oldLaneLocation);
+                                toGoStraightOn.addVehicle(m,v, oldLaneLocation);
+                                v.setSegment(toGoStraightOn);
                             }
                         }
 
@@ -135,10 +158,12 @@ public class Turn {
 
             }else{
                 if(oldLaneLocation !=0) {
-                    toGoStraightOn.addVehicle(v, 0);
+                    toGoStraightOn.addVehicle(m,v, 0);
+                    v.setSegment(toGoStraightOn);
                     //add traffic violation
                 } else {
-                    toGoStraightOn.addVehicle(v, 0);
+                    toGoStraightOn.addVehicle(m,v, 0);
+                    v.setSegment(toGoStraightOn);
                 }
             }
 
@@ -160,27 +185,31 @@ public class Turn {
           Segment toTurnLeftOnto = getLeftTurns(m,s);
           int oldLaneLocation = s.getLane().laneLocation(v);
           s.removeVehicle(v);
-          v.removeSegment(s);
+          v.removeSegment();
 
-          if(toTurnLeftOnto.getLane().getLaneCount() >1){
-              if(s.getLane().compatible(toTurnLeftOnto.getLane().getLaneCount())){
+          if(toTurnLeftOnto.laneCount() >1){
+              if(s.getLane().compatible(toTurnLeftOnto.laneCount())){
 
                   if(oldLaneLocation != 0){
-                      toTurnLeftOnto.addVehicle(v, oldLaneLocation);
+                      toTurnLeftOnto.addVehicle(m,v, oldLaneLocation);
+                      v.setSegment(toTurnLeftOnto);
                       // add traffic violation
                   } else {
-                      toTurnLeftOnto.addVehicle(v, oldLaneLocation);
+                      toTurnLeftOnto.addVehicle(m,v, oldLaneLocation);
+                      v.setSegment(toTurnLeftOnto);
                   }
 
 
               }else {
 
-                  if (s.getLane().getLaneCount() == 3 && toTurnLeftOnto.getLane().getLaneCount() == 2) {
+                  if (s.laneCount() == 3 && toTurnLeftOnto.laneCount() == 2) {
                       if (oldLaneLocation == 2 || oldLaneLocation == 3) {
-                          toTurnLeftOnto.addVehicle(v, 1);
+                          toTurnLeftOnto.addVehicle(m,v, 1);
+                          v.setSegment(toTurnLeftOnto);
                           //add traffic violation
                       } else {
-                          toTurnLeftOnto.addVehicle(v, oldLaneLocation);
+                          toTurnLeftOnto.addVehicle(m,v, oldLaneLocation);
+                          v.setSegment(toTurnLeftOnto);
                       }
                   }
 
@@ -189,11 +218,13 @@ public class Turn {
 
           }else{
               if(oldLaneLocation !=0) {
-                  toTurnLeftOnto.addVehicle(v, 0);
+                  toTurnLeftOnto.addVehicle(m,v, 0);
+                  v.setSegment(toTurnLeftOnto);
                   //add traffic violation
 
               } else {
-                  toTurnLeftOnto.addVehicle(v, 0);
+                  toTurnLeftOnto.addVehicle(m,v, 0);
+                  v.setSegment(toTurnLeftOnto);
               }
           }
 
@@ -216,27 +247,31 @@ public class Turn {
             Segment toTurnRightOnto = getLeftTurns(m,s);
             int oldLaneLocation = s.getLane().laneLocation(v);
             s.removeVehicle(v);
-            v.removeSegment(s);
+            v.removeSegment();
 
-            if(toTurnRightOnto.getLane().getLaneCount() >1){
-                if(s.getLane().compatible(toTurnRightOnto.getLane().getLaneCount())){
+            if(toTurnRightOnto.laneCount() >1){
+                if(s.getLane().compatible(toTurnRightOnto.laneCount())){
 
-                    if(oldLaneLocation != s.getLane().getLaneCount() - 1){
-                        toTurnRightOnto.addVehicle(v, oldLaneLocation);
+                    if(oldLaneLocation != s.laneCount() - 1){
+                        toTurnRightOnto.addVehicle(m,v, oldLaneLocation);
+                        v.setSegment(toTurnRightOnto);
                         // add traffic violation
                     } else {
-                        toTurnRightOnto.addVehicle(v, oldLaneLocation);
+                        toTurnRightOnto.addVehicle(m,v, oldLaneLocation);
+                        v.setSegment(toTurnRightOnto);
                     }
 
 
                 }else {
 
-                    if (s.getLane().getLaneCount() == 3 && toTurnRightOnto.getLane().getLaneCount() == 2) {
+                    if (s.laneCount() == 3 && toTurnRightOnto.laneCount() == 2) {
                         if (oldLaneLocation == 0 || oldLaneLocation == 1) {
-                            toTurnRightOnto.addVehicle(v, 0);
+                            toTurnRightOnto.addVehicle(m,v, 0);
+                            v.setSegment(toTurnRightOnto);
                             //add traffic violation
                         } else {
-                            toTurnRightOnto.addVehicle(v, oldLaneLocation);
+                            toTurnRightOnto.addVehicle(m,v, oldLaneLocation);
+                            v.setSegment(toTurnRightOnto);
                         }
                     }
 
@@ -244,12 +279,14 @@ public class Turn {
                 }
 
             }else{
-                if(oldLaneLocation != s.getLane().getLaneCount() - 1) {
-                    toTurnRightOnto.addVehicle(v, 0);
+                if(oldLaneLocation != s.laneCount() - 1) {
+                    toTurnRightOnto.addVehicle(m,v, 0);
+                    v.setSegment(toTurnRightOnto);
                     //add traffic violation
 
                 } else {
-                    toTurnRightOnto.addVehicle(v, 0);
+                    toTurnRightOnto.addVehicle(m,v, 0);
+                    v.setSegment(toTurnRightOnto);
                 }
             }
 
@@ -276,23 +313,23 @@ public class Turn {
             Segment toUTurnOnto = getSegment(m,new Point(s.getSegmentLocation().y,s.getSegmentLocation().x));
             int oldLaneLocation = s.getLane().laneLocation(v);
             s.removeVehicle(v);
-            v.removeSegment(s);
+            v.removeSegment();
 
-            if(toUTurnOnto.getLane().getLaneCount() > 1) {
+            if(toUTurnOnto.laneCount() > 1) {
 
-                if (s.getLane().compatible(toUTurnOnto.getLane().getLaneCount()) && toUTurnOnto.getLane().getLaneCount() !=3) {
-                    toUTurnOnto.addVehicle(v, oldLaneLocation);
+                if (s.getLane().compatible(toUTurnOnto.laneCount()) && toUTurnOnto.laneCount() !=3) {
+                    toUTurnOnto.addVehicle(m,v, oldLaneLocation);
                 } else{
 
-                     if (s.getLane().getLaneCount() == 1 && toUTurnOnto.getLane().getLaneCount() == 3){
-                        toUTurnOnto.addVehicle(v, 1);
+                     if (s.laneCount() == 1 && toUTurnOnto.laneCount() == 3){
+                        toUTurnOnto.addVehicle(m,v, 1);
                     }
 
-                     else if(s.getLane().getLaneCount() == 3 && toUTurnOnto.getLane().getLaneCount() == 2){
+                     else if(s.laneCount() == 3 && toUTurnOnto.laneCount() == 2){
                          if(s.getLane().laneLocation(v) == 1 || s.getLane().laneLocation(v) == 1){
-                             toUTurnOnto.addVehicle(v, 1);
+                             toUTurnOnto.addVehicle(m,v, 1);
                          } else {
-                             toUTurnOnto.addVehicle(v, 0);
+                             toUTurnOnto.addVehicle(m,v, 0);
                          }
 
                      }
@@ -300,10 +337,10 @@ public class Turn {
                 }
 
             }else {
-                toUTurnOnto.addVehicle(v, 0);
+                toUTurnOnto.addVehicle(m,v, 0);
             }
 
-            v.addSegment(toUTurnOnto);
+            v.setSegment(toUTurnOnto);
         }
     }
 
