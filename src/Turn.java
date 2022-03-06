@@ -5,7 +5,12 @@ import java.util.stream.Collectors;
 
 public class Turn {
 
-    //from this segment, can we turn at intersection the upcoming intersection
+    /**
+     * Checks segment s leads to an intersection that vehicles on can turn on
+     * @param m Map of segments
+     * @param s Segment to be checked
+     * @return
+     */
     public static boolean canTurn(Map m, Segment s) {
         ArrayList<Segment> roads = m.getMap().get(s.getSegmentLocation().y);
 
@@ -19,9 +24,12 @@ public class Turn {
     }
 
 
-
-
-
+    /**
+     * Gets turns of the upcoming intersection of segment s
+     * @param m Map of segments
+     * @param s segment with upcoming intersection
+     * @return
+     */
     static public  ArrayList<Segment> getTurns(Map m, Segment s){
         ArrayList<Segment> availableTurns = new ArrayList<>();
 
@@ -40,13 +48,18 @@ public class Turn {
     }
 
 
-
-        static public Segment getSegment(Map m, Point segment ){
+    /**
+     * Returns the segment with location segLocation
+     * @param m Map of segments
+     * @param segLocation Point that represents segment location
+     * @return
+     */
+        static public Segment getSegment(Map m, Point segLocation ){
       ArrayList<ArrayList<Segment>> segments = m.getMap();
       ArrayList<Segment> results = new ArrayList<>();
       segments.forEach(s -> results.addAll(s));
       results.stream()
-              .filter(s -> s.getSegmentLocation().equals(segment))
+              .filter(s -> s.getSegmentLocation().equals(segLocation))
               .collect(Collectors.toList());
       if (results.isEmpty()) return null;
       return results.get(0);
@@ -63,7 +76,12 @@ public class Turn {
     }
 
 
-
+    /**
+     * Returns segment ahead after upcoming intersection of segment s
+     * @param m Map of segments
+     * @param s the segment with a straight direction
+     * @return
+     */
   static   private Segment getStraight(Map m, Segment s){
         ArrayList<Segment> options = getTurns(m,s);
 
@@ -86,7 +104,12 @@ public class Turn {
     }
 
 
-
+    /**
+     * Returns left turn segment adjacent to segment s
+     * @param m Map of segments
+     * @param s Segment to turn left at
+     * @return
+     */
   static   private Segment getLeftTurns(Map m, Segment s){
         ArrayList<Segment> options = getTurns(m,s);
 
@@ -102,6 +125,13 @@ public class Turn {
 
     }
 
+
+    /**
+     * Returns right turn segment adjacent to segment s
+     * @param m Map of segments
+     * @param s Segment to turn right at
+     * @return
+     */
    static private Segment getRightTurns(Map m, Segment s){
         ArrayList<Segment> options = getTurns(m,s);
 
@@ -123,9 +153,9 @@ public class Turn {
 
     /**
      * Vehicles goes straight when method is call. Traffic violation is applied if player is not on the appropriate lane
-     * @param m game map
-     * @param s the segment player is turning from
-     * @param v vehicle that is turning
+     * @param m Map of segments
+     * @param s The segment vehicle is going straight from
+     * @param v Vehicle going straight
      */
     static public void goStraight(Map m, Segment s,Vehicle v){
 

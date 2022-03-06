@@ -7,8 +7,8 @@ public class Segment {
 
     final Direction direction;
     final Point location;  // this road segment is between intersection x and intersection y
-    private ArrayList<Integer> intersections = new ArrayList<>();
-    private ArrayList<Vehicle> onSegment = new ArrayList<>();
+    private ArrayList<Integer> intersections = new ArrayList<>(); //intersections connected by the segment
+    private ArrayList<Vehicle> onSegment = new ArrayList<>(); //vehicles on the segment
     private Lane segmentLanes;
     private Random num = new Random();
 
@@ -37,6 +37,11 @@ public class Segment {
     }
 
 
+    public void moveVehicle(Point p) {
+        segmentLanes.moveVehicle(p);
+    }
+
+
     public void removeVehicle(Vehicle v) {
         segmentLanes.removeVehicle(v);
     }
@@ -58,9 +63,6 @@ public class Segment {
     }
 
 
-    public void moveVehicle(Point p) {
-        segmentLanes.moveVehicle(p);
-    }
 
 
     /**
@@ -155,7 +157,10 @@ public class Segment {
 
         }
 
-
+        /**
+         * Removes vehicle on segment
+         * @param v the vehicle to be removed
+         */
         public void removeVehicle(Vehicle v) {
             Point location = v.getVehicleLocation();
             v.setVehicleLocation(null);
@@ -171,6 +176,10 @@ public class Segment {
         }
 
 
+        /**
+         * Moves the vehicle one index up
+         * @param p the segment position of the the vehicle
+         */
         public void moveVehicle(Point p) {
             Vehicle toMove = lanes[p.x][p.y];
             toMove.setVehicleLocation(new Point(toMove.getVehicleLocation().x + 1, toMove.getVehicleLocation().y));
@@ -224,6 +233,11 @@ public class Segment {
         }
 
 
+        /**
+         * Checks if an index is empty
+         * @param p the point to be checked
+         * @return
+         */
         public boolean isEmpty(Point p) {
 
             if (lanes[p.x][p.y] == null) {
@@ -234,6 +248,11 @@ public class Segment {
         }
 
 
+        /**
+         * Returns the indexes of vehicle v
+         * @param v the vehicle with an unknown index
+         * @return
+         */
         public int laneLocation(Vehicle v) {
 
             for (int i = 0; i < segmentLength; i++) {
@@ -422,25 +441,35 @@ public class Segment {
 
     /**
      * Returns the direction of a segment
-     *
      * @return
      */
     public Direction getDirection() {
         return direction;
     }
 
-
+    /**
+     * Returns segment location
+     * @return
+     */
     public Point getSegmentLocation() {
         return location;
     }
 
+    /**
+     * Adds intersections of segment
+     * @param p
+     */
     private void addIntersections(Point p) {
         intersections.add(p.x);
         intersections.add(p.y);
     }
 
 
-    //segment is one way
+    /**
+     * Returns true if segment object is oneway
+     * @param m the Map that contains the segment
+     * @return
+     */
     public boolean oneWay(Map m) {
         Point toFind = new Point(location.y, location.x);
 
@@ -454,6 +483,10 @@ public class Segment {
     }
 
 
+    /**
+     * Returns an arraylist of intersections connected to segment object
+     * @return
+     */
     public ArrayList<Integer> getIntersections() {
         return intersections;
     }

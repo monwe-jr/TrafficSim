@@ -90,12 +90,28 @@ public abstract class Vehicle {
         return maxSpeed;
     }
 
+    /**
+     * Length of vehicle
+     * @return
+     */
+    public int getLength(){
+        return length;
+    }
 
+
+
+    /**
+     * Returns damage status object
+     * @return damage status
+     */
     public DamageStatus getDamageStatus() {
         return damageStatus;
     }
 
-
+    /**
+     * Changes vehicle's location on segment s
+     * @param p new location
+     */
     public void setVehicleLocation(Point p){
         if(!damageStatus.isDestroyed()) {
             vehicleLocation = p;
@@ -106,15 +122,16 @@ public abstract class Vehicle {
     }
 
 
+    /**
+     * Returns the current segment location of vehicle object
+     * @return vehicle location
+     */
    public Point getVehicleLocation(){
         return vehicleLocation;
 
    }
 
 
-   public int getLength(){
-        return length;
-   }
 
 
 

@@ -18,30 +18,13 @@ public class Car extends Vehicle  {
 
     @Override
     public void move() {
-
-        while (vehicleLocation.x != currentSegment.segmentLength() -1 && !getDamageStatus().isDestroyed()){
-            if(currentSegment.getLane().isEmpty(new Point(vehicleLocation.x+1,vehicleLocation.y))){
-
-                TimerTask task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        currentSegment.moveVehicle(vehicleLocation);
-
-                    }
-                };
-
-                timer.schedule(task, 10000);
-
-
-            }
-
+        currentSegment.moveVehicle(vehicleLocation);
         }
 
 
 
 
 
-    }
 
 
 

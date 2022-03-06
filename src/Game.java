@@ -26,6 +26,8 @@ public class Game {
         test.addSegment(new Segment(new Point(7, 5), Direction.West));
 
 
+
+
         Segment in6 = new Segment(new Point(5, 7), Direction.East);
 
         Car l = new Car(Color.blue, true,in6);
