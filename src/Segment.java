@@ -10,13 +10,13 @@ public class Segment {
     private ArrayList<Integer> intersections = new ArrayList<>(); //intersections connected by the segment
     private ArrayList<Vehicle> onSegment = new ArrayList<>(); //vehicles on the segment
     private Lane segmentLanes;
-    private Random num = new Random();
 
 
-    Segment(Point intersections, Direction d) {
+
+    Segment(Point intersections, Direction d, int laneCount, int segLength) {
         this.direction = d;
         this.location = intersections;
-        addLane();
+        segmentLanes = new Lane(laneCount,segLength);
         addIntersections(intersections);
     }
 
@@ -96,11 +96,14 @@ public class Segment {
         private int laneCount;
         private int segmentLength = 12;
 
-        Lane(int i) {
-            this.laneCount = i;
-            lanes = new Vehicle[segmentLength][i];
+
+        Lane(int count, int segLength) {
+            this.laneCount = count;
+            this.segmentLength = segLength;
+
+            lanes = new Vehicle[segmentLength][count];
             for (int k = 0; k < segmentLength; k++) {
-                for (int l = 0; l < i; l++) {
+                for (int l = 0; l < count; l++) {
                     lanes[k][l] = null;
                 }
             }
@@ -439,15 +442,6 @@ public class Segment {
 
     }
 
-
-    /**
-     * Assigns road segment a random number of lanes in the range 1-3
-     */
-    private void addLane() {
-        int random = num.nextInt(3 - 1 + 1) + 1;
-        segmentLanes = new Lane(random);
-
-    }
 
 
     /**
