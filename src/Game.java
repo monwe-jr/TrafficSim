@@ -1,9 +1,10 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Game {
-     ArrayList<Vehicle> vehicles;
-
+    ArrayList<Vehicle> vehicles;
+    Map m;
 
 
     Game() {
@@ -38,6 +39,38 @@ public class Game {
 
 
 
+    }
+
+    /**
+     * Moves all AI vehicles every time it is called
+     */
+    private void moveAI() {
+        for (Vehicle v: vehicles) {
+            if (!v.getSegment().atEnd(v)) {
+                v.move();
+                return;
+            } else {
+                ArrayList<Segment> possible = Turn.getTurns(m, v.getSegment());
+                if (possible != null) {
+                    Collections.shuffle(possible);
+                    Direction target = possible.get(0).getDirection();
+                    Direction current = v.getSegment().getDirection();
+                    
+                    if (Direction.equals(Direction.rightDirection(current), target)) {
+                        Turn.rightTurn(m, v.getSegment(), v);
+                        return;
+                    } else if (Direction.equals(Direction.leftDirection(current), target)) {
+                        Turn.leftTurn(m, v.getSegment(), v);
+                        return;
+                    } else {
+                        Turn.goStraight(m, v.getSegment(), v);
+                        return;
+                    }
+                } else {
+                    Turn.uTurn(m, v.getSegment(), v);
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {

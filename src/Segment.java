@@ -178,7 +178,7 @@ public class Segment {
 
         /**
          * Moves the vehicle one index up
-         * @param p the segment position of the the vehicle
+         * @param p the segment position of the vehicle
          */
         public void moveVehicle(Point p) {
             Vehicle toMove = lanes[p.x][p.y];

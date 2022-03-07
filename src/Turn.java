@@ -285,7 +285,7 @@ public class Turn {
                     if(oldLaneLocation != s.laneCount() - 1){
                         toTurnRightOnto.addVehicle(m,v, oldLaneLocation);
                         v.setSegment(toTurnRightOnto);
-                        // add traffic violation
+                        //TODO add traffic violation
                     } else {
                         toTurnRightOnto.addVehicle(m,v, oldLaneLocation);
                         v.setSegment(toTurnRightOnto);
@@ -298,7 +298,7 @@ public class Turn {
                         if (oldLaneLocation == 0 || oldLaneLocation == 1) {
                             toTurnRightOnto.addVehicle(m,v, 0);
                             v.setSegment(toTurnRightOnto);
-                            //add traffic violation
+                            //TODO add traffic violation
                         } else {
                             toTurnRightOnto.addVehicle(m,v, oldLaneLocation);
                             v.setSegment(toTurnRightOnto);
@@ -312,7 +312,7 @@ public class Turn {
                 if(oldLaneLocation != s.laneCount() - 1) {
                     toTurnRightOnto.addVehicle(m,v, 0);
                     v.setSegment(toTurnRightOnto);
-                    //add traffic violation
+                    //TODO add traffic violation
 
                 } else {
                     toTurnRightOnto.addVehicle(m,v, 0);
@@ -338,7 +338,7 @@ public class Turn {
      * @param s the segment player is turning from
      * @param v the vehicle that will be turning
      */
-     public void uTurn(Map m, Segment s,Vehicle v){
+     static public void uTurn(Map m, Segment s,Vehicle v){
         if(Intersection.isDeadEnd(m,s.getSegmentLocation().y)){
             Segment toUTurnOnto = getSegment(m,new Point(s.getSegmentLocation().y,s.getSegmentLocation().x));
             int oldLaneLocation = s.getLane().laneLocation(v);
