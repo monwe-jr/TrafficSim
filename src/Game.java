@@ -27,16 +27,12 @@ public class Game {
         test.addSegment(new Segment(new Point(7, 5), Direction.West));
 
 
-
-
         Segment in6 = new Segment(new Point(5, 7), Direction.East);
 
-        Car l = new Car(Color.blue, true,in6);
-        in6.addVehicle(test,l, in6.laneCount()-1);
+        Car l = new Car(Color.blue, true, in6);
+        in6.addVehicle(test, l, in6.laneCount() - 1);
 
         l.move();
-
-
 
 
     }
@@ -45,29 +41,31 @@ public class Game {
      * Moves all AI vehicles every time it is called
      */
     private void moveAI() {
-        for (Vehicle v: vehicles) {
-            if (!v.getSegment().atEnd(v)) {
-                v.move();
-                return;
-            } else {
-                ArrayList<Segment> possible = Turn.getTurns(m, v.getSegment());
-                if (possible != null) {
-                    Collections.shuffle(possible);
-                    Direction target = possible.get(0).getDirection();
-                    Direction current = v.getSegment().getDirection();
-                    
-                    if (Direction.equals(Direction.rightDirection(current), target)) {
-                        Turn.rightTurn(m, v.getSegment(), v);
-                        return;
-                    } else if (Direction.equals(Direction.leftDirection(current), target)) {
-                        Turn.leftTurn(m, v.getSegment(), v);
-                        return;
-                    } else {
-                        Turn.goStraight(m, v.getSegment(), v);
-                        return;
-                    }
+        for (Vehicle v : vehicles) {
+            if (!v.isDrivable()) {
+                if (!v.getSegment().atEnd(v)) {
+                    v.move();
+                    return;
                 } else {
-                    Turn.uTurn(m, v.getSegment(), v);
+                    ArrayList<Segment> possible = Turn.getTurns(m, v.getSegment());
+                    if (possible != null) {
+                        Collections.shuffle(possible);
+                        Direction target = possible.get(0).getDirection();
+                        Direction current = v.getSegment().getDirection();
+
+                        if (Direction.equals(Direction.rightDirection(current), target)) {
+                            Turn.rightTurn(m, v.getSegment(), v);
+                            return;
+                        } else if (Direction.equals(Direction.leftDirection(current), target)) {
+                            Turn.leftTurn(m, v.getSegment(), v);
+                            return;
+                        } else {
+                            Turn.goStraight(m, v.getSegment(), v);
+                            return;
+                        }
+                    } else {
+                        Turn.uTurn(m, v.getSegment(), v);
+                    }
                 }
             }
         }

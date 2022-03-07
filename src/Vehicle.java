@@ -138,7 +138,7 @@ public abstract class Vehicle {
    }
 
 
-
-
-
+    public boolean isDrivable() {
+        return drivable;
+    }
 }
