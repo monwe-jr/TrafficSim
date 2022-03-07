@@ -40,6 +40,13 @@ public class Reputation {
 
 
 
+    public void turnViolation(){
+
+    }
+
+    public void correspondingLaneViolation(){
+
+    }
 
 
 

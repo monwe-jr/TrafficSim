@@ -35,13 +35,6 @@ public abstract class Vehicle {
     }
 
 
-    public void turnViolation(){
-
-    }
-
-    public void correspondingLaneViolation(){
-
-    }
 
 
 
