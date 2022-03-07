@@ -43,11 +43,9 @@ public class Map implements Serializable{
     }
 
      public void addSegment(Segment s) {
-
         if (s.getSegmentLocation().x < interCount && s.getSegmentLocation().y < interCount) {
             int x = s.getSegmentLocation().x;
-            int y = s.getSegmentLocation().y;
-            map.get(x).add(new Segment(new Point(x, y), s.getDirection()));
+            map.get(x).add(s);
         }
 
     }

@@ -3,11 +3,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Game {
-    ArrayList<Vehicle> vehicles;
-    Map m;
+    ArrayList<Vehicle> vehicles = new ArrayList<>();
+    Map m = new Map(8);
 
 
     Game() {
+
 
         m.addSegment(new Segment(new Point(0, 2), Direction.East,2,12));
         m.addSegment(new Segment(new Point(0, 4), Direction.North,3,12));
