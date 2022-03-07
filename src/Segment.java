@@ -259,7 +259,7 @@ public class Segment {
         public int laneLocation(Vehicle v) {
 
             for (int i = 0; i < segmentLength; i++) {
-                for (int j = 0; j < lanes.length; j++) {
+                for (int j = 0; j < lanes[0].length; j++) {
                     if (lanes[i][j] == v) {
                         return j;
                     }

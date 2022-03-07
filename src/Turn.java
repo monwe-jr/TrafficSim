@@ -89,15 +89,15 @@ public class Turn {
      * @return
      */
     static private Segment getStraight(Map m, Segment s) {
-        ArrayList<Segment> options = getTurns(m, s);
+        ArrayList<Segment> options = m.getMap().get(s.getSegmentLocation().y);
 
-        List<Segment> seg = options.stream()
+        /*List<Segment> seg = options.stream()
                 .filter(r -> r.getDirection() == Direction.straightDirection(r.getDirection()))
                 .collect(Collectors.toList());
         if (seg.isEmpty()) return null;
-        return seg.get(0);
+        return seg.get(0);*/
 
-        /*for (int i = 0; i < options.size(); i++) {
+        for (int i = 0; i < options.size(); i++) {
             if(options.get(i).getDirection() == Direction.straightDirection(s.getDirection())){
                     return options.get(i);
             }else{
@@ -105,7 +105,7 @@ public class Turn {
             }
         }
 
-            return null;*/
+            return null;
 
     }
 

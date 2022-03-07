@@ -70,11 +70,12 @@ public class Game {
                             Turn.leftTurn(m, v.getSegment(), v);
                             return;
                         } else {
-                            Turn.goStraight(m, v.getSegment(), v);
+                            System.out.println("Shouldn't be here");
                             return;
                         }
                     } else {
-                        Turn.uTurn(m, v.getSegment(), v);
+                        Turn.goStraight(m, v.getSegment(), v);
+                        return;
                     }
                 }
             }
