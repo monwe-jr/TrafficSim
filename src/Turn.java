@@ -1,6 +1,6 @@
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Turn {
@@ -54,15 +54,15 @@ public class Turn {
      * @param segLocation Point that represents segment location
      * @return
      */
-        static public Segment getSegment(Map m, Point segLocation ){
+    static public Segment getSegment(Map m, Point segLocation ){
       ArrayList<ArrayList<Segment>> segments = m.getMap();
       ArrayList<Segment> results = new ArrayList<>();
       segments.forEach(s -> results.addAll(s));
-      results.stream()
+      List<Segment> seg = results.stream()
               .filter(s -> s.getSegmentLocation().equals(segLocation))
               .collect(Collectors.toList());
-      if (results.isEmpty()) return null;
-      return results.get(0);
+      if (seg.isEmpty()) return null;
+      return seg.get(0);
 
         /*for (int i = 0; i < m.getMap().size(); i++) {
             for (int j = 0; j < m.getMap().get(i).size(); j++) {
@@ -85,11 +85,11 @@ public class Turn {
   static   private Segment getStraight(Map m, Segment s){
         ArrayList<Segment> options = getTurns(m,s);
 
-        options.stream()
+        List<Segment> seg = options.stream()
                 .filter(r -> r.getDirection() == Direction.straightDirection(r.getDirection()))
                 .collect(Collectors.toList());
-        if(options.isEmpty()) return null;
-        return options.get(0);
+        if(seg.isEmpty()) return null;
+        return seg.get(0);
 
         /*for (int i = 0; i < options.size(); i++) {
             if(options.get(i).getDirection() == Direction.straightDirection(s.getDirection())){
