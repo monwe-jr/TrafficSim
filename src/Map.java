@@ -24,7 +24,7 @@ public class Map implements Serializable{
 
     }
 
-    public String toString() {
+//    public String toString() {
         //get all intersections in an ArrayList
         //traverse through ArrayList find one with the highest Segments connected
         //Dictionary to map Points to Intersections, set target as (0,0)
@@ -36,11 +36,11 @@ public class Map implements Serializable{
          * 00808
          * 68686
          * 00808
-         * 68686
-         */
-        // for each possible coordinate check is it an intersection segment or empty
-        return "";
-    }
+//         * 68686
+//         */
+//        // for each possible coordinate check is it an intersection segment or empty
+//        return "";
+//    }
 
      public void addSegment(Segment s) {
 
