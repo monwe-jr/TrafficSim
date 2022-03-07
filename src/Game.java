@@ -33,7 +33,16 @@ public class Game {
         in6.addVehicle(m, l, in6.laneCount() - 1);
 
         l.move();
-
+        vehicles.add(new Car(Color.blue, false, in6));
+        vehicles.add(new Car(Color.blue, false, in6));
+        vehicles.add(new Car(Color.blue, false, in6));
+        int i = 0;
+        for (Vehicle v : vehicles) {
+            in6.addVehicle(m, v, i++);
+        }
+        for (int j = 0; j < 100; j++) {
+            moveAI();
+        }
 
     }
 
@@ -72,6 +81,6 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        new Game();
+        Game game = new Game();
     }
 }
