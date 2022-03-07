@@ -41,7 +41,7 @@ public class Game {
         for (Vehicle v : vehicles) {
             in6.addVehicle(m, v, i++ % in6.getLane().getLaneCount());
         }
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < 10; j++) {
             moveAI();
         }
 

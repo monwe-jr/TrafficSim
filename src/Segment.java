@@ -190,7 +190,7 @@ public class Segment {
             lanes[toMove.getVehicleLocation().x][toMove.vehicleLocation.y] = toMove;
             lanes[toMove.getVehicleLocation().x - (toMove.getLength())][toMove.vehicleLocation.y] = null;
 
-            System.out.println( toMove + "moved 1mile forward");
+            System.out.println( toMove + " moved 1mile forward on " + toMove.getSegment());
 
         }
 
