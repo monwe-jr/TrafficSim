@@ -35,6 +35,17 @@ public abstract class Vehicle {
     }
 
 
+    public void turnViolation(){
+
+    }
+
+    public void correspondingLaneViolation(){
+
+    }
+
+
+
+
     public abstract void move();
 
 

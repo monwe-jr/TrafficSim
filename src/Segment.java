@@ -187,7 +187,7 @@ public class Segment {
             lanes[toMove.getVehicleLocation().x][toMove.vehicleLocation.y] = toMove;
             lanes[toMove.getVehicleLocation().x - (toMove.getLength())][toMove.vehicleLocation.y] = null;
 
-            System.out.println("Car moved 1mile forward");
+            System.out.println( toMove + "moved 1mile forward");
 
         }
 
@@ -278,19 +278,19 @@ public class Segment {
 
             if (v instanceof Car) {
                 if (location.y > 0) {
-                    if (lanes[location.x][location.y - 1] == null) {
+                    if (lanes[location.x+1][location.y - 1] == null && location.x+1 <= segmentLength-1 ) {
                         return true;
                     }
                 }
             } else if (v instanceof Bus) {
                 if (location.y > 0) {
-                    if (lanes[location.x][location.y - 1] == null && lanes[location.x - 1][location.y - 1] == null) {
+                    if (lanes[location.x+1][location.y - 1] == null && lanes[location.x][location.y - 1] == null && location.x+1 <= segmentLength-1) {
                         return true;
                     }
                 }
             } else if (v instanceof Truck) {
                 if (location.y > 0) {
-                    if (lanes[location.x][location.y - 1] == null && lanes[location.x - 1][location.y - 1] == null && lanes[location.x - 2][location.y - 1] == null) {
+                    if (lanes[location.x + 1][location.y - 1] == null && lanes[location.x ][location.y - 1] == null && lanes[location.x - 1][location.y - 1] == null && location.x+1 <= segmentLength-1) {
                         return true;
                     }
                 }
@@ -309,23 +309,23 @@ public class Segment {
         private boolean canSwitchRight(Vehicle v) {
             Point location = v.getVehicleLocation();
 
-            if (v instanceof Car) {
+            if (v instanceof Car && location.x+1 <= segmentLength-1) {
                 if (location.y < laneCount - 1) {
-                    if (lanes[location.x][location.y + 1] == null) {
+                    if (lanes[location.x+1][location.y + 1] == null) {
                         return true;
                     }
 
                 }
             } else if (v instanceof Bus) {
                 if (location.y < laneCount - 1) {
-                    if (lanes[location.x][location.y + 1] == null && lanes[location.x - 1][location.y + 1] == null) {
+                    if (lanes[location.x+1][location.y + 1] == null && lanes[location.x][location.y + 1] == null && location.x+1 <= segmentLength-1) {
                         return true;
                     }
 
                 }
             } else if (v instanceof Truck) {
                 if (location.y < laneCount - 1) {
-                    if (lanes[location.x][location.y + 1] == null && lanes[location.x - 1][location.y + 1] == null && lanes[location.x - 2][location.y + 1] == null) {
+                    if (lanes[location.x+1][location.y + 1] == null && lanes[location.x ][location.y + 1] == null && lanes[location.x - 1][location.y + 1] == null && location.x+1 <= segmentLength-1) {
                         return true;
                     }
 
@@ -345,7 +345,7 @@ public class Segment {
             Point location = v.getVehicleLocation();
 
             if (canSwitchLeft(v)) {
-                v.setVehicleLocation(new Point(location.x, location.y - 1));
+                v.setVehicleLocation(new Point(location.x + 1, location.y - 1));
 
 
                 for (int i = location.x; i >= (location.x - (v.getLength() - 1)); i--) {
@@ -355,14 +355,18 @@ public class Segment {
                     }
                 }
 
+                moveVehicle(v.getVehicleLocation());
+
 
             } else {
-                Vehicle hit = lanes[location.x][location.y - 1];
+                if (location.x + 1 <= segmentLength - 1){
+                    Vehicle hit = lanes[location.x][location.y - 1];
                 v.getDamageStatus().calculatedSuffered(v, hit);
                 v.getDamageStatus().calculateGenerated(v, hit);
                 hit.getDamageStatus().calculatedSuffered(hit, v);
                 hit.getDamageStatus().calculateGenerated(hit, v);
                 //which location after damage
+            }
 
             }
 
@@ -378,7 +382,7 @@ public class Segment {
             Point location = v.getVehicleLocation();
 
             if (canSwitchRight(v)) {
-                v.setVehicleLocation(new Point(location.x, location.y + 1));
+                v.setVehicleLocation(new Point(location.x + 1, location.y + 1));
 
 
                 for (int i = location.x; i >= (location.x - (v.getLength() - 1)); i--) {
@@ -388,14 +392,18 @@ public class Segment {
                     }
                 }
 
+                moveVehicle(v.getVehicleLocation());
+
 
             } else {
-                Vehicle hit = lanes[location.x][location.y - 1];
-                v.getDamageStatus().calculatedSuffered(v, hit);
-                v.getDamageStatus().calculateGenerated(v, hit);
-                hit.getDamageStatus().calculatedSuffered(hit, v);
-                hit.getDamageStatus().calculateGenerated(hit, v);
-                //which location after damage
+                if(location.x+1 <= segmentLength-1) {
+                    Vehicle hit = lanes[location.x][location.y - 1];
+                    v.getDamageStatus().calculatedSuffered(v, hit);
+                    v.getDamageStatus().calculateGenerated(v, hit);
+                    hit.getDamageStatus().calculatedSuffered(hit, v);
+                    hit.getDamageStatus().calculateGenerated(hit, v);
+                    //which location after damage
+                }
 
             }
         }
