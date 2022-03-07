@@ -16,18 +16,5 @@ public class Car extends Vehicle  {
         length = 1;
     }
 
-    @Override
-    public void move() {
-        currentSegment.moveVehicle(vehicleLocation);
-        }
-
-
-
-
-
-
-
-
-
 
 }

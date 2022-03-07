@@ -46,7 +46,9 @@ public abstract class Vehicle {
 
 
 
-    public abstract void move();
+    public void move(){
+        currentSegment.moveVehicle(vehicleLocation);
+    }
 
 
     /**

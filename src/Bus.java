@@ -16,16 +16,5 @@ public class Bus extends Vehicle {
 
 
 
-    @Override
-    public void move() {
-                        currentSegment.moveVehicle(vehicleLocation);
-        }
-
-
-
-
-
-
-
 
 }
