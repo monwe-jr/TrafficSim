@@ -13,10 +13,12 @@ public class Turn {
      * @return
      */
     public static boolean canTurn(Map m, Segment s) {
-        ArrayList<Segment> roads = m.getMap().get(s.getSegmentLocation().y);
+        ArrayList<Segment> roads = m.getMap().get(s.getSegmentLocation().x);
 
         for (int i = 0; i < roads.size(); i++) {
-            if (roads.get(i).getSegmentLocation().x == s.getSegmentLocation().y && !s.getDirection().equals(s.getDirection(), roads.get(i).getDirection()) && !roads.get(i).getSegmentLocation().equals(new Point(s.getSegmentLocation().y, s.getSegmentLocation().x))) {
+            if (roads.get(i).getSegmentLocation().x == s.getSegmentLocation().x
+                    && !s.getDirection().equals(s.getDirection(), roads.get(i).getDirection())
+                    && !roads.get(i).getSegmentLocation().equals(new Point(s.getSegmentLocation().y, s.getSegmentLocation().x))) {
                 return true;
             }
         }

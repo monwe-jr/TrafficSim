@@ -9,6 +9,7 @@ public class Game {
 
     Game() {
 
+        vehicles = new ArrayList<>();
         m = new Map(8);
         m.addSegment(new Segment(new Point(0, 2), Direction.East));
         m.addSegment(new Segment(new Point(0, 4), Direction.North));
@@ -27,6 +28,7 @@ public class Game {
         m.addSegment(new Segment(new Point(7, 5), Direction.West));
 
 
+
         Segment in6 = new Segment(new Point(5, 7), Direction.East);
 
         Car l = new Car(Color.blue, true, in6);
@@ -34,11 +36,11 @@ public class Game {
 
         l.move();
         vehicles.add(new Car(Color.blue, false, in6));
-        vehicles.add(new Car(Color.blue, false, in6));
-        vehicles.add(new Car(Color.blue, false, in6));
+//        vehicles.add(new Car(Color.blue, false, in6));
+//        vehicles.add(new Car(Color.blue, false, in6));
         int i = 0;
         for (Vehicle v : vehicles) {
-            in6.addVehicle(m, v, i++);
+            in6.addVehicle(m, v, i++ % in6.getLane().getLaneCount());
         }
         for (int j = 0; j < 100; j++) {
             moveAI();
