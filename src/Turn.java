@@ -180,7 +180,7 @@ public class Turn {
                         if (oldLaneLocation == 2) {
                             toGoStraightOn.addVehicle(m, v, 1);
                             v.setSegment(toGoStraightOn);
-                            //add traffic violation
+                            v.getReputation().correspondingLaneViolation();
                         } else {
                             toGoStraightOn.addVehicle(m, v, oldLaneLocation);
                             v.setSegment(toGoStraightOn);
@@ -191,13 +191,10 @@ public class Turn {
                 }
 
             } else {
+                toGoStraightOn.addVehicle(m, v, 0);
+                v.setSegment(toGoStraightOn);
                 if (oldLaneLocation != 0) {
-                    toGoStraightOn.addVehicle(m, v, 0);
-                    v.setSegment(toGoStraightOn);
-                    //add traffic violation
-                } else {
-                    toGoStraightOn.addVehicle(m, v, 0);
-                    v.setSegment(toGoStraightOn);
+                    v.getReputation().correspondingLaneViolation();
                 }
             }
 
@@ -228,7 +225,7 @@ public class Turn {
                     if (oldLaneLocation != 0) {
                         toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
                         v.setSegment(toTurnLeftOnto);
-                        // add traffic violation
+                        v.getReputation().correspondingLaneViolation();
                     } else {
                         toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
                         v.setSegment(toTurnLeftOnto);
@@ -241,7 +238,7 @@ public class Turn {
                         if (oldLaneLocation == 2 || oldLaneLocation == 3) {
                             toTurnLeftOnto.addVehicle(m, v, 1);
                             v.setSegment(toTurnLeftOnto);
-                            //add traffic violation
+                            v.getReputation().correspondingLaneViolation();
                         } else {
                             toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
                             v.setSegment(toTurnLeftOnto);
@@ -252,14 +249,11 @@ public class Turn {
                 }
 
             } else {
+                toTurnLeftOnto.addVehicle(m, v, 0);
+                v.setSegment(toTurnLeftOnto);
                 if (oldLaneLocation != 0) {
-                    toTurnLeftOnto.addVehicle(m, v, 0);
-                    v.setSegment(toTurnLeftOnto);
-                    //add traffic violation
+                    v.getReputation().correspondingLaneViolation();
 
-                } else {
-                    toTurnLeftOnto.addVehicle(m, v, 0);
-                    v.setSegment(toTurnLeftOnto);
                 }
             }
 
@@ -290,7 +284,7 @@ public class Turn {
                     if (oldLaneLocation != s.laneCount() - 1) {
                         toTurnRightOnto.addVehicle(m, v, oldLaneLocation);
                         v.setSegment(toTurnRightOnto);
-                        //TODO add traffic violation
+                        v.getReputation().correspondingLaneViolation();
                     } else {
                         toTurnRightOnto.addVehicle(m, v, oldLaneLocation);
                         v.setSegment(toTurnRightOnto);
@@ -303,7 +297,7 @@ public class Turn {
                         if (oldLaneLocation == 0 || oldLaneLocation == 1) {
                             toTurnRightOnto.addVehicle(m, v, 0);
                             v.setSegment(toTurnRightOnto);
-                            //TODO add traffic violation
+                            v.getReputation().correspondingLaneViolation();
                         } else {
                             toTurnRightOnto.addVehicle(m, v, oldLaneLocation);
                             v.setSegment(toTurnRightOnto);
@@ -314,14 +308,11 @@ public class Turn {
                 }
 
             } else {
-                if (oldLaneLocation != s.laneCount() - 1) {
-                    toTurnRightOnto.addVehicle(m, v, 0);
-                    v.setSegment(toTurnRightOnto);
-                    //TODO add traffic violation
+                toTurnRightOnto.addVehicle(m, v, 0);
+                v.setSegment(toTurnRightOnto);
+                if (oldLaneLocation != 0) {
+                    v.getReputation().correspondingLaneViolation();
 
-                } else {
-                    toTurnRightOnto.addVehicle(m, v, 0);
-                    v.setSegment(toTurnRightOnto);
                 }
             }
 
@@ -374,4 +365,5 @@ public class Turn {
     }
 
 
+    //TODO add collision for turns 
 }

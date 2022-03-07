@@ -365,7 +365,10 @@ public class Segment {
                 v.getDamageStatus().calculateGenerated(v, hit);
                 hit.getDamageStatus().calculatedSuffered(hit, v);
                 hit.getDamageStatus().calculateGenerated(hit, v);
-                //which location after damage
+
+
+
+
             }
 
             }
@@ -402,7 +405,7 @@ public class Segment {
                     v.getDamageStatus().calculateGenerated(v, hit);
                     hit.getDamageStatus().calculatedSuffered(hit, v);
                     hit.getDamageStatus().calculateGenerated(hit, v);
-                    //which location after damage
+
                 }
 
             }

@@ -38,14 +38,11 @@ public class Reputation {
     }
 
 
-
-
-    public void turnViolation(){
-
-    }
-
+    /**
+     * If a player does not make a turn or go straight using the corresponding lane, this method iis called
+     */
     public void correspondingLaneViolation(){
-
+        changeNiceness(10.0);
     }
 
 

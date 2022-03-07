@@ -9,8 +9,8 @@ public abstract class Vehicle {
     protected Double size;
     protected Double weight;
     protected Double maxSpeed;
-    private DamageStatus damageStatus;
     private Reputation reputation;
+    private DamageStatus damageStatus;
     protected Segment currentSegment;
     protected int length;
     protected Point vehicleLocation; //lane location on segment s
@@ -29,8 +29,8 @@ public abstract class Vehicle {
         this.currentSegment = s;
         reputation = new Reputation();
         setSegment(s);
-        damageStatus = new DamageStatus();
         reputation = new Reputation();
+        damageStatus = new DamageStatus(reputation);
 
     }
 
@@ -71,6 +71,7 @@ public abstract class Vehicle {
     }
 
 
+    public Reputation getReputation(){return reputation;}
 
     /**
      * Returns the size of the vehicle.
