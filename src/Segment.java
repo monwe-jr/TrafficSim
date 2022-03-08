@@ -47,23 +47,95 @@ public class Segment {
     }
 
 
-    /**
-     * Returns true when vehicle v is at the end of a segment
-     *
-     * @param v
-     * @return
-     */
-    public boolean atEnd(Vehicle v) {
-        if (segmentLanes.atEnd(v)) {
-            return true;
-        } else {
-            return false;
-        }
 
+    public int laneLocation(Vehicle v){
+       return segmentLanes.laneLocation(v);
     }
 
 
+    public boolean compatible(int l){
+        return segmentLanes.compatible(l);
+    }
 
+
+    public boolean atEnd(Vehicle v) {
+       return segmentLanes.atEnd(v);
+
+    }
+
+    public boolean isEmpty(Point p){
+        return segmentLanes.isEmpty(p);
+    }
+
+
+    public boolean canSwitchLeft(Vehicle v){
+        return canSwitchLeft(v);
+    }
+
+    public boolean canSwitchRight(Vehicle v){
+        return canSwitchRight(v);
+    }
+
+   public void switchRight(Vehicle v){
+        segmentLanes.switchRight(v);
+   }
+
+    public void switchLeft(Vehicle v){
+        segmentLanes.switchLeft(v);
+    }
+
+
+    /**
+     * Returns the direction of a segment
+     * @return
+     */
+    public Direction getDirection() {
+        return direction;
+    }
+
+    /**
+     * Returns segment location
+     * @return
+     */
+    public Point getSegmentLocation() {
+        return location;
+    }
+
+    /**
+     * Adds intersections of segment
+     * @param p
+     */
+    private void addIntersections(Point p) {
+        intersections.add(p.x);
+        intersections.add(p.y);
+    }
+
+
+    /**
+     * Returns true if segment object is oneway
+     * @param m the Map that contains the segment
+     * @return
+     */
+    public boolean oneWay(Map m) {
+        Point toFind = new Point(location.y, location.x);
+
+        for (int i = 0; i < m.getMap().get(location.y).size(); i++) {
+            if (m.getMap().get(location.y).get(i).getSegmentLocation().equals(toFind)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Returns an arraylist of intersections connected to segment object
+     * @return
+     */
+    public ArrayList<Integer> getIntersections() {
+        return intersections;
+    }
 
     /**
      * returns a list of vehicles at the end of a segment
@@ -83,15 +155,12 @@ public class Segment {
     }
 
 
-    public Lane getLane() {
-        return segmentLanes;
-    }
 
 
     /**
      * Inner class that handles lane funtionality
      */
-    public class Lane {
+    private class Lane {
         private Vehicle[][] lanes;
         private int laneCount;
         private int segmentLength = 12;
@@ -115,7 +184,7 @@ public class Segment {
          * @param v    the vehicle we want to add
          * @param lane
          */
-        public void addVehicle(Map m, Vehicle v, int lane) {
+        private void addVehicle(Map m, Vehicle v, int lane) {
 
             if (v instanceof Car) {
                 if (isEmpty(new Point(0, lane))) {
@@ -164,7 +233,7 @@ public class Segment {
          * Removes vehicle on segment
          * @param v the vehicle to be removed
          */
-        public void removeVehicle(Vehicle v) {
+        private void removeVehicle(Vehicle v) {
             Point location = v.getVehicleLocation();
             v.setVehicleLocation(null);
             onSegment.remove(v);
@@ -183,7 +252,7 @@ public class Segment {
          * Moves the vehicle one index up
          * @param p the segment position of the vehicle
          */
-        public void moveVehicle(Point p) {
+        private void moveVehicle(Point p) {
             Vehicle toMove = lanes[p.x][p.y];
             toMove.setVehicleLocation(new Point(toMove.getVehicleLocation().x + 1, toMove.getVehicleLocation().y));
 
@@ -226,7 +295,7 @@ public class Segment {
          * @param v Vehicle to be checked
          * @return
          */
-        public boolean atEnd(Vehicle v) {
+        private boolean atEnd(Vehicle v) {
             for (int i = 0; i < laneCount; i++) {
                 if (v == lanes[4][i]) {
                     return true;
@@ -241,7 +310,7 @@ public class Segment {
          * @param p the point to be checked
          * @return
          */
-        public boolean isEmpty(Point p) {
+        private boolean isEmpty(Point p) {
 
             if (lanes[p.x][p.y] == null) {
                 return true;
@@ -256,7 +325,7 @@ public class Segment {
          * @param v the vehicle with an unknown index
          * @return
          */
-        public int laneLocation(Vehicle v) {
+        private int laneLocation(Vehicle v) {
 
             for (int i = 0; i < segmentLength; i++) {
                 for (int j = 0; j < lanes.length; j++) {
@@ -344,7 +413,7 @@ public class Segment {
          *
          * @param v
          */
-        public void switchLeft(Vehicle v) {
+        private void switchLeft(Vehicle v) {
             Point location = v.getVehicleLocation();
 
             if (canSwitchLeft(v)) {
@@ -384,7 +453,7 @@ public class Segment {
          *
          * @param v
          */
-        public void switchRight(Vehicle v) {
+        private void switchRight(Vehicle v) {
             Point location = v.getVehicleLocation();
 
             if (canSwitchRight(v)) {
@@ -420,7 +489,7 @@ public class Segment {
          *
          * @param l
          */
-        public boolean compatible(int l) {
+        private boolean compatible(int l) {
 
             if (l >= laneCount) {
                 return true;
@@ -431,11 +500,11 @@ public class Segment {
         }
 
 
-        public int getLaneCount() {
+        private int getLaneCount() {
             return laneCount;
         }
 
-        public int getSegmentLength() {
+        private int getSegmentLength() {
             return segmentLength;
         }
 
@@ -444,57 +513,6 @@ public class Segment {
 
 
 
-    /**
-     * Returns the direction of a segment
-     * @return
-     */
-    public Direction getDirection() {
-        return direction;
-    }
-
-    /**
-     * Returns segment location
-     * @return
-     */
-    public Point getSegmentLocation() {
-        return location;
-    }
-
-    /**
-     * Adds intersections of segment
-     * @param p
-     */
-    private void addIntersections(Point p) {
-        intersections.add(p.x);
-        intersections.add(p.y);
-    }
-
-
-    /**
-     * Returns true if segment object is oneway
-     * @param m the Map that contains the segment
-     * @return
-     */
-    public boolean oneWay(Map m) {
-        Point toFind = new Point(location.y, location.x);
-
-        for (int i = 0; i < m.getMap().get(location.y).size(); i++) {
-            if (m.getMap().get(location.y).get(i).getSegmentLocation().equals(toFind)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-
-    /**
-     * Returns an arraylist of intersections connected to segment object
-     * @return
-     */
-    public ArrayList<Integer> getIntersections() {
-        return intersections;
-    }
 
 
 }

@@ -39,7 +39,7 @@ public class Game {
 //        vehicles.add(new Car(Color.blue, false, in6));
         int i = 0;
         for (Vehicle v : vehicles) {
-            in6.addVehicle(m, v, i++ % in6.getLane().getLaneCount());
+            in6.addVehicle(m, v, i++ % in6.laneCount());
         }
         for (int j = 0; j < 100; j++) {
             moveAI();

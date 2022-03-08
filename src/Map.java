@@ -16,8 +16,7 @@ public class Map implements Serializable{
 
 
      public void generate(int intersections) {
-
-
+        
         for (int i = 0; i < intersections; i++) {
             map.add(new ArrayList<Segment>());
         }

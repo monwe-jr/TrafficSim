@@ -89,7 +89,7 @@ public class Turn {
      * @return
      */
     static private Segment getStraight(Map m, Segment s) {
-        ArrayList<Segment> options = getTurns(m, s);
+        ArrayList<Segment> options = m.getMap().get(s.getSegmentLocation().y);
 
         List<Segment> seg = options.stream()
                 .filter(r -> r.getDirection() == Direction.straightDirection(r.getDirection()))
@@ -167,12 +167,12 @@ public class Turn {
 
         if (getStraight(m, s) != null) {
             Segment toGoStraightOn = getStraight(m, s);
-            int oldLaneLocation = s.getLane().laneLocation(v);
+            int oldLaneLocation = s.laneLocation(v);
             s.removeVehicle(v);
             v.removeSegment();
 
             if (toGoStraightOn.laneCount() > 1) {
-                if (s.getLane().compatible(toGoStraightOn.laneCount())) {
+                if (s.compatible(toGoStraightOn.laneCount())) {
                     toGoStraightOn.addVehicle(m, v, oldLaneLocation);
                     v.setSegment(toGoStraightOn);
                 } else {
@@ -217,12 +217,12 @@ public class Turn {
     static public void leftTurn(Map m, Segment s, Vehicle v) {
         if (getLeftTurns(m, s) != null) {
             Segment toTurnLeftOnto = getLeftTurns(m, s);
-            int oldLaneLocation = s.getLane().laneLocation(v);
+            int oldLaneLocation = s.laneLocation(v);
             s.removeVehicle(v);
             v.removeSegment();
 
             if (toTurnLeftOnto.laneCount() > 1) {
-                if (s.getLane().compatible(toTurnLeftOnto.laneCount())) {
+                if (s.compatible(toTurnLeftOnto.laneCount())) {
 
                     if (oldLaneLocation != 0) {
                         toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
@@ -276,12 +276,12 @@ public class Turn {
     static public void rightTurn(Map m, Segment s, Vehicle v) {
         if (getRightTurns(m, s) != null) {
             Segment toTurnRightOnto = getLeftTurns(m, s);
-            int oldLaneLocation = s.getLane().laneLocation(v);
+            int oldLaneLocation = s.laneLocation(v);
             s.removeVehicle(v);
             v.removeSegment();
 
             if (toTurnRightOnto.laneCount() > 1) {
-                if (s.getLane().compatible(toTurnRightOnto.laneCount())) {
+                if (s.compatible(toTurnRightOnto.laneCount())) {
 
                     if (oldLaneLocation != s.laneCount() - 1) {
                         toTurnRightOnto.addVehicle(m, v, oldLaneLocation);
@@ -335,20 +335,20 @@ public class Turn {
     static public void uTurn(Map m, Segment s, Vehicle v) {
         if (Intersection.isDeadEnd(m, s.getSegmentLocation().y)) {
             Segment toUTurnOnto = getSegment(m, new Point(s.getSegmentLocation().y, s.getSegmentLocation().x));
-            int oldLaneLocation = s.getLane().laneLocation(v);
+            int oldLaneLocation = s.laneLocation(v);
             s.removeVehicle(v);
             v.removeSegment();
 
             if (toUTurnOnto.laneCount() > 1) {
 
-                if (s.getLane().compatible(toUTurnOnto.laneCount()) && toUTurnOnto.laneCount() != 3) {
+                if (s.compatible(toUTurnOnto.laneCount()) && toUTurnOnto.laneCount() != 3) {
                     toUTurnOnto.addVehicle(m, v, oldLaneLocation);
                 } else {
 
                     if (s.laneCount() == 1 && toUTurnOnto.laneCount() == 3) {
                         toUTurnOnto.addVehicle(m, v, 1);
                     } else if (s.laneCount() == 3 && toUTurnOnto.laneCount() == 2) {
-                        if (s.getLane().laneLocation(v) == 1 || s.getLane().laneLocation(v) == 1) {
+                        if (s.laneLocation(v) == 1 || s.laneLocation(v) == 1) {
                             toUTurnOnto.addVehicle(m, v, 1);
                         } else {
                             toUTurnOnto.addVehicle(m, v, 0);
