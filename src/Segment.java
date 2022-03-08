@@ -1,9 +1,10 @@
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Segment {
+public class Segment implements Serializable {
 
     final Direction direction;
     final Point location;  // this road segment is between intersection x and intersection y
@@ -164,7 +165,7 @@ public class Segment {
     /**
      * Inner class that handles lane funtionality
      */
-    private class Lane {
+    private class Lane implements Serializable {
         private Vehicle[][] lanes;
         private int laneCount;
         private int segmentLength = 12;

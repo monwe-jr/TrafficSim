@@ -27,11 +27,11 @@ public class Game {
         m.addSegment(new Segment(new Point(7, 3), Direction.East, 3, 12));
         m.addSegment(new Segment(new Point(7, 5), Direction.West, 3, 10));
 
+        saveMap();
+        //Segment in6 = new Segment(new Point(5, 7), Direction.East, 3, 10);
 
-        Segment in6 = new Segment(new Point(5, 7), Direction.East, 3, 10);
 
-
-        vehicles.add(new Car(Color.blue, false, in6));
+        /*vehicles.add(new Car(Color.blue, false, in6));
 //        vehicles.add(new Car(Color.blue, false, in6));
 //        vehicles.add(new Car(Color.blue, false, in6));
         int i = 0;
@@ -40,7 +40,7 @@ public class Game {
         }
         for (int j = 0; j < 20; j++) {
             moveAI();
-        }
+        }*/
 
     }
 
