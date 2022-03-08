@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -41,6 +42,33 @@ public class Game {
             moveAI();
         }
 
+    }
+
+    //example implementation
+    public void saveMap() {
+        try {
+            FileOutputStream fos = new FileOutputStream("/temp/Map.ser");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(m);
+            oos.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadMap() {
+        try {
+            FileInputStream fis = new FileInputStream("/temp/Map.ser");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            m = (Map)ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
