@@ -135,10 +135,10 @@ public abstract class Vehicle implements Serializable {
      * Returns the current segment location of vehicle object
      * @return vehicle location
      */
-   public Point getVehicleLocation(){
+    public Point getVehicleLocation(){
         return vehicleLocation;
 
-   }
+    }
 
 
     public boolean isDrivable() {

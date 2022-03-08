@@ -1,4 +1,3 @@
-
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class Segment implements Serializable {
 
 
     public int laneLocation(Vehicle v){
-       return segmentLanes.laneLocation(v);
+        return segmentLanes.laneLocation(v);
     }
 
 
@@ -60,7 +59,7 @@ public class Segment implements Serializable {
 
 
     public boolean atEnd(Vehicle v) {
-       return segmentLanes.atEnd(v);
+        return segmentLanes.atEnd(v);
 
     }
 
@@ -70,16 +69,16 @@ public class Segment implements Serializable {
 
 
     public boolean canSwitchLeft(Vehicle v){
-        return canSwitchLeft(v);
+        return segmentLanes.canSwitchLeft(v);
     }
 
     public boolean canSwitchRight(Vehicle v){
-        return canSwitchRight(v);
+        return segmentLanes.canSwitchRight(v);
     }
 
-   public void switchRight(Vehicle v){
+    public void switchRight(Vehicle v){
         segmentLanes.switchRight(v);
-   }
+    }
 
     public void switchLeft(Vehicle v){
         segmentLanes.switchLeft(v);
@@ -443,15 +442,15 @@ public class Segment implements Serializable {
             } else {
                 if (location.x + 1 <= segmentLength - 1){
                     Vehicle hit = lanes[location.x][location.y - 1];
-                v.getDamageStatus().calculatedSuffered(v, hit);
-                v.getDamageStatus().calculateGenerated(v, hit);
-                hit.getDamageStatus().calculatedSuffered(hit, v);
-                hit.getDamageStatus().calculateGenerated(hit, v);
+                    v.getDamageStatus().calculatedSuffered(v, hit);
+                    v.getDamageStatus().calculateGenerated(v, hit);
+                    hit.getDamageStatus().calculatedSuffered(hit, v);
+                    hit.getDamageStatus().calculateGenerated(hit, v);
 
 
 
 
-            }
+                }
 
             }
 
