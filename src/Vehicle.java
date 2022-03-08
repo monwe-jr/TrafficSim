@@ -1,9 +1,10 @@
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public abstract class Vehicle {
+public abstract class Vehicle implements Serializable {
     private Color c;
     private boolean drivable; //distinguishes humans from AI
     protected Double size;
