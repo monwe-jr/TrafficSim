@@ -41,7 +41,7 @@ public class Game {
         for (Vehicle v : vehicles) {
             in6.addVehicle(m, v, i++ % in6.laneCount());
         }
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < 10; j++) {
             moveAI();
         }
 
@@ -55,7 +55,7 @@ public class Game {
             if (!v.isDrivable()) {
                 if (!v.getSegment().atEnd(v)) {
                     v.move();
-                    return;
+                    continue;
                 } else {
                     ArrayList<Segment> possible = Turn.getTurns(m, v.getSegment());
                     if (possible != null) {
@@ -65,16 +65,17 @@ public class Game {
 
                         if (Direction.equals(Direction.rightDirection(current), target)) {
                             Turn.rightTurn(m, v.getSegment(), v);
-                            return;
+                            continue;
                         } else if (Direction.equals(Direction.leftDirection(current), target)) {
                             Turn.leftTurn(m, v.getSegment(), v);
-                            return;
+                            continue;
                         } else {
-                            Turn.goStraight(m, v.getSegment(), v);
-                            return;
+                            System.out.println("Shouldn't be here");
+                            continue;
                         }
                     } else {
-                        Turn.uTurn(m, v.getSegment(), v);
+                        Turn.goStraight(m, v.getSegment(), v);
+                        continue;
                     }
                 }
             }

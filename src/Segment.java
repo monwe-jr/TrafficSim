@@ -259,7 +259,7 @@ public class Segment {
             lanes[toMove.getVehicleLocation().x][toMove.vehicleLocation.y] = toMove;
             lanes[toMove.getVehicleLocation().x - (toMove.getLength())][toMove.vehicleLocation.y] = null;
 
-            System.out.println( toMove + "moved 1mile forward");
+            System.out.println( toMove + " moved 1mile forward on " + toMove.getSegment());
 
         }
 
@@ -328,7 +328,7 @@ public class Segment {
         private int laneLocation(Vehicle v) {
 
             for (int i = 0; i < segmentLength; i++) {
-                for (int j = 0; j < lanes.length; j++) {
+                for (int j = 0; j < lanes[0].length; j++) {
                     if (lanes[i][j] == v) {
                         return j;
                     }
