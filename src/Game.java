@@ -12,7 +12,7 @@ public class Game {
         loadMap();
 
         Segment in6 = new Segment(new Point(5, 7), Direction.East, 3, 10);
-
+        int a = 1;
 
         vehicles.add(new Car(Color.blue, false, in6));
 //        vehicles.add(new Car(Color.blue, false, in6));
