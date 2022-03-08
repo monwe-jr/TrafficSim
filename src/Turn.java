@@ -38,13 +38,13 @@ public class Turn {
         ArrayList<Segment> availableTurns = new ArrayList<>();
 
         if (canTurn(m, s)) {
-            for (int j = 0; j < m.getMap().size(); j++) {
+            for (int j = 0; j < m.getMap().get(s.getSegmentLocation().y).size(); j++) {
                 if (m.getMap().get(s.getSegmentLocation().y).get(j).getSegmentLocation().x == s.getSegmentLocation().y && !m.getMap().get(s.getSegmentLocation().y).get(j).getSegmentLocation().equals(new Point(s.getSegmentLocation().y, s.getSegmentLocation().x))) {
                     availableTurns.add(m.getMap().get(s.getSegmentLocation().y).get(j));
                 }
             }
         } else {
-            System.out.println("Can't turn at upcoming intersection");
+            System.out.println("Can't turn at upcoming intersection!");
             return null;
         }
 
@@ -98,10 +98,8 @@ public class Turn {
         return seg.get(0);*/
 
         for (int i = 0; i < options.size(); i++) {
-            if(options.get(i).getDirection() == Direction.straightDirection(s.getDirection())){
-                    return options.get(i);
-            }else{
-                System.out.println("Can't go straight!");
+            if(options.get(i).getDirection().equals( Direction.straightDirection(s.getDirection()))) {
+                return options.get(i);
             }
         }
 
@@ -123,8 +121,6 @@ public class Turn {
         for (int i = 0; i < options.size(); i++) {
             if (options.get(i).getDirection() == Direction.leftDirection(s.getDirection())) {
                 return options.get(i);
-            } else {
-                System.out.println("Can't go left!");
             }
         }
 
@@ -146,8 +142,6 @@ public class Turn {
         for (int i = 0; i < options.size(); i++) {
             if (options.get(i).getDirection() == Direction.rightDirection(s.getDirection())) {
                 return options.get(i);
-            } else {
-                System.out.println("Can't go right!");
             }
         }
 
@@ -201,7 +195,7 @@ public class Turn {
             }
 
         } else {
-            System.out.println("Cannot go straight at this intersection!");
+            System.out.println("Cannot go straight at upcoming intersection!");
         }
 
     }

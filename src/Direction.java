@@ -11,13 +11,13 @@ public enum Direction {
 
    static public Direction straightDirection(Direction d) {
         if (d == North) {
-            return South;
-        } else if (d == East) {
-            return West;
-        } else if (d == South) {
             return North;
-        } else if (d == West) {
+        } else if (d == East) {
             return East;
+        } else if (d == South) {
+            return South;
+        } else if (d == West) {
+            return West;
         }
 
         return null;

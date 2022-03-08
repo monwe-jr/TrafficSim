@@ -30,10 +30,9 @@ public class Game {
 
         Segment in6 = new Segment(new Point(5, 7), Direction.East,3,10);
 
-        Car l = new Car(Color.blue, true, in6);
-        in6.addVehicle(m, l, in6.laneCount() - 1);
 
-        l.move();
+
+
         vehicles.add(new Car(Color.blue, false, in6));
 //        vehicles.add(new Car(Color.blue, false, in6));
 //        vehicles.add(new Car(Color.blue, false, in6));
@@ -58,7 +57,7 @@ public class Game {
                     continue;
                 } else {
                     ArrayList<Segment> possible = Turn.getTurns(m, v.getSegment());
-                    if (possible != null) {
+                    if (possible != null ) {
                         Collections.shuffle(possible);
                         Direction target = possible.get(0).getDirection();
                         Direction current = v.getSegment().getDirection();
