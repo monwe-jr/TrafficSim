@@ -67,6 +67,7 @@ public class Game {
                     if(possible == null) possible = new ArrayList<>();
                     possible.add(Turn.getStraight(m, v.getSegment()));
                     if (possible != null) {
+                        possible.removeAll(Collections.singleton(null));
                         Collections.shuffle(possible);
                         goal = possible.get(0);
                         v.target = goal;
