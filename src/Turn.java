@@ -98,12 +98,12 @@ public class Turn {
         return seg.get(0);*/
 
         for (int i = 0; i < options.size(); i++) {
-            if(options.get(i).getDirection().equals( Direction.straightDirection(s.getDirection()))) {
+            if (options.get(i).getDirection().equals(Direction.straightDirection(s.getDirection()))) {
                 return options.get(i);
             }
         }
 
-            return null;
+        return null;
 
     }
 
@@ -160,37 +160,75 @@ public class Turn {
     static public void goStraight(Map m, Segment s, Vehicle v) {
 
         if (getStraight(m, s) != null) {
+
             Segment toGoStraightOn = getStraight(m, s);
             int oldLaneLocation = s.laneLocation(v);
             s.removeVehicle(v);
             v.removeSegment();
 
+
             if (toGoStraightOn.laneCount() > 1) {
+
                 if (s.compatible(toGoStraightOn.laneCount())) {
-                    toGoStraightOn.addVehicle(m, v, oldLaneLocation);
-                    v.setSegment(toGoStraightOn);
+                    if (toGoStraightOn.isEmpty(new Point(0, oldLaneLocation))) {
+                        toGoStraightOn.addVehicle(m, v, oldLaneLocation);
+                        v.setSegment(toGoStraightOn);
+                    } else {
+                        v.getDamageStatus().calculatedSuffered(v, toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)));
+                        v.getDamageStatus().calculateGenerated(v, toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)));
+                        toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)),v);
+                        toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)),v);
+                    }
+
                 } else {
 
 
                     if (s.laneCount() == 3 && toGoStraightOn.laneCount() == 2) {
                         if (oldLaneLocation == 2) {
-                            toGoStraightOn.addVehicle(m, v, 1);
-                            v.setSegment(toGoStraightOn);
-                            v.getReputation().correspondingLaneViolation();
+                            if (toGoStraightOn.isEmpty(new Point(0, 1))) {
+                                toGoStraightOn.addVehicle(m, v, 1);
+                                v.setSegment(toGoStraightOn);
+                                v.getReputation().correspondingLaneViolation();
+                            } else {
+                                v.getReputation().correspondingLaneViolation();
+                                v.getDamageStatus().calculatedSuffered(v, toGoStraightOn.getVehicle(new Point(0, 1)));
+                                v.getDamageStatus().calculateGenerated(v, toGoStraightOn.getVehicle(new Point(0, 1)));
+                                toGoStraightOn.getVehicle(new Point(0, 1)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, 1)),v);
+                                toGoStraightOn.getVehicle(new Point(0, 1)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, 1)),v);
+                            }
+
                         } else {
-                            toGoStraightOn.addVehicle(m, v, oldLaneLocation);
-                            v.setSegment(toGoStraightOn);
+                            if (toGoStraightOn.isEmpty(new Point(0, oldLaneLocation))) {
+                                toGoStraightOn.addVehicle(m, v, oldLaneLocation);
+                                v.setSegment(toGoStraightOn);
+                            } else {
+                                v.getDamageStatus().calculatedSuffered(v, toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)));
+                                v.getDamageStatus().calculateGenerated(v, toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)));
+                                toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)),v);
+                                toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)),v);
+                            }
                         }
                     }
 
 
                 }
 
+
             } else {
-                toGoStraightOn.addVehicle(m, v, 0);
-                v.setSegment(toGoStraightOn);
-                if (oldLaneLocation != 0) {
-                    v.getReputation().correspondingLaneViolation();
+                if (toGoStraightOn.isEmpty(new Point(0, 0))) {
+                    toGoStraightOn.addVehicle(m, v, 0);
+                    v.setSegment(toGoStraightOn);
+                    if (oldLaneLocation != 0) {
+                        v.getReputation().correspondingLaneViolation();
+                    }
+                } else {
+                    if (oldLaneLocation != 0) {
+                        v.getReputation().correspondingLaneViolation();
+                    }
+                    v.getDamageStatus().calculatedSuffered(v, toGoStraightOn.getVehicle(new Point(0, 0)));
+                    v.getDamageStatus().calculateGenerated(v, toGoStraightOn.getVehicle(new Point(0, 0)));
+                    toGoStraightOn.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, 0)),v);
+                    toGoStraightOn.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, 0)),v);
                 }
             }
 
@@ -219,12 +257,31 @@ public class Turn {
                 if (s.compatible(toTurnLeftOnto.laneCount())) {
 
                     if (oldLaneLocation != 0) {
-                        toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
-                        v.setSegment(toTurnLeftOnto);
-                        v.getReputation().correspondingLaneViolation();
+                        if (toTurnLeftOnto.isEmpty(new Point(0, oldLaneLocation))) {
+                            toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
+                            v.setSegment(toTurnLeftOnto);
+                            v.getReputation().correspondingLaneViolation();
+                        }
+                        else {
+                            v.getReputation().correspondingLaneViolation();
+                            v.getDamageStatus().calculatedSuffered(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
+                            v.getDamageStatus().calculateGenerated(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
+                            toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+                            toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+                        }
+
                     } else {
-                        toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
-                        v.setSegment(toTurnLeftOnto);
+                        if (toTurnLeftOnto.isEmpty(new Point(0, oldLaneLocation))) {
+                            toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
+                            v.setSegment(toTurnLeftOnto);
+
+                        }
+                        else {
+                            v.getDamageStatus().calculatedSuffered(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
+                            v.getDamageStatus().calculateGenerated(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
+                            toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+                            toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+                        }
                     }
 
 
@@ -232,12 +289,30 @@ public class Turn {
 
                     if (s.laneCount() == 3 && toTurnLeftOnto.laneCount() == 2) {
                         if (oldLaneLocation == 2 || oldLaneLocation == 3) {
-                            toTurnLeftOnto.addVehicle(m, v, 1);
-                            v.setSegment(toTurnLeftOnto);
-                            v.getReputation().correspondingLaneViolation();
+                            if (toTurnLeftOnto.isEmpty(new Point(0, 1))) {
+                                toTurnLeftOnto.addVehicle(m, v, 1);
+                                v.setSegment(toTurnLeftOnto);
+                                v.getReputation().correspondingLaneViolation();
+                            }
+                            else {
+                                v.getReputation().correspondingLaneViolation();
+                                v.getDamageStatus().calculatedSuffered(v, toTurnLeftOnto.getVehicle(new Point(0, 1)));
+                                v.getDamageStatus().calculateGenerated(v, toTurnLeftOnto.getVehicle(new Point(0, 1)));
+                                toTurnLeftOnto.getVehicle(new Point(0, 1)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, 1)),v);
+                                toTurnLeftOnto.getVehicle(new Point(0, 1)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, 1)),v);
+                            }
                         } else {
-                            toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
-                            v.setSegment(toTurnLeftOnto);
+                            if (toTurnLeftOnto.isEmpty(new Point(0, oldLaneLocation))) {
+                                toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
+                                v.setSegment(toTurnLeftOnto);
+
+                            }
+                            else {
+                                v.getDamageStatus().calculatedSuffered(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
+                                v.getDamageStatus().calculateGenerated(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
+                                toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+                                toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+                            }
                         }
                     }
 
@@ -245,14 +320,26 @@ public class Turn {
                 }
 
             } else {
-                toTurnLeftOnto.addVehicle(m, v, 0);
-                v.setSegment(toTurnLeftOnto);
-                if (oldLaneLocation != 0) {
+                if (toTurnLeftOnto.isEmpty(new Point(0, 0))) {
+                    toTurnLeftOnto.addVehicle(m, v, 0);
+                    v.setSegment(toTurnLeftOnto);
                     v.getReputation().correspondingLaneViolation();
+                    if (oldLaneLocation != 0) {
+                        v.getReputation().correspondingLaneViolation();
 
+                    }
+                }
+                else {
+                    if (oldLaneLocation != 0) {
+                        v.getReputation().correspondingLaneViolation();
+
+                    }
+                    v.getDamageStatus().calculatedSuffered(v, toTurnLeftOnto.getVehicle(new Point(0, 0)));
+                    v.getDamageStatus().calculateGenerated(v, toTurnLeftOnto.getVehicle(new Point(0, 0)));
+                    toTurnLeftOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, 0)),v);
+                    toTurnLeftOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, 0)),v);
                 }
             }
-
 
         } else {
             System.out.println("Cannot turn Left at this intersection!");
@@ -278,25 +365,62 @@ public class Turn {
                 if (s.compatible(toTurnRightOnto.laneCount())) {
 
                     if (oldLaneLocation != s.laneCount() - 1) {
-                        toTurnRightOnto.addVehicle(m, v, oldLaneLocation);
-                        v.setSegment(toTurnRightOnto);
-                        v.getReputation().correspondingLaneViolation();
+                        if(toTurnRightOnto.isEmpty(new Point(0, oldLaneLocation))) {
+                            toTurnRightOnto.addVehicle(m, v, oldLaneLocation);
+                            v.setSegment(toTurnRightOnto);
+                            v.getReputation().correspondingLaneViolation();
+                        } else{
+                            v.getReputation().correspondingLaneViolation();
+                            v.getDamageStatus().calculatedSuffered(v, toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)));
+                            v.getDamageStatus().calculateGenerated(v, toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)));
+                            toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+                            toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+                            }
                     } else {
-                        toTurnRightOnto.addVehicle(m, v, oldLaneLocation);
-                        v.setSegment(toTurnRightOnto);
+                        if(toTurnRightOnto.isEmpty(new Point(0, oldLaneLocation))) {
+                            toTurnRightOnto.addVehicle(m, v, 0);
+                            v.setSegment(toTurnRightOnto);
+
+                        } else{
+
+                            v.getDamageStatus().calculatedSuffered(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
+                            v.getDamageStatus().calculateGenerated(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
+                            toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
+                            toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
+
+                        }
                     }
 
 
                 } else {
 
                     if (s.laneCount() == 3 && toTurnRightOnto.laneCount() == 2) {
+
                         if (oldLaneLocation == 0 || oldLaneLocation == 1) {
-                            toTurnRightOnto.addVehicle(m, v, 0);
-                            v.setSegment(toTurnRightOnto);
-                            v.getReputation().correspondingLaneViolation();
+                            if(toTurnRightOnto.isEmpty(new Point(0, 0))) {
+                                toTurnRightOnto.addVehicle(m, v, 0);
+                                v.setSegment(toTurnRightOnto);
+                                v.getReputation().correspondingLaneViolation();
+                            } else{
+                                v.getReputation().correspondingLaneViolation();
+                                v.getDamageStatus().calculatedSuffered(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
+                                v.getDamageStatus().calculateGenerated(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
+                                toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
+                                toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
+
+                            }
+
                         } else {
-                            toTurnRightOnto.addVehicle(m, v, oldLaneLocation);
-                            v.setSegment(toTurnRightOnto);
+                            if(toTurnRightOnto.isEmpty(new Point(0, 0))) {
+                                toTurnRightOnto.addVehicle(m, v, 0);
+                                v.setSegment(toTurnRightOnto);
+                            } else{
+                                v.getDamageStatus().calculatedSuffered(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
+                                v.getDamageStatus().calculateGenerated(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
+                                toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
+                                toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
+
+                            }
                         }
                     }
 
@@ -304,10 +428,23 @@ public class Turn {
                 }
 
             } else {
-                toTurnRightOnto.addVehicle(m, v, 0);
-                v.setSegment(toTurnRightOnto);
-                if (oldLaneLocation != 0) {
-                    v.getReputation().correspondingLaneViolation();
+                if (toTurnRightOnto.isEmpty(new Point(0, 0))) {
+                    toTurnRightOnto.addVehicle(m, v, 0);
+                    v.setSegment(toTurnRightOnto);
+                    if (oldLaneLocation != 0) {
+                        v.getReputation().correspondingLaneViolation();
+
+                    }
+                } else {
+                    if (oldLaneLocation != 0) {
+                        v.getReputation().correspondingLaneViolation();
+
+                    }
+                    v.getDamageStatus().calculatedSuffered(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
+                    v.getDamageStatus().calculateGenerated(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
+                    toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)), v);
+                    toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)), v);
+
 
                 }
             }

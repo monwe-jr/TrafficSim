@@ -84,6 +84,10 @@ public class Segment {
         segmentLanes.switchLeft(v);
     }
 
+    public Vehicle getVehicle(Point p){
+        return segmentLanes.getVehicle(p);
+    }
+
 
     /**
      * Returns the direction of a segment
@@ -497,6 +501,11 @@ public class Segment {
                 return false;
             }
 
+        }
+
+
+        private Vehicle getVehicle(Point p){
+            return lanes[p.x][p.y];
         }
 
 
