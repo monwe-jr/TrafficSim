@@ -9,29 +9,12 @@ public class Game {
 
 
     Game() {
+        loadMap();
+
+        Segment in6 = new Segment(new Point(5, 7), Direction.East, 3, 10);
 
 
-        m.addSegment(new Segment(new Point(0, 2), Direction.East, 2, 12));
-        m.addSegment(new Segment(new Point(0, 4), Direction.North, 3, 12));
-        m.addSegment(new Segment(new Point(0, 6), Direction.West, 1, 11));
-        m.addSegment(new Segment(new Point(0, 7), Direction.South, 2, 10));
-        m.addSegment(new Segment(new Point(1, 4), Direction.West, 3, 8));
-        m.addSegment(new Segment(new Point(1, 2), Direction.South, 1, 12));
-        m.addSegment(new Segment(new Point(2, 1), Direction.North, 3, 6));
-        m.addSegment(new Segment(new Point(2, 0), Direction.West, 2, 112));
-        m.addSegment(new Segment(new Point(3, 2), Direction.North, 3, 10));
-        m.addSegment(new Segment(new Point(4, 0), Direction.South, 2, 10));
-        m.addSegment(new Segment(new Point(4, 1), Direction.East, 3, 10));
-        m.addSegment(new Segment(new Point(5, 7), Direction.East, 2, 11));
-        m.addSegment(new Segment(new Point(6, 0), Direction.East, 1, 10));
-        m.addSegment(new Segment(new Point(7, 3), Direction.East, 3, 12));
-        m.addSegment(new Segment(new Point(7, 5), Direction.West, 3, 10));
-
-        saveMap();
-        //Segment in6 = new Segment(new Point(5, 7), Direction.East, 3, 10);
-
-
-        /*vehicles.add(new Car(Color.blue, false, in6));
+        vehicles.add(new Car(Color.blue, false, in6));
 //        vehicles.add(new Car(Color.blue, false, in6));
 //        vehicles.add(new Car(Color.blue, false, in6));
         int i = 0;
@@ -40,14 +23,14 @@ public class Game {
         }
         for (int j = 0; j < 20; j++) {
             moveAI();
-        }*/
+        }
 
     }
 
     //example implementation
     public void saveMap() {
         try {
-            FileOutputStream fos = new FileOutputStream("/temp/Map.ser");
+            FileOutputStream fos = new FileOutputStream("Map.ser");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(m);
             oos.close();
@@ -59,7 +42,7 @@ public class Game {
 
     public void loadMap() {
         try {
-            FileInputStream fis = new FileInputStream("/temp/Map.ser");
+            FileInputStream fis = new FileInputStream("Map.ser");
             ObjectInputStream ois = new ObjectInputStream(fis);
             m = (Map)ois.readObject();
             ois.close();
@@ -78,9 +61,10 @@ public class Game {
         for (Vehicle v : vehicles) {
             if (!v.isDrivable()) {
                 Segment goal = v.target;
-                ArrayList<Segment> possible;
+                ArrayList<Segment> possible = null;
                 if (goal == null) {
-                    possible = Turn.getTurns(m, v.getSegment());
+                    possible = (Turn.getTurns(m, v.getSegment()));
+                    if(possible == null) possible = new ArrayList<>();
                     possible.add(Turn.getStraight(m, v.getSegment()));
                     if (possible != null) {
                         Collections.shuffle(possible);
