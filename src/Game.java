@@ -40,7 +40,7 @@ public class Game {
         for (Vehicle v : vehicles) {
             in6.addVehicle(m, v, i++ % in6.laneCount());
         }
-        for (int j = 0; j < 10; j++) {
+        for (int j = 0; j < 20; j++) {
             moveAI();
         }
 
@@ -69,7 +69,7 @@ public class Game {
                             Turn.leftTurn(m, v.getSegment(), v);
                             continue;
                         } else {
-                            System.out.println("Shouldn't be here");
+                            //System.out.println("Shouldn't be here");
                             continue;
                         }
                     } else {
