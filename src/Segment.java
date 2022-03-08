@@ -357,19 +357,19 @@ public class Segment implements Serializable {
         private boolean canSwitchLeft(Vehicle v) {
             Point location = v.getVehicleLocation();
 
-            if (v instanceof Car) {
+            if (v.getLength() == 1 && location.x + 1 <= segmentLength - 1) {
                 if (location.y > 0) {
                     if (lanes[location.x+1][location.y - 1] == null && location.x+1 <= segmentLength-1 ) {
                         return true;
                     }
                 }
-            } else if (v instanceof Bus) {
+            } else if (v.getLength() == 2 && location.x + 1 <= segmentLength - 1) {
                 if (location.y > 0) {
                     if (lanes[location.x+1][location.y - 1] == null && lanes[location.x][location.y - 1] == null && location.x+1 <= segmentLength-1) {
                         return true;
                     }
                 }
-            } else if (v instanceof Truck) {
+            } else if (v.getLength() == 3 && location.x + 1 <= segmentLength - 1) {
                 if (location.y > 0) {
                     if (lanes[location.x + 1][location.y - 1] == null && lanes[location.x ][location.y - 1] == null && lanes[location.x - 1][location.y - 1] == null && location.x+1 <= segmentLength-1) {
                         return true;
@@ -390,31 +390,33 @@ public class Segment implements Serializable {
         private boolean canSwitchRight(Vehicle v) {
             Point location = v.getVehicleLocation();
 
-            if (v instanceof Car && location.x+1 <= segmentLength-1) {
+            if (v.getLength() == 1 && location.x + 1 <= segmentLength - 1) {
                 if (location.y < laneCount - 1) {
-                    if (lanes[location.x+1][location.y + 1] == null) {
+                    if (lanes[location.x + 1][location.y + 1] == null) {
                         return true;
                     }
 
                 }
-            } else if (v instanceof Bus) {
+            } else if (v.getLength() == 2 && location.x + 1 <= segmentLength - 1) {
                 if (location.y < laneCount - 1) {
-                    if (lanes[location.x+1][location.y + 1] == null && lanes[location.x][location.y + 1] == null && location.x+1 <= segmentLength-1) {
+                    if (lanes[location.x + 1][location.y + 1] == null && lanes[location.x][location.y + 1] == null && location.x + 1 <= segmentLength - 1) {
                         return true;
                     }
 
                 }
-            } else if (v instanceof Truck) {
+            } else if (v.getLength() == 3 && location.x + 1 <= segmentLength - 1) {
                 if (location.y < laneCount - 1) {
-                    if (lanes[location.x+1][location.y + 1] == null && lanes[location.x ][location.y + 1] == null && lanes[location.x - 1][location.y + 1] == null && location.x+1 <= segmentLength-1) {
+                    if (lanes[location.x + 1][location.y + 1] == null && lanes[location.x][location.y + 1] == null && lanes[location.x - 1][location.y + 1] == null && location.x + 1 <= segmentLength - 1) {
                         return true;
                     }
 
                 }
             }
 
+
             return false;
         }
+
 
 
         /**
