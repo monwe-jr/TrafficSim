@@ -496,7 +496,7 @@ public class Segment {
         /**
          * Checks if Lane has the same or more amount of 'lanes'
          *
-         * @param l
+         * @param l lane count
          */
         private boolean compatible(int l) {
 
