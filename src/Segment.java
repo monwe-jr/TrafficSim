@@ -37,15 +37,15 @@ public class Segment {
     }
 
 
-    public void moveVehicle(Point p) {
-        segmentLanes.moveVehicle(p);
-    }
 
 
     public void removeVehicle(Vehicle v) {
         segmentLanes.removeVehicle(v);
     }
 
+    public void moveVehicle(Point p) {
+        segmentLanes.moveVehicle(p);
+    }
 
 
     public int laneLocation(Vehicle v){
@@ -258,12 +258,17 @@ public class Segment {
          */
         private void moveVehicle(Point p) {
             Vehicle toMove = lanes[p.x][p.y];
-            toMove.setVehicleLocation(new Point(toMove.getVehicleLocation().x + 1, toMove.getVehicleLocation().y));
 
-            lanes[toMove.getVehicleLocation().x][toMove.vehicleLocation.y] = toMove;
-            lanes[toMove.getVehicleLocation().x - (toMove.getLength())][toMove.vehicleLocation.y] = null;
+            if(p.x !=segmentLength-1) {
+                toMove.setVehicleLocation(new Point(toMove.getVehicleLocation().x + 1, toMove.getVehicleLocation().y));
 
-            System.out.println( toMove + " moved 1mile forward on " + toMove.getSegment().getSegmentLocation());
+                lanes[toMove.getVehicleLocation().x][toMove.vehicleLocation.y] = toMove;
+                lanes[toMove.getVehicleLocation().x - (toMove.getLength())][toMove.vehicleLocation.y] = null;
+
+                System.out.println(toMove + " moved 1mile forward on " + toMove.getSegment().getSegmentLocation());
+            } else {
+                System.out.println("You have arrived at intersection " + p.y );
+            }
 
         }
 
