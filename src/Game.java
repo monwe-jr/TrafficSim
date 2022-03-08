@@ -89,10 +89,13 @@ public class Game {
                 } else {
                     if (Direction.equals(Direction.rightDirection(current), target)) {
                         Turn.rightTurn(m, v.getSegment(), v);
+                        v.target = null;
                     } else if (Direction.equals(Direction.leftDirection(current), target)) {
                         Turn.leftTurn(m, v.getSegment(), v);
+                        v.target = null;
                     } else {
                         Turn.goStraight(m, v.getSegment(), v);
+                        v.target = null;
                     }
                 }
             }
