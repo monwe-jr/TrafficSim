@@ -88,7 +88,7 @@ public class Turn {
      * @param s the segment with a straight direction
      * @return
      */
-    static private Segment getStraight(Map m, Segment s) {
+    static protected Segment getStraight(Map m, Segment s) {
         ArrayList<Segment> options = m.getMap().get(s.getSegmentLocation().y);
 
         /*List<Segment> seg = options.stream()

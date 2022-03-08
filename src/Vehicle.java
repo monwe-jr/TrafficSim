@@ -12,6 +12,7 @@ public abstract class Vehicle {
     private Reputation reputation;
     private DamageStatus damageStatus;
     protected Segment currentSegment;
+    protected Segment target;
     protected int length;
     protected Point vehicleLocation; //lane location on segment s
     protected TimerTask task;
