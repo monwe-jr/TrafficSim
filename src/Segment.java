@@ -260,7 +260,7 @@ public class Segment implements Serializable {
             Vehicle toMove = lanes[p.x][p.y];
 
             if(p.x !=segmentLength-1) {
-                toMove.setVehicleLocation(new Point(toMove.getVehicleLocation().x + 1, toMove.getVehicleLocation().y));
+                toMove.setVehicleLocation(new Point(p.x + 1, p.y));
 
                 lanes[toMove.getVehicleLocation().x][toMove.vehicleLocation.y] = toMove;
                 lanes[toMove.getVehicleLocation().x - (toMove.getLength())][toMove.vehicleLocation.y] = null;
