@@ -16,8 +16,6 @@ public abstract class Vehicle implements Serializable {
     protected Segment target;
     protected int length;
     protected Point vehicleLocation; //lane location on segment s
-    protected TimerTask task;
-    protected Timer timer = new Timer();
 
     /**
      * Creates a Vehicle with a specified color and indicator for player vehicle.

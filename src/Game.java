@@ -9,21 +9,62 @@ public class Game {
 
 
     Game() {
-        loadMap();
 
-        Segment in6 = new Segment(new Point(5, 7), Direction.East, 3, 10);
+
+  loadMap();
+//        m.addSegment(new Segment(new Point(0,4), Direction.North,3,4));
+//        m.addSegment(new Segment(new Point(0,2), Direction.East,2,3));
+//        m.addSegment(new Segment(new Point(0,6), Direction.West,2,2));
+//        m.addSegment(new Segment(new Point(0,7), Direction.South,2,1));
+//        m.addSegment(new Segment(new Point(1,4),Direction.West,2,3) );
+//        m.addSegment(new Segment(new Point(1,2), Direction.North,3,2));
+//        m.addSegment(new Segment(new Point(1,8), Direction.South,2,2));
+//        m.addSegment(new Segment(new Point(2,1), Direction.North,3,2));
+//        m.addSegment(new Segment(new Point(2,0), Direction.West,2,3));
+//        m.addSegment(new Segment(new Point(3,2), Direction.North,1,8));
+//        m.addSegment(new Segment(new Point(4,1), Direction.East,2,2));
+//        m.addSegment(new Segment(new Point(4,0), Direction.South,3,3));
+//        m.addSegment(new Segment(new Point(5,7), Direction.East,2,2));
+//        m.addSegment(new Segment(new Point(6,0), Direction.East,2,3));
+//        m.addSegment(new Segment(new Point(7,3), Direction.East,3,2));
+//        m.addSegment(new Segment(new Point(7,5), Direction.West,3,1));
+//        m.addSegment(new Segment(new Point(8,9), Direction.East,2,3));
+//        m.addSegment(new Segment(new Point(8,13), Direction.West,3,2));
+//        m.addSegment(new Segment(new Point(9,8), Direction.West,2,4));
+//        m.addSegment(new Segment(new Point(9,10), Direction.South,4,2));
+//        m.addSegment(new Segment(new Point(10,11), Direction.West,4,2));
+//        m.addSegment(new Segment(new Point(11,12), Direction.North,4,3));
+//        m.addSegment(new Segment(new Point(12,11), Direction.South,4,2));
+//        m.addSegment(new Segment(new Point(12,13), Direction.North,4,1));
+//        m.addSegment(new Segment(new Point(13,12), Direction.South,4,3));
+//        m.addSegment(new Segment(new Point(13,8), Direction.East,4,2));
+//        saveMap();
+
+
+
+
+
+        Segment in6 = new Segment(new Point(2,0), Direction.West,2,3);
         int a = 1;
 
         vehicles.add(new Car(Color.blue, false, in6));
 //        vehicles.add(new Car(Color.blue, false, in6));
 //        vehicles.add(new Car(Color.blue, false, in6));
+
+
+
         int i = 0;
         for (Vehicle v : vehicles) {
             in6.addVehicle(m, v, i++ % in6.laneCount());
         }
+
         for (int j = 0; j < 20; j++) {
             moveAI();
         }
+
+
+
+
 
     }
 
@@ -54,6 +95,7 @@ public class Game {
         }
     }
 
+
     /**
      * Moves all AI vehicles every time it is called
      */
@@ -69,7 +111,7 @@ public class Game {
                     if (possible != null) {
                         possible.removeAll(Collections.singleton(null));
                         Collections.shuffle(possible);
-                        goal = possible.get(0);
+                        goal = possible.get((int)(Math.random() * possible.size()));
                         v.target = goal;
                     }
                 }

@@ -23,23 +23,7 @@ public class Map implements Serializable{
 
     }
 
-    public String toString() {
-        //get all intersections in an ArrayList
-        //traverse through ArrayList find one with the highest Segments connected
-        //Dictionary to map Points to Intersections, set target as (0,0)
-        //if North Segment (previousx, previousy+1) etc
-        //find lowest x and lowest y, subtract that from every point
-        // 0 is empty, 6 is Intersection, 8 is Segment
-        /* example
-         * 00686
-         * 00808
-         * 68686
-         * 00808
-         * 68686
-         */
-        // for each possible coordinate check is it an intersection segment or empty
-        return "";
-    }
+
 
      public void addSegment(Segment s) {
         if (s.getSegmentLocation().x < interCount && s.getSegmentLocation().y < interCount) {
@@ -50,8 +34,9 @@ public class Map implements Serializable{
     }
 
 
-
-
+    public void erase() {
+        map.clear();
+    }
 
      public ArrayList<ArrayList<Segment>> getMap() {
         return map;

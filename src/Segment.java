@@ -141,6 +141,7 @@ public class Segment implements Serializable {
         return intersections;
     }
 
+
     /**
      * returns a list of vehicles at the end of a segment
      *
@@ -257,17 +258,19 @@ public class Segment implements Serializable {
          * @param p the segment position of the vehicle
          */
         private void moveVehicle(Point p) {
-            Vehicle toMove = lanes[p.x][p.y];
+            Point location = p;
+            Vehicle toMove = lanes[location.x][location.y];
 
-            if(p.x !=segmentLength-1) {
-                toMove.setVehicleLocation(new Point(p.x + 1, p.y));
 
+            if(location.x !=segmentLength-1) {
+                toMove.setVehicleLocation(new Point(location.x + 1, location.y));
+                lanes[location.x][location.y] = null;
                 lanes[toMove.getVehicleLocation().x][toMove.vehicleLocation.y] = toMove;
                 lanes[toMove.getVehicleLocation().x - (toMove.getLength())][toMove.vehicleLocation.y] = null;
 
                 System.out.println(toMove + " moved 1mile forward on " + toMove.getSegment().getSegmentLocation());
             } else {
-                System.out.println("You have arrived at intersection " + p.y );
+                System.out.println("You have arrived at intersection " + location.y );
             }
 
         }
@@ -306,7 +309,7 @@ public class Segment implements Serializable {
          */
         private boolean atEnd(Vehicle v) {
             for (int i = 0; i < laneCount; i++) {
-                if (v == lanes[4][i]) {
+                if (v == lanes[segmentLength-1][i]) {
                     return true;
                 }
             }
@@ -438,8 +441,8 @@ public class Segment implements Serializable {
                     }
                 }
 
-                moveVehicle(v.getVehicleLocation());
-
+                moveVehicle(new Point(location.x,location.y-1));
+                System.out.println(v + " moved and switched to left lane");
 
             } else {
                 if (location.x + 1 <= segmentLength - 1){
@@ -448,6 +451,8 @@ public class Segment implements Serializable {
                     v.getDamageStatus().calculateGenerated(v, hit);
                     hit.getDamageStatus().calculatedSuffered(hit, v);
                     hit.getDamageStatus().calculateGenerated(hit, v);
+
+                    System.out.println(v + " moved and switched to left lane");
 
 
 
@@ -478,7 +483,8 @@ public class Segment implements Serializable {
                     }
                 }
 
-                moveVehicle(v.getVehicleLocation());
+                moveVehicle(new Point(location.x,location.y+1));
+                System.out.println(v + " moved and switched to Right lane");
 
 
             } else {
@@ -488,6 +494,8 @@ public class Segment implements Serializable {
                     v.getDamageStatus().calculateGenerated(v, hit);
                     hit.getDamageStatus().calculatedSuffered(hit, v);
                     hit.getDamageStatus().calculateGenerated(hit, v);
+
+                    System.out.println(v + " moved and switched to right lane");
 
                 }
 
