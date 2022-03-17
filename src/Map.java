@@ -35,7 +35,8 @@ public class Map implements Serializable{
 
 
     public void erase() {
-        map.clear();
+        map.removeAll(map);
+
     }
 
      public ArrayList<ArrayList<Segment>> getMap() {
