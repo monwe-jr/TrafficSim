@@ -4,8 +4,8 @@ public class DamageStatus {
 
     private boolean destroyed;
     private double currentStatus = 100.0;
-    private ArrayList<Double> sufferedDamageHistory;
-    private ArrayList<Double> generatedDamageHistory;
+    private ArrayList<Double> sufferedDamageHistory = new ArrayList<>();
+    private ArrayList<Double> generatedDamageHistory = new ArrayList<>();
     private Reputation currentReputation;
 
     DamageStatus(Reputation r) {

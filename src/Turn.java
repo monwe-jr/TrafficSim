@@ -234,31 +234,31 @@ public class Turn {
 
             v.setSegment(toGoStraightOn);
             if(v.getSegment().laneCount() ==1) {
-                System.out.println("Going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". This segment has only one lane on segment " + toGoStraightOn.getSegmentLocation());
+                System.out.println( v + " is going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". This segment has only one lane on segment " + toGoStraightOn.getSegmentLocation());
             }
             else if(v.getSegment().laneCount() ==2){
                 if(v.getSegment().laneLocation(v) ==0){
-                    System.out.println("Going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the left lane on segment " + toGoStraightOn.getSegmentLocation());
+                    System.out.println(v + " is going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the left lane on segment " + toGoStraightOn.getSegmentLocation());
                 } else {
-                    System.out.println("Going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the right lane on segment " + toGoStraightOn.getSegmentLocation());
+                    System.out.println(v + " is going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the right lane on segment " + toGoStraightOn.getSegmentLocation());
                 }
 
             }
             else if(v.getSegment().laneCount() ==3){
                 if(v.getSegment().laneLocation(v) ==0){
-                    System.out.println("Going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the left lane on segment " + toGoStraightOn.getSegmentLocation());
+                    System.out.println(v + " is going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the left lane on segment " + toGoStraightOn.getSegmentLocation());
                 } else  if (v.getSegment().laneLocation(v) ==1){
-                    System.out.println("Going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the middle lane on segment " + toGoStraightOn.getSegmentLocation());
+                    System.out.println(v + " is going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the middle lane on segment " + toGoStraightOn.getSegmentLocation());
                 }
                 else  if (v.getSegment().laneLocation(v) ==2){
-                    System.out.println("Going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the right lane on segment " + toGoStraightOn.getSegmentLocation());
+                    System.out.println(v + " is gooing straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the right lane on segment " + toGoStraightOn.getSegmentLocation());
                 }
 
             }
 
 
         } else {
-            System.out.println("Cannot go straight at upcoming intersection!");
+            System.out.println(v + " cannot go straight at upcoming intersection!");
         }
 
     }
@@ -368,22 +368,22 @@ public class Turn {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
             if(v.getSegment().laneCount() == 1) {
-                System.out.println("Performed left turn at intersection " + toTurnLeftOnto.getSegmentLocation().x  + ". This segment has only 1 lane on segment " + toTurnLeftOnto.getSegmentLocation());
+                System.out.println(v + " performed left turn at intersection " + toTurnLeftOnto.getSegmentLocation().x  + ". This segment has only 1 lane on segment " + toTurnLeftOnto.getSegmentLocation());
             }
             else if (v.getSegment().laneCount() == 2){
                 if(v.getSegment().laneLocation(v) == 0) {
-                    System.out.println("Performed left turn at intersection "  + toTurnLeftOnto.getSegmentLocation().x  +  ". Vehicle is now on the left lane on segment " + toTurnLeftOnto.getSegmentLocation());
+                    System.out.println(v + " performed left turn at intersection "  + toTurnLeftOnto.getSegmentLocation().x  +  ". Vehicle is now on the left lane on segment " + toTurnLeftOnto.getSegmentLocation());
                 } else {
-                    System.out.println("Performed left turn at intersection "  + toTurnLeftOnto.getSegmentLocation().x  +     ". Vehicle is now on the right lane on segment " + toTurnLeftOnto.getSegmentLocation());
+                    System.out.println(v+ " performed left turn at intersection "  + toTurnLeftOnto.getSegmentLocation().x  +     ". Vehicle is now on the right lane on segment " + toTurnLeftOnto.getSegmentLocation());
                 }
             }
             else if (v.getSegment().laneCount() == 3){
                 if(v.getSegment().laneLocation(v) == 0) {
-                    System.out.println("Performed left turn at intersection " + toTurnLeftOnto.getSegmentLocation().x  + ". Vehicle is now on the left lane on segment " + toTurnLeftOnto.getSegmentLocation());
+                    System.out.println(v + " performed left turn at intersection " + toTurnLeftOnto.getSegmentLocation().x  + ". Vehicle is now on the left lane on segment " + toTurnLeftOnto.getSegmentLocation());
                 } else if(v.getSegment().laneLocation(v) == 1){
-                    System.out.println("Performed left turn at intersection " + toTurnLeftOnto.getSegmentLocation().x  + ". Vehicle is now on the middle lane on segment " + toTurnLeftOnto.getSegmentLocation());
+                    System.out.println(v + " performed left turn at intersection " + toTurnLeftOnto.getSegmentLocation().x  + ". Vehicle is now on the middle lane on segment " + toTurnLeftOnto.getSegmentLocation());
                 } else if(v.getSegment().laneLocation(v) == 2){
-                    System.out.println("Performed left turn at intersection " + toTurnLeftOnto.getSegmentLocation().x  + ". Vehicle is now on the right lane on segment " + toTurnLeftOnto.getSegmentLocation());
+                    System.out.println(v + " performed left turn at intersection " + toTurnLeftOnto.getSegmentLocation().x  + ". Vehicle is now on the right lane on segment " + toTurnLeftOnto.getSegmentLocation());
 
                 }
 
@@ -391,7 +391,7 @@ public class Turn {
             /////////////////////////////////////////////////////////////////////////////////////////////
 
         } else {
-            System.out.println("Cannot turn Left at this intersection!");
+            System.out.println(v + "Cannot turn Left at this intersection!");
         }
     }
 
@@ -495,22 +495,22 @@ public class Turn {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
             if(v.getSegment().laneCount() == 1) {
-                System.out.println("Performed right turn at intersection " + toTurnRightOnto.getSegmentLocation().x  + ". This segment has only 1 lane on segment " + toTurnRightOnto.getSegmentLocation());
+                System.out.println(v + " performed right turn at intersection " + toTurnRightOnto.getSegmentLocation().x  + ". This segment has only 1 lane on segment " + toTurnRightOnto.getSegmentLocation());
             }
             else if (v.getSegment().laneCount() == 2){
                 if(v.getSegment().laneLocation(v) == 0) {
-                    System.out.println("Performed right turn at intersection "  + toTurnRightOnto.getSegmentLocation().x  +  ". Vehicle is now on the left lane on segment " + toTurnRightOnto.getSegmentLocation());
+                    System.out.println(v + " performed right turn at intersection "  + toTurnRightOnto.getSegmentLocation().x  +  ". Vehicle is now on the left lane on segment " + toTurnRightOnto.getSegmentLocation());
                 } else {
-                    System.out.println("Performed right turn at intersection "  + toTurnRightOnto.getSegmentLocation().x  +     ". Vehicle is now on the right lane on segment " + toTurnRightOnto.getSegmentLocation());
+                    System.out.println(v + " performed right turn at intersection "  + toTurnRightOnto.getSegmentLocation().x  +     ". Vehicle is now on the right lane on segment " + toTurnRightOnto.getSegmentLocation());
                 }
             }
             else if (v.getSegment().laneCount() == 3){
                 if(v.getSegment().laneLocation(v) == 0) {
-                    System.out.println("Performed right turn at intersection " + toTurnRightOnto.getSegmentLocation().x  + ". Vehicle is now on the left lane on segment " + toTurnRightOnto.getSegmentLocation());
+                    System.out.println(v + " performed right turn at intersection " + toTurnRightOnto.getSegmentLocation().x  + ". Vehicle is now on the left lane on segment " + toTurnRightOnto.getSegmentLocation());
                 } else if(v.getSegment().laneLocation(v) == 1){
-                    System.out.println("Performed right turn at intersection " + toTurnRightOnto.getSegmentLocation().x  + ". Vehicle is now on the middle lane on segment " + toTurnRightOnto.getSegmentLocation());
+                    System.out.println(v + " performed right turn at intersection " + toTurnRightOnto.getSegmentLocation().x  + ". Vehicle is now on the middle lane on segment " + toTurnRightOnto.getSegmentLocation());
                 } else if(v.getSegment().laneLocation(v) == 2){
-                    System.out.println("Performed right turn at intersection " + toTurnRightOnto.getSegmentLocation().x  + ". Vehicle is now on the right lane on segment " + toTurnRightOnto.getSegmentLocation());
+                    System.out.println(v + " performed right turn at intersection " + toTurnRightOnto.getSegmentLocation().x  + ". Vehicle is now on the right lane on segment " + toTurnRightOnto.getSegmentLocation());
 
                 }
 
@@ -518,7 +518,7 @@ public class Turn {
             /////////////////////////////////////////////////////////////////////////////////////////////
 
         } else {
-            System.out.println("Cannot turn right at this intersection!");
+            System.out.println(v + "Cannot turn right at this intersection!");
         }
     }
 
@@ -564,22 +564,22 @@ public class Turn {
 
    //////////////////////////////////////////////////////////////////////////////////////////////////
             if(v.getSegment().laneCount() == 1) {
-                System.out.println("Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". This segment has only 1 lane on segment " + toUTurnOnto.getSegmentLocation());
+                System.out.println(v + "Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". This segment has only 1 lane on segment " + toUTurnOnto.getSegmentLocation());
             }
             else if (v.getSegment().laneCount() == 2){
                 if(v.getSegment().laneLocation(v) == 0) {
-                    System.out.println("Performed U-Turn at intersection "  + toUTurnOnto.getSegmentLocation().x  +  ". Vehicle is now on the left lane on segment " + toUTurnOnto.getSegmentLocation());
+                    System.out.println(v + "Performed U-Turn at intersection "  + toUTurnOnto.getSegmentLocation().x  +  ". Vehicle is now on the left lane on segment " + toUTurnOnto.getSegmentLocation());
                 } else {
-                    System.out.println("Performed U-Turn at intersection "  + toUTurnOnto.getSegmentLocation().x  +     ". Vehicle is now on the right lane on segment " + toUTurnOnto.getSegmentLocation());
+                    System.out.println(v + "Performed U-Turn at intersection "  + toUTurnOnto.getSegmentLocation().x  +     ". Vehicle is now on the right lane on segment " + toUTurnOnto.getSegmentLocation());
                 }
             }
             else if (v.getSegment().laneCount() == 3){
                 if(v.getSegment().laneLocation(v) == 0) {
-                    System.out.println("Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the left lane on segment " + toUTurnOnto.getSegmentLocation());
+                    System.out.println(v + "Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the left lane on segment " + toUTurnOnto.getSegmentLocation());
                 } else if(v.getSegment().laneLocation(v) == 1){
-                    System.out.println("Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the middle lane on segment " + toUTurnOnto.getSegmentLocation());
+                    System.out.println(v + "Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the middle lane on segment " + toUTurnOnto.getSegmentLocation());
                 } else if(v.getSegment().laneLocation(v) == 2){
-                    System.out.println("Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the right lane on segment " + toUTurnOnto.getSegmentLocation());
+                    System.out.println(v + "Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the right lane on segment " + toUTurnOnto.getSegmentLocation());
 
                 }
 

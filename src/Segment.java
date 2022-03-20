@@ -371,12 +371,11 @@ public class Segment implements Serializable {
 
 
                 if(!atEnd(toMove)) {
-                    System.out.println("Vehicle is " + (segmentLength - getIndex(toMove).x - 1) + " miles away from intersection " + toMove.getSegment().getSegmentLocation().y + ".");
+                    System.out.println(toMove +" is " + (segmentLength - getIndex(toMove).x - 1) + " miles away from intersection " + toMove.getSegment().getSegmentLocation().y + ".");
                 }else{
-                    System.out.println("You have arrived at intersection " + location.y );
+                    System.out.println(toMove + " has arrived at intersection " + location.y );
                 }
             }
-
 
 
         }
@@ -399,7 +398,7 @@ public class Segment implements Serializable {
                 }
             } else {
 
-                System.out.println("Vehicle is not on segment!");
+                System.out.println(v + " is not on segment!");
 
             }
             return null;
@@ -551,14 +550,14 @@ public class Segment implements Serializable {
 
                 if(laneCount == 2) {
                     if(laneLocation(v) == 0) {
-                        System.out.println("Vehicle moved from the right lane to the left lane.");
+                        System.out.println(v + " moved from the right lane to the left lane.");
                     }
                 }
                 else if(laneCount == 3){
                     if(laneLocation(v) == 1) {
-                        System.out.println("Vehicle moved from the right lane to the middle lane.");
+                        System.out.println(v + " Vehicle moved from the right lane to the middle lane.");
                     } else {
-                        System.out.println("Vehicle moved from the middle lane to the left lane.");
+                        System.out.println(v + " Vehicle moved from the middle lane to the left lane.");
                     }
                 }
 
@@ -604,14 +603,14 @@ public class Segment implements Serializable {
 
                 if(laneCount == 2) {
                     if(laneLocation(v) == 1) {
-                        System.out.println("Vehicle moved from the left lane to the right lane.");
+                        System.out.println(v + " Vehicle moved from the left lane to the right lane.");
                     }
                 }
                 else if(laneCount == 3){
                     if(laneLocation(v) == 1) {
-                        System.out.println("Vehicle moved from the left lane to the right lane.");
+                        System.out.println(v + " Vehicle moved from the left lane to the right lane.");
                     } else {
-                        System.out.println("Vehicle moved from the middle lane to the right lane.");
+                        System.out.println(v + " Vehicle moved from the middle lane to the right lane.");
                     }
 
                 }

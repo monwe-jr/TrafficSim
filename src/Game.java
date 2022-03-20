@@ -48,7 +48,7 @@ public class Game {
 //
 
         addAI(4);
-        for (int j = 0; j < 20; j++) {
+        for (int j = 0; j < 5; j++) {
             moveAI();
         }
 
