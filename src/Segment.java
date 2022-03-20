@@ -29,6 +29,14 @@ public class Segment implements Serializable {
         return segmentLanes.getSegmentLength();
     }
 
+    public boolean canInsert(Vehicle v){
+        return segmentLanes.canInsert(v);
+    }
+
+
+    public ArrayList<Integer> alternateInserts(Vehicle v){
+       return segmentLanes.alternateInserts(v);
+    }
 
     public void addVehicle(Map m, Vehicle v, int lane) {
         segmentLanes.addVehicle(m, v, lane);
@@ -182,6 +190,99 @@ public class Segment implements Serializable {
                 }
             }
         }
+
+
+
+
+       private boolean canInsert(Vehicle v){
+
+
+            if(v instanceof Car){
+            int check = 0;
+
+                for (int i = 0; i < laneCount; i++) {
+                    if(lanes[0][i]!=null) {
+                        check += 1;
+                    }
+                }
+
+                if(check != laneCount){
+                    return true;
+                }
+
+            }
+
+            else if (v instanceof Bus){
+                int check = 0;
+
+                for (int i = 0; i < laneCount; i++) {
+                    if(lanes[1][i]!=null && lanes[0][i]!=null) {
+                        check += 1;
+                    }
+                }
+
+                if(check != laneCount){
+                    return true;
+                }
+
+            }
+
+
+            else if(v instanceof  Truck){
+                int check = 0;
+
+                for (int i = 0; i < laneCount; i++) {
+                    if(lanes[2][i]!=null && lanes[1][i]!=null && lanes[0][i]!=null) {
+                        check += 1;
+                    }
+                }
+
+                if(check != laneCount){
+                    return true;
+                }
+
+            }
+
+            return false;
+
+       }
+
+
+       private ArrayList<Integer> alternateInserts(Vehicle v){
+            ArrayList<Integer> alternates = new ArrayList<>();
+
+            if(canInsert(v)){
+              if(v instanceof Car){
+                  for (int i = 0; i < laneCount; i++) {
+                      if(lanes[0][i] == null){
+                        alternates.add(i);
+                      }
+                  }
+
+              }
+              else if (v instanceof Bus){
+                  for (int i = 0; i < laneCount; i++) {
+                      if(lanes[0][i] == null && lanes[1][i] == null ){
+                          alternates.add(i);
+                      }
+                  }
+
+              }
+              else if (v instanceof Truck){
+                  for (int i = 0; i < laneCount; i++) {
+                      if(lanes[2][i] == null && lanes[1][i] == null && lanes[0][i] == null){
+                          alternates.add(i);
+                      }
+                  }
+              }
+
+
+            }
+
+           return alternates;
+       }
+
+
 
         /**
          * Adds a vehicle to a segment but adding it to a lane. Note that vehicles are only added at the beginning of segments
