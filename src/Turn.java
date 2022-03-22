@@ -176,7 +176,7 @@ public class Turn {
                         toGoStraightOn.addVehicle(m, v, oldLaneLocation);
                     } else {
 
-                        ArrayList<Vehicle> victims = toGoStraightOn.getVictims(v,oldLaneLocation);
+                        ArrayList<Vehicle> victims = toGoStraightOn.getFrontVictims(v,oldLaneLocation);
 
                         for (int i = 0; i < victims.size(); i++) {
                             Vehicle victim = victims.get(i);
@@ -204,7 +204,7 @@ public class Turn {
                                 v.getReputation().correspondingLaneViolation();
                             } else {
 
-                                ArrayList<Vehicle> victims = toGoStraightOn.getVictims(v,1);
+                                ArrayList<Vehicle> victims = toGoStraightOn.getFrontVictims(v,1);
 
                                 for (int i = 0; i < victims.size(); i++) {
                                     Vehicle victim = victims.get(i);
@@ -225,7 +225,7 @@ public class Turn {
                                 toGoStraightOn.addVehicle(m, v, oldLaneLocation);
                             } else {
 
-                                ArrayList<Vehicle> victims = toGoStraightOn.getVictims(v,oldLaneLocation);
+                                ArrayList<Vehicle> victims = toGoStraightOn.getFrontVictims(v,oldLaneLocation);
 
                                 for (int i = 0; i < victims.size(); i++) {
                                     Vehicle victim = victims.get(i);
@@ -261,7 +261,7 @@ public class Turn {
                     }
 
 
-                    ArrayList<Vehicle> victims = toGoStraightOn.getVictims(v,0);
+                    ArrayList<Vehicle> victims = toGoStraightOn.getFrontVictims(v,0);
 
                     for (int i = 0; i < victims.size(); i++) {
                         Vehicle victim = victims.get(i);
@@ -335,7 +335,7 @@ public class Turn {
                         }
                         else {
 
-                            ArrayList<Vehicle> victims = toTurnLeftOnto.getVictims(v,oldLaneLocation);
+                            ArrayList<Vehicle> victims = toTurnLeftOnto.getFrontVictims(v,oldLaneLocation);
 
                             for (int i = 0; i < victims.size(); i++) {
                                 Vehicle victim = victims.get(i);
@@ -358,7 +358,7 @@ public class Turn {
                         }
                         else {
 
-                            ArrayList<Vehicle> victims = toTurnLeftOnto.getVictims(v,oldLaneLocation);
+                            ArrayList<Vehicle> victims = toTurnLeftOnto.getFrontVictims(v,oldLaneLocation);
 
                             for (int i = 0; i < victims.size(); i++) {
                                 Vehicle victim = victims.get(i);
@@ -386,7 +386,7 @@ public class Turn {
                                 v.getReputation().correspondingLaneViolation();
                             }
                             else {
-                                ArrayList<Vehicle> victims = toTurnLeftOnto.getVictims(v,1);
+                                ArrayList<Vehicle> victims = toTurnLeftOnto.getFrontVictims(v,1);
 
                                 for (int i = 0; i < victims.size(); i++) {
                                     Vehicle victim = victims.get(i);
@@ -407,7 +407,7 @@ public class Turn {
 
                             }
                             else {
-                                ArrayList<Vehicle> victims = toTurnLeftOnto.getVictims(v,oldLaneLocation);
+                                ArrayList<Vehicle> victims = toTurnLeftOnto.getFrontVictims(v,oldLaneLocation);
 
                                 for (int i = 0; i < victims.size(); i++) {
                                     Vehicle victim = victims.get(i);
@@ -442,7 +442,7 @@ public class Turn {
                         v.getReputation().correspondingLaneViolation();
 
                     }
-                    ArrayList<Vehicle> victims = toTurnLeftOnto.getVictims(v,0);
+                    ArrayList<Vehicle> victims = toTurnLeftOnto.getFrontVictims(v,0);
 
                     for (int i = 0; i < victims.size(); i++) {
                         Vehicle victim = victims.get(i);
@@ -515,7 +515,7 @@ public class Turn {
                             v.getReputation().correspondingLaneViolation();
                         } else{
 
-                            ArrayList<Vehicle> victims = toTurnRightOnto.getVictims(v,oldLaneLocation);
+                            ArrayList<Vehicle> victims = toTurnRightOnto.getFrontVictims(v,oldLaneLocation);
 
                             for (int i = 0; i < victims.size(); i++) {
                                 Vehicle victim = victims.get(i);
@@ -536,7 +536,7 @@ public class Turn {
                             toTurnRightOnto.addVehicle(m, v, toTurnRightOnto.laneCount()-1);
                         } else{
 
-                            ArrayList<Vehicle> victims = toTurnRightOnto.getVictims(v,toTurnRightOnto.laneCount()-1);
+                            ArrayList<Vehicle> victims = toTurnRightOnto.getFrontVictims(v,toTurnRightOnto.laneCount()-1);
 
                             for (int i = 0; i < victims.size(); i++) {
                                 Vehicle victim = victims.get(i);
@@ -564,7 +564,7 @@ public class Turn {
                                 toTurnRightOnto.addVehicle(m, v, 0);
                                 v.getReputation().correspondingLaneViolation();
                             } else{
-                                ArrayList<Vehicle> victims = toTurnRightOnto.getVictims(v,0);
+                                ArrayList<Vehicle> victims = toTurnRightOnto.getFrontVictims(v,0);
 
                                 for (int i = 0; i < victims.size(); i++) {
                                     Vehicle victim = victims.get(i);
@@ -585,7 +585,7 @@ public class Turn {
                                 v.removeSegment();
                                 toTurnRightOnto.addVehicle(m, v, toTurnRightOnto.laneCount()-1);
                             } else{
-                                ArrayList<Vehicle> victims = toTurnRightOnto.getVictims(v,toTurnRightOnto.laneCount()-1);
+                                ArrayList<Vehicle> victims = toTurnRightOnto.getFrontVictims(v,toTurnRightOnto.laneCount()-1);
 
                                 for (int i = 0; i < victims.size(); i++) {
                                     Vehicle victim = victims.get(i);
@@ -620,7 +620,7 @@ public class Turn {
 
                     }
 
-                    ArrayList<Vehicle> victims = toTurnRightOnto.getVictims(v,0);
+                    ArrayList<Vehicle> victims = toTurnRightOnto.getFrontVictims(v,0);
 
                     for (int i = 0; i < victims.size(); i++) {
                         Vehicle victim = victims.get(i);

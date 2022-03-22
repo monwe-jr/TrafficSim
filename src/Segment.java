@@ -47,9 +47,12 @@ public class Segment implements Serializable {
 
     }
 
-    public ArrayList<Vehicle> getVictims(Vehicle atFault, int lane){
-        return segmentLanes.getVictims(atFault,lane);
+
+    public ArrayList<Vehicle> getFrontVictims(Vehicle atFault, int lane){
+        return segmentLanes.getFrontVictims(atFault,lane);
     }
+
+
 
 
     public void removeVehicle(Vehicle v) {
@@ -592,14 +595,18 @@ public class Segment implements Serializable {
 
 
             } else {
-                if (location.x + 1 <= segmentLength - 1) {
-                    Vehicle hit = lanes[location.x][location.y - 1];
-                    v.getDamageStatus().calculatedSuffered(v, hit);
-                    v.getDamageStatus().calculateGenerated(v, hit);
-                    hit.getDamageStatus().calculatedSuffered(hit, v);
-                    hit.getDamageStatus().calculateGenerated(hit, v);
+                if (location.x + 1 <= segmentLength - 1 && location.y-1 >= 0) {
+                    ArrayList<Vehicle> victims = getSideVictims(v,location.y-1);
 
-                    System.out.println("Collision occurred when switching lanes! Vehicle was returned to original lane.");
+                    for (int i = 0; i < victims.size() ; i++) {
+                        
+                        v.getDamageStatus().calculatedSuffered(v, victims.get(i));
+                        v.getDamageStatus().calculateGenerated(v, victims.get(i));
+                        victims.get(i).getDamageStatus().calculatedSuffered(victims.get(i), v);
+                        victims.get(i).getDamageStatus().calculateGenerated(victims.get(i), v);
+
+                        System.out.println("Collision occurred when switching lanes! Vehicle was returned to original lane.");
+                    }
 
 
                 }
@@ -645,14 +652,19 @@ public class Segment implements Serializable {
 
 
             } else {
-                if (location.x + 1 <= segmentLength - 1) {
-                    Vehicle hit = lanes[location.x][location.y - 1];
-                    v.getDamageStatus().calculatedSuffered(v, hit);
-                    v.getDamageStatus().calculateGenerated(v, hit);
-                    hit.getDamageStatus().calculatedSuffered(hit, v);
-                    hit.getDamageStatus().calculateGenerated(hit, v);
+                if (location.x + 1 <= segmentLength - 1 && location.y+1 <= laneCount) {
+                    ArrayList<Vehicle> victims = getSideVictims(v,location.y+1);
 
-                    System.out.println("Collision occurred when switching lanes! Vehicle was returned to original lane.");
+                    for (int i = 0; i < victims.size() ; i++) {
+
+                        v.getDamageStatus().calculatedSuffered(v, victims.get(i));
+                        v.getDamageStatus().calculateGenerated(v, victims.get(i));
+                        victims.get(i).getDamageStatus().calculatedSuffered(victims.get(i), v);
+                        victims.get(i).getDamageStatus().calculateGenerated(victims.get(i), v);
+
+                        System.out.println("Collision occurred when switching lanes! Vehicle was returned to original lane.");
+                    }
+
 
                 }
 
@@ -683,15 +695,17 @@ public class Segment implements Serializable {
 
 
 
-        private ArrayList<Vehicle> getVictims (Vehicle atFault, int lane){
+        private ArrayList<Vehicle> getFrontVictims (Vehicle atFault, int lane){
             ArrayList<Vehicle> victims = new ArrayList<>();
 
 
                 for (int i = 0; i < atFault.getLength(); i++) {
-                    if(lanes[i][lane] !=null){
-                        victims.add(getVehicle(new Point(i,lane)));
+                    if (lanes[i][lane] != null) {
+                        victims.add(getVehicle(new Point(i, lane)));
                     }
                 }
+
+
 
                 return victims;
 
@@ -699,11 +713,25 @@ public class Segment implements Serializable {
 
 
 
+        private ArrayList<Vehicle> getSideVictims (Vehicle atFault, int lane){
+            ArrayList<Vehicle> victims = new ArrayList<>();
+
+            for (int i = atFault.getVehicleLocation().x+1; i >= i - (atFault.length - 1)  ; i--) {
+                if (lanes[i][lane] != null) {
+                    victims.add(getVehicle(new Point(i, lane)));
+                }
+            }
+
+            return victims;
+
+        }
+
 
 
         private int getLaneCount() {
             return laneCount;
         }
+
 
         private int getSegmentLength() {
             return segmentLength;
@@ -713,7 +741,7 @@ public class Segment implements Serializable {
     }
 
 
-    //TODO Change sout to only happen when driveable is true
+    //TODO Change sout to only happen when driveable is true for full game
 
 
 }
