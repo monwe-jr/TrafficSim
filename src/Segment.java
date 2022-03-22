@@ -12,11 +12,10 @@ public class Segment implements Serializable {
     private Lane segmentLanes;
 
 
-
     Segment(Point intersections, Direction d, int laneCount, int segLength) {
         this.direction = d;
         this.location = intersections;
-        segmentLanes = new Lane(laneCount,segLength);
+        segmentLanes = new Lane(laneCount, segLength);
         addIntersections(intersections);
     }
 
@@ -29,13 +28,17 @@ public class Segment implements Serializable {
         return segmentLanes.getSegmentLength();
     }
 
-    public boolean canInsert(Vehicle v){
+    public boolean canInsert(Vehicle v) {
         return segmentLanes.canInsert(v);
     }
 
+    public boolean canAdd(Vehicle v, int lane) {
+        return segmentLanes.canAdd(v, lane);
+    }
 
-    public ArrayList<Integer> alternateInserts(Vehicle v){
-       return segmentLanes.alternateInserts(v);
+
+    public ArrayList<Integer> alternateInserts(Vehicle v) {
+        return segmentLanes.alternateInserts(v);
     }
 
     public void addVehicle(Map m, Vehicle v, int lane) {
@@ -44,7 +47,9 @@ public class Segment implements Serializable {
 
     }
 
-
+    public ArrayList<Vehicle> getVictims(Vehicle atFault, int lane){
+        return segmentLanes.getVictims(atFault,lane);
+    }
 
 
     public void removeVehicle(Vehicle v) {
@@ -56,12 +61,12 @@ public class Segment implements Serializable {
     }
 
 
-    public int laneLocation(Vehicle v){
+    public int laneLocation(Vehicle v) {
         return segmentLanes.laneLocation(v);
     }
 
 
-    public boolean compatible(int l){
+    public boolean compatible(int l) {
         return segmentLanes.compatible(l);
     }
 
@@ -71,34 +76,35 @@ public class Segment implements Serializable {
 
     }
 
-    public boolean isEmpty(Point p){
+    public boolean isEmpty(Point p) {
         return segmentLanes.isEmpty(p);
     }
 
 
-    public boolean canSwitchLeft(Vehicle v){
+    public boolean canSwitchLeft(Vehicle v) {
         return segmentLanes.canSwitchLeft(v);
     }
 
-    public boolean canSwitchRight(Vehicle v){
+    public boolean canSwitchRight(Vehicle v) {
         return segmentLanes.canSwitchRight(v);
     }
 
-    public void switchRight(Vehicle v){
+    public void switchRight(Vehicle v) {
         segmentLanes.switchRight(v);
     }
 
-    public void switchLeft(Vehicle v){
+    public void switchLeft(Vehicle v) {
         segmentLanes.switchLeft(v);
     }
 
-    public Vehicle getVehicle(Point p){
+    public Vehicle getVehicle(Point p) {
         return segmentLanes.getVehicle(p);
     }
 
 
     /**
      * Returns the direction of a segment
+     *
      * @return
      */
     public Direction getDirection() {
@@ -107,6 +113,7 @@ public class Segment implements Serializable {
 
     /**
      * Returns segment location
+     *
      * @return
      */
     public Point getSegmentLocation() {
@@ -115,6 +122,7 @@ public class Segment implements Serializable {
 
     /**
      * Adds intersections of segment
+     *
      * @param p
      */
     private void addIntersections(Point p) {
@@ -125,6 +133,7 @@ public class Segment implements Serializable {
 
     /**
      * Returns true if segment object is oneway
+     *
      * @param m the Map that contains the segment
      * @return
      */
@@ -143,6 +152,7 @@ public class Segment implements Serializable {
 
     /**
      * Returns an arraylist of intersections connected to segment object
+     *
      * @return
      */
     public ArrayList<Integer> getIntersections() {
@@ -168,8 +178,6 @@ public class Segment implements Serializable {
     }
 
 
-
-
     /**
      * Inner class that handles lane funtionality
      */
@@ -192,52 +200,45 @@ public class Segment implements Serializable {
         }
 
 
+        private boolean canInsert(Vehicle v) {
 
 
-       private boolean canInsert(Vehicle v){
-
-
-            if(v instanceof Car){
-            int check = 0;
-
-                for (int i = 0; i < laneCount; i++) {
-                    if(lanes[0][i]!=null) {
-                        check += 1;
-                    }
-                }
-
-                if(check != laneCount){
-                    return true;
-                }
-
-            }
-
-            else if (v instanceof Bus){
+            if (v instanceof Car) {
                 int check = 0;
 
                 for (int i = 0; i < laneCount; i++) {
-                    if(lanes[1][i]!=null && lanes[0][i]!=null) {
+                    if (lanes[0][i] != null) {
                         check += 1;
                     }
                 }
 
-                if(check != laneCount){
+                if (check != laneCount) {
                     return true;
                 }
 
-            }
-
-
-            else if(v instanceof  Truck){
+            } else if (v instanceof Bus) {
                 int check = 0;
 
                 for (int i = 0; i < laneCount; i++) {
-                    if(lanes[2][i]!=null && lanes[1][i]!=null && lanes[0][i]!=null) {
+                    if (lanes[1][i] != null && lanes[0][i] != null) {
                         check += 1;
                     }
                 }
 
-                if(check != laneCount){
+                if (check != laneCount) {
+                    return true;
+                }
+
+            } else if (v instanceof Truck) {
+                int check = 0;
+
+                for (int i = 0; i < laneCount; i++) {
+                    if (lanes[2][i] != null && lanes[1][i] != null && lanes[0][i] != null) {
+                        check += 1;
+                    }
+                }
+
+                if (check != laneCount) {
                     return true;
                 }
 
@@ -245,43 +246,40 @@ public class Segment implements Serializable {
 
             return false;
 
-       }
+        }
 
 
-       private ArrayList<Integer> alternateInserts(Vehicle v){
+        private ArrayList<Integer> alternateInserts(Vehicle v) {
             ArrayList<Integer> alternates = new ArrayList<>();
 
-            if(canInsert(v)){
-              if(v instanceof Car){
-                  for (int i = 0; i < laneCount; i++) {
-                      if(lanes[0][i] == null){
-                        alternates.add(i);
-                      }
-                  }
+            if (canInsert(v)) {
+                if (v instanceof Car) {
+                    for (int i = 0; i < laneCount; i++) {
+                        if (lanes[0][i] == null) {
+                            alternates.add(i);
+                        }
+                    }
 
-              }
-              else if (v instanceof Bus){
-                  for (int i = 0; i < laneCount; i++) {
-                      if(lanes[0][i] == null && lanes[1][i] == null ){
-                          alternates.add(i);
-                      }
-                  }
+                } else if (v instanceof Bus) {
+                    for (int i = 0; i < laneCount; i++) {
+                        if (lanes[0][i] == null && lanes[1][i] == null) {
+                            alternates.add(i);
+                        }
+                    }
 
-              }
-              else if (v instanceof Truck){
-                  for (int i = 0; i < laneCount; i++) {
-                      if(lanes[2][i] == null && lanes[1][i] == null && lanes[0][i] == null){
-                          alternates.add(i);
-                      }
-                  }
-              }
+                } else if (v instanceof Truck) {
+                    for (int i = 0; i < laneCount; i++) {
+                        if (lanes[2][i] == null && lanes[1][i] == null && lanes[0][i] == null) {
+                            alternates.add(i);
+                        }
+                    }
+                }
 
 
             }
 
-           return alternates;
-       }
-
+            return alternates;
+        }
 
 
         /**
@@ -293,7 +291,7 @@ public class Segment implements Serializable {
         private void addVehicle(Map m, Vehicle v, int lane) {
 
             if (v instanceof Car) {
-                if (isEmpty(new Point(0, lane))) {
+                if (canInsert(v)) {
                     v.setVehicleLocation(new Point(0, lane));
                     onSegment.add(v);
                     lanes[v.getVehicleLocation().x][v.getVehicleLocation().y] = v;
@@ -305,7 +303,7 @@ public class Segment implements Serializable {
 
 
             } else if (v instanceof Bus) {
-                if (isEmpty(new Point(0, lane)) && isEmpty(new Point(1, lane))) {
+                if (canInsert(v)) {
                     v.setVehicleLocation(new Point(1, lane));
                     onSegment.add(v);
 
@@ -319,7 +317,7 @@ public class Segment implements Serializable {
 
 
             } else if (v instanceof Truck) {
-                if (isEmpty(new Point(0, lane)) && isEmpty(new Point(1, lane)) && isEmpty(new Point(2, lane))) {
+                if (canInsert(v)) {
                     v.setVehicleLocation(new Point(2, lane));
                     onSegment.add(v);
 
@@ -332,11 +330,12 @@ public class Segment implements Serializable {
                 }
 
             }
-
         }
+
 
         /**
          * Removes vehicle on segment
+         *
          * @param v the vehicle to be removed
          */
         private void removeVehicle(Vehicle v) {
@@ -347,7 +346,7 @@ public class Segment implements Serializable {
 
 
             for (int i = location.x; i >= (location.x - (v.getLength() - 1)); i--) {
-                lanes[location.x][location.y] = null;
+                lanes[i][location.y] = null;
             }
 
 
@@ -356,6 +355,7 @@ public class Segment implements Serializable {
 
         /**
          * Moves the vehicle one index up
+         *
          * @param p the segment position of the vehicle
          */
         private void moveVehicle(Point p) {
@@ -363,17 +363,18 @@ public class Segment implements Serializable {
             Vehicle toMove = lanes[location.x][location.y];
 
 
-            if(!atEnd(toMove)) {
+            if (!atEnd(toMove)) {
                 toMove.setVehicleLocation(new Point(location.x + 1, location.y));
-                lanes[location.x][location.y] = null;
                 lanes[toMove.getVehicleLocation().x][toMove.vehicleLocation.y] = toMove;
                 lanes[toMove.getVehicleLocation().x - (toMove.getLength())][toMove.vehicleLocation.y] = null;
 
 
-                if(!atEnd(toMove)) {
-                    System.out.println(toMove +" is " + (segmentLength - getIndex(toMove).x - 1) + " miles away from intersection " + toMove.getSegment().getSegmentLocation().y + ".");
-                }else{
-                    System.out.println(toMove + " has arrived at intersection " + location.y );
+
+
+                if (!atEnd(toMove)) {
+                    System.out.println(toMove + " is " + (segmentLength - toMove.getVehicleLocation().x - 1) + " miles away from intersection " + toMove.getSegment().getSegmentLocation().y + ".");
+                } else {
+                    System.out.println(toMove + " has arrived at intersection " + toMove.getSegment().getSegmentLocation().y);
                 }
             }
 
@@ -413,17 +414,18 @@ public class Segment implements Serializable {
          * @return
          */
         private boolean atEnd(Vehicle v) {
-            for (int i = 0; i < laneCount; i++) {
-                if (v == lanes[segmentLength-1][i]) {
+
+                if (v.getVehicleLocation().x == segmentLength-1) {
                     return true;
                 }
-            }
+
             return false;
         }
 
 
         /**
          * Checks if an index is empty
+         *
          * @param p the point to be checked
          * @return
          */
@@ -437,8 +439,35 @@ public class Segment implements Serializable {
         }
 
 
+        private boolean canAdd(Vehicle v, int lane) {
+
+            if (v instanceof Car) {
+
+                    if (lanes[0][lane] == null) {
+                        return true;
+                    }
+
+            } else if (v instanceof Bus) {
+
+                    if (lanes[1][lane] == null && lanes[0][lane] == null) {
+                      return true;
+                    }
+
+            } else if (v instanceof Truck) {
+
+                    if (lanes[2][lane] == null && lanes[1][lane] == null && lanes[0][lane] == null) {
+                       return true;
+                    }
+
+            }
+
+            return false;
+        }
+
+
         /**
          * Returns the indexes of vehicle v
+         *
          * @param v the vehicle with an unknown index
          * @return
          */
@@ -467,19 +496,19 @@ public class Segment implements Serializable {
 
             if (v.getLength() == 1 && location.x + 1 <= segmentLength - 1) {
                 if (location.y > 0) {
-                    if (lanes[location.x+1][location.y - 1] == null && location.x+1 <= segmentLength-1 ) {
+                    if (lanes[location.x + 1][location.y - 1] == null && location.x + 1 <= segmentLength - 1) {
                         return true;
                     }
                 }
             } else if (v.getLength() == 2 && location.x + 1 <= segmentLength - 1) {
                 if (location.y > 0) {
-                    if (lanes[location.x+1][location.y - 1] == null && lanes[location.x][location.y - 1] == null && location.x+1 <= segmentLength-1) {
+                    if (lanes[location.x + 1][location.y - 1] == null && lanes[location.x][location.y - 1] == null && location.x + 1 <= segmentLength - 1) {
                         return true;
                     }
                 }
             } else if (v.getLength() == 3 && location.x + 1 <= segmentLength - 1) {
                 if (location.y > 0) {
-                    if (lanes[location.x + 1][location.y - 1] == null && lanes[location.x ][location.y - 1] == null && lanes[location.x - 1][location.y - 1] == null && location.x+1 <= segmentLength-1) {
+                    if (lanes[location.x + 1][location.y - 1] == null && lanes[location.x][location.y - 1] == null && lanes[location.x - 1][location.y - 1] == null && location.x + 1 <= segmentLength - 1) {
                         return true;
                     }
                 }
@@ -498,33 +527,33 @@ public class Segment implements Serializable {
         private boolean canSwitchRight(Vehicle v) {
             Point location = v.getVehicleLocation();
 
-            if (v.getLength() == 1 && location.x + 1 <= segmentLength - 1) {
-                if (location.y < laneCount - 1) {
-                    if (lanes[location.x + 1][location.y + 1] == null) {
-                        return true;
-                    }
 
-                }
-            } else if (v.getLength() == 2 && location.x + 1 <= segmentLength - 1) {
-                if (location.y < laneCount - 1) {
-                    if (lanes[location.x + 1][location.y + 1] == null && lanes[location.x][location.y + 1] == null && location.x + 1 <= segmentLength - 1) {
-                        return true;
-                    }
+                if (v.getLength() == 1 && location.x + 1 <= segmentLength - 1) {
+                    if (location.y < laneCount - 1) {
+                        if (lanes[location.x + 1][location.y + 1] == null) {
+                            return true;
+                        }
 
-                }
-            } else if (v.getLength() == 3 && location.x + 1 <= segmentLength - 1) {
-                if (location.y < laneCount - 1) {
-                    if (lanes[location.x + 1][location.y + 1] == null && lanes[location.x][location.y + 1] == null && lanes[location.x - 1][location.y + 1] == null && location.x + 1 <= segmentLength - 1) {
-                        return true;
                     }
+                } else if (v.getLength() == 2 && location.x + 1 <= segmentLength - 1) {
+                    if (location.y < laneCount - 1) {
+                        if (lanes[location.x + 1][location.y + 1] == null && lanes[location.x][location.y + 1] == null && location.x + 1 <= segmentLength - 1) {
+                            return true;
+                        }
 
+                    }
+                } else if (v.getLength() == 3 && location.x + 1 <= segmentLength - 1) {
+                    if (location.y < laneCount - 1) {
+                        if (lanes[location.x + 1][location.y + 1] == null && lanes[location.x][location.y + 1] == null && lanes[location.x - 1][location.y + 1] == null && location.x + 1 <= segmentLength - 1) {
+                            return true;
+                        }
+
+                    }
                 }
-            }
 
 
             return false;
         }
-
 
 
         /**
@@ -536,25 +565,25 @@ public class Segment implements Serializable {
             Point location = v.getVehicleLocation();
 
             if (canSwitchLeft(v)) {
-                v.setVehicleLocation(new Point(location.x + 1, location.y - 1));
+                Point target = new Point(location.x + 1, location.y - 1); 
+                v.setVehicleLocation(target);
 
                 for (int i = location.x; i >= (location.x - (v.getLength() - 1)); i--) {
                     lanes[i][location.y] = null;
                     if (!v.getDamageStatus().isDestroyed()) {
-                        lanes[i][location.y - 1] = v;
+                        lanes[i+1][location.y-1] = v;
                     }
                 }
 
-                moveVehicle(new Point(location.x,location.y-1));
+             
 
 
-                if(laneCount == 2) {
-                    if(laneLocation(v) == 0) {
+                if (laneCount == 2) {
+                    if (laneLocation(v) == 0) {
                         System.out.println(v + " moved from the right lane to the left lane.");
                     }
-                }
-                else if(laneCount == 3){
-                    if(laneLocation(v) == 1) {
+                } else if (laneCount == 3) {
+                    if (laneLocation(v) == 1) {
                         System.out.println(v + " Vehicle moved from the right lane to the middle lane.");
                     } else {
                         System.out.println(v + " Vehicle moved from the middle lane to the left lane.");
@@ -563,7 +592,7 @@ public class Segment implements Serializable {
 
 
             } else {
-                if (location.x + 1 <= segmentLength - 1){
+                if (location.x + 1 <= segmentLength - 1) {
                     Vehicle hit = lanes[location.x][location.y - 1];
                     v.getDamageStatus().calculatedSuffered(v, hit);
                     v.getDamageStatus().calculateGenerated(v, hit);
@@ -589,26 +618,25 @@ public class Segment implements Serializable {
             Point location = v.getVehicleLocation();
 
             if (canSwitchRight(v)) {
-                v.setVehicleLocation(new Point(location.x + 1, location.y + 1));
+                Point target = new Point(location.x + 1, location.y + 1);
+                v.setVehicleLocation(target);
 
                 for (int i = location.x; i >= (location.x - (v.getLength() - 1)); i--) {
                     lanes[i][location.y] = null;
                     if (!v.getDamageStatus().isDestroyed()) {
-                        lanes[i][location.y + 1] = v;
+                        lanes[i+1][location.y+1] = v;
                     }
                 }
 
-                moveVehicle(new Point(location.x,location.y+1));
 
 
-                if(laneCount == 2) {
-                    if(laneLocation(v) == 1) {
+                if (laneCount == 2) {
+                    if (laneLocation(v) == 1) {
                         System.out.println(v + " Vehicle moved from the left lane to the right lane.");
                     }
-                }
-                else if(laneCount == 3){
-                    if(laneLocation(v) == 1) {
-                        System.out.println(v + " Vehicle moved from the left lane to the right lane.");
+                } else if (laneCount == 3) {
+                    if (laneLocation(v) == 1) {
+                        System.out.println(v + " Vehicle moved from the left lane to the middle lane.");
                     } else {
                         System.out.println(v + " Vehicle moved from the middle lane to the right lane.");
                     }
@@ -617,7 +645,7 @@ public class Segment implements Serializable {
 
 
             } else {
-                if(location.x+1 <= segmentLength-1) {
+                if (location.x + 1 <= segmentLength - 1) {
                     Vehicle hit = lanes[location.x][location.y - 1];
                     v.getDamageStatus().calculatedSuffered(v, hit);
                     v.getDamageStatus().calculateGenerated(v, hit);
@@ -648,9 +676,29 @@ public class Segment implements Serializable {
         }
 
 
-        private Vehicle getVehicle(Point p){
+
+        private Vehicle getVehicle(Point p) {
             return lanes[p.x][p.y];
         }
+
+
+
+        private ArrayList<Vehicle> getVictims (Vehicle atFault, int lane){
+            ArrayList<Vehicle> victims = new ArrayList<>();
+
+
+                for (int i = 0; i < atFault.getLength(); i++) {
+                    if(lanes[i][lane] !=null){
+                        victims.add(getVehicle(new Point(i,lane)));
+                    }
+                }
+
+                return victims;
+
+        }
+
+
+
 
 
         private int getLaneCount() {

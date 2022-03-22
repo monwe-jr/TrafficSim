@@ -19,7 +19,7 @@ public class Game {
 //        m.addSegment(new Segment(new Point(0,6), Direction.West,2,4));
 //        m.addSegment(new Segment(new Point(0,7), Direction.South,2,4));
 //        m.addSegment(new Segment(new Point(1,4),Direction.West,2,4) );
-//        m.addSegment(new Segment(new Point(1,2), Direction.North,3,4));
+//        m.addSegment(new Segment(new Point(1,2), Direction.South,3,4));
 //        m.addSegment(new Segment(new Point(2,1), Direction.North,3,4));
 //        m.addSegment(new Segment(new Point(2,0), Direction.West,2,4));
 //        m.addSegment(new Segment(new Point(3,2), Direction.North,1,4));
@@ -47,8 +47,8 @@ public class Game {
 //        }
 //
 
-        addAI(4);
-        for (int j = 0; j < 5; j++) {
+        addAI(1);
+        for (int j = 0; j < 1000; j++) {
             moveAI();
         }
 
@@ -107,8 +107,9 @@ public class Game {
                 } else {
                     forceAdd(v, s);
                 }
+
             } else if (choice == 1) {
-                Vehicle v = new Truck(new Color(r, g, b), false, s);
+                Vehicle v = new Bus(new Color(r, g, b), false, s);
                 vehicles.add(v);
 
                 if (s.isEmpty(new Point(0, laneCount))) {
@@ -118,7 +119,7 @@ public class Game {
                 }
 
             } else if (choice == 2) {
-                Vehicle v = new Bus(new Color(r, g, b), false, s);
+                Vehicle v = new Truck(new Color(r, g, b), false, s);
                 vehicles.add(v);
 
                 if (s.isEmpty(new Point(0, laneCount))) {
@@ -126,6 +127,8 @@ public class Game {
                 } else {
                     forceAdd(v, s);
                 }
+
+
 
             }
         }
@@ -217,16 +220,20 @@ public class Game {
                             v.move();
                         }
                     } else {
+
                         if (Direction.equals(Direction.rightDirection(current), target)) {
-                            Turn.rightTurn(m, v.getSegment(), v);
-                            v.target = null;
+
+                                Turn.rightTurn(m, v.getSegment(), v);
+                                v.target = null;
                         } else if (Direction.equals(Direction.leftDirection(current), target)) {
-                            Turn.leftTurn(m, v.getSegment(), v);
-                            v.target = null;
+
+                                Turn.leftTurn(m, v.getSegment(), v);
+                                v.target = null;
                         } else {
                             Turn.goStraight(m, v.getSegment(), v);
                             v.target = null;
                         }
+
                     }
                 }
             }

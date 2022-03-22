@@ -42,6 +42,13 @@ public class DamageStatus {
     private void calculateReputation(){}
     //TODO reputation calculator after collision
 
+    public void frontCollision(){
+//TODO reputation front collision
+    }
+
+    public void sideCollision(){
+//TODO reputation side collision
+    }
 
 
     public void calculatedSuffered(Vehicle thisV, Vehicle otherV) {

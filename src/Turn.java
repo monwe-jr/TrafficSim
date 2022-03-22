@@ -165,20 +165,30 @@ public class Turn {
 
             Segment toGoStraightOn = getStraight(m, s);
             int oldLaneLocation = s.laneLocation(v);
-            s.removeVehicle(v);
-            v.removeSegment();
 
 
             if (toGoStraightOn.laneCount() > 1) {
 
                 if (s.compatible(toGoStraightOn.laneCount())) {
-                    if (toGoStraightOn.isEmpty(new Point(0, oldLaneLocation))) {
+                    if (toGoStraightOn.canAdd(v,oldLaneLocation)) {
+                        s.removeVehicle(v);
+                        v.removeSegment();
                         toGoStraightOn.addVehicle(m, v, oldLaneLocation);
                     } else {
-                        v.getDamageStatus().calculatedSuffered(v, toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)));
-                        v.getDamageStatus().calculateGenerated(v, toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)));
-                        toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)),v);
-                        toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)),v);
+
+                        ArrayList<Vehicle> victims = toGoStraightOn.getVictims(v,oldLaneLocation);
+
+                        for (int i = 0; i < victims.size(); i++) {
+                            Vehicle victim = victims.get(i);
+
+                            v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                            v.getDamageStatus().calculateGenerated(v, victim);
+                            victim.getDamageStatus().calculatedSuffered(victim,v);
+                            victim.getDamageStatus().calculatedSuffered(victim,v);
+                        }
+
+                        System.out.println("Collision occurred");
+
                     }
 
 
@@ -187,25 +197,47 @@ public class Turn {
 
                     if (s.laneCount() == 3 && toGoStraightOn.laneCount() == 2) {
                         if (oldLaneLocation == 2) {
-                            if (toGoStraightOn.isEmpty(new Point(0, 1))) {
+                            if (toGoStraightOn.canAdd(v,1)) {
+                                s.removeVehicle(v);
+                                v.removeSegment();
                                 toGoStraightOn.addVehicle(m, v, 1);
                                 v.getReputation().correspondingLaneViolation();
                             } else {
-                                v.getReputation().correspondingLaneViolation();
-                                v.getDamageStatus().calculatedSuffered(v, toGoStraightOn.getVehicle(new Point(0, 1)));
-                                v.getDamageStatus().calculateGenerated(v, toGoStraightOn.getVehicle(new Point(0, 1)));
-                                toGoStraightOn.getVehicle(new Point(0, 1)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, 1)),v);
-                                toGoStraightOn.getVehicle(new Point(0, 1)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, 1)),v);
+
+                                ArrayList<Vehicle> victims = toGoStraightOn.getVictims(v,1);
+
+                                for (int i = 0; i < victims.size(); i++) {
+                                    Vehicle victim = victims.get(i);
+
+                                    v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                                    v.getDamageStatus().calculateGenerated(v, victim);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+                                }
+
+                                System.out.println("Collision occurred");
                             }
 
                         } else {
-                            if (toGoStraightOn.isEmpty(new Point(0, oldLaneLocation))) {
+                            if (toGoStraightOn.canAdd(v, oldLaneLocation)) {
+                                s.removeVehicle(v);
+                                v.removeSegment();
                                 toGoStraightOn.addVehicle(m, v, oldLaneLocation);
                             } else {
-                                v.getDamageStatus().calculatedSuffered(v, toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)));
-                                v.getDamageStatus().calculateGenerated(v, toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)));
-                                toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)),v);
-                                toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, oldLaneLocation)),v);
+
+                                ArrayList<Vehicle> victims = toGoStraightOn.getVictims(v,oldLaneLocation);
+
+                                for (int i = 0; i < victims.size(); i++) {
+                                    Vehicle victim = victims.get(i);
+
+                                    v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                                    v.getDamageStatus().calculateGenerated(v, victim);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+                                }
+
+                                System.out.println("Collision occurred");
+
                             }
                         }
 
@@ -216,7 +248,9 @@ public class Turn {
 
 
             } else {
-                if (toGoStraightOn.isEmpty(new Point(0, 0))) {
+                if (toGoStraightOn.canAdd(v,0)) {
+                    s.removeVehicle(v);
+                    v.removeSegment();
                     toGoStraightOn.addVehicle(m, v, 0);
                     if (oldLaneLocation != 0) {
                         v.getReputation().correspondingLaneViolation();
@@ -225,10 +259,21 @@ public class Turn {
                     if (oldLaneLocation != 0) {
                         v.getReputation().correspondingLaneViolation();
                     }
-                    v.getDamageStatus().calculatedSuffered(v, toGoStraightOn.getVehicle(new Point(0, 0)));
-                    v.getDamageStatus().calculateGenerated(v, toGoStraightOn.getVehicle(new Point(0, 0)));
-                    toGoStraightOn.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, 0)),v);
-                    toGoStraightOn.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toGoStraightOn.getVehicle(new Point(0, 0)),v);
+
+
+                    ArrayList<Vehicle> victims = toGoStraightOn.getVictims(v,0);
+
+                    for (int i = 0; i < victims.size(); i++) {
+                        Vehicle victim = victims.get(i);
+
+                        v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                        v.getDamageStatus().calculateGenerated(v, victim);
+                        victim.getDamageStatus().calculatedSuffered(victim,v);
+                        victim.getDamageStatus().calculatedSuffered(victim,v);
+                    }
+
+
+                    System.out.println("Collision occurred");
                 }
             }
 
@@ -275,35 +320,56 @@ public class Turn {
         if (getLeftTurns(m, s) != null) {
             Segment toTurnLeftOnto = getLeftTurns(m, s);
             int oldLaneLocation = s.laneLocation(v);
-            s.removeVehicle(v);
-            v.removeSegment();
+
+
 
             if (toTurnLeftOnto.laneCount() > 1) {
                 if (s.compatible(toTurnLeftOnto.laneCount())) {
 
                     if (oldLaneLocation != 0) {
-                        if (toTurnLeftOnto.isEmpty(new Point(0, oldLaneLocation))) {
+                        if (toTurnLeftOnto.canAdd(v, oldLaneLocation)) {
+                            s.removeVehicle(v);
+                            v.removeSegment();
                             toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
                             v.getReputation().correspondingLaneViolation();
                         }
                         else {
-                            v.getReputation().correspondingLaneViolation();
-                            v.getDamageStatus().calculatedSuffered(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
-                            v.getDamageStatus().calculateGenerated(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
-                            toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
-                            toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+
+                            ArrayList<Vehicle> victims = toTurnLeftOnto.getVictims(v,oldLaneLocation);
+
+                            for (int i = 0; i < victims.size(); i++) {
+                                Vehicle victim = victims.get(i);
+
+                                v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                                v.getDamageStatus().calculateGenerated(v, victim);
+                                victim.getDamageStatus().calculatedSuffered(victim,v);
+                                victim.getDamageStatus().calculatedSuffered(victim,v);
+                            }
+
+                            System.out.println("Collision occurred");
                         }
 
                     } else {
-                        if (toTurnLeftOnto.isEmpty(new Point(0, oldLaneLocation))) {
+                        if (toTurnLeftOnto.canAdd(v, oldLaneLocation)) {
+                            s.removeVehicle(v);
+                            v.removeSegment();
                             toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
 
                         }
                         else {
-                            v.getDamageStatus().calculatedSuffered(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
-                            v.getDamageStatus().calculateGenerated(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
-                            toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
-                            toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+
+                            ArrayList<Vehicle> victims = toTurnLeftOnto.getVictims(v,oldLaneLocation);
+
+                            for (int i = 0; i < victims.size(); i++) {
+                                Vehicle victim = victims.get(i);
+
+                                v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                                v.getDamageStatus().calculateGenerated(v, victim);
+                                victim.getDamageStatus().calculatedSuffered(victim,v);
+                                victim.getDamageStatus().calculatedSuffered(victim,v);
+                            }
+                            System.out.println("Collision occurred");
+
                         }
                     }
 
@@ -313,27 +379,46 @@ public class Turn {
 
                     if (s.laneCount() == 3 && toTurnLeftOnto.laneCount() == 2) {
                         if (oldLaneLocation == 2 || oldLaneLocation == 3) {
-                            if (toTurnLeftOnto.isEmpty(new Point(0, 1))) {
+                            if (toTurnLeftOnto.canAdd(v, 1)) {
+                                s.removeVehicle(v);
+                                v.removeSegment();
                                 toTurnLeftOnto.addVehicle(m, v, 1);
                                 v.getReputation().correspondingLaneViolation();
                             }
                             else {
-                                v.getReputation().correspondingLaneViolation();
-                                v.getDamageStatus().calculatedSuffered(v, toTurnLeftOnto.getVehicle(new Point(0, 1)));
-                                v.getDamageStatus().calculateGenerated(v, toTurnLeftOnto.getVehicle(new Point(0, 1)));
-                                toTurnLeftOnto.getVehicle(new Point(0, 1)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, 1)),v);
-                                toTurnLeftOnto.getVehicle(new Point(0, 1)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, 1)),v);
+                                ArrayList<Vehicle> victims = toTurnLeftOnto.getVictims(v,1);
+
+                                for (int i = 0; i < victims.size(); i++) {
+                                    Vehicle victim = victims.get(i);
+
+                                    v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                                    v.getDamageStatus().calculateGenerated(v, victim);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+                                }
+
+                                System.out.println("Collision occurred");
                             }
                         } else {
-                            if (toTurnLeftOnto.isEmpty(new Point(0, oldLaneLocation))) {
+                            if (toTurnLeftOnto.canAdd(v, oldLaneLocation)) {
+                                s.removeVehicle(v);
+                                v.removeSegment();
                                 toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
 
                             }
                             else {
-                                v.getDamageStatus().calculatedSuffered(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
-                                v.getDamageStatus().calculateGenerated(v, toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)));
-                                toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
-                                toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+                                ArrayList<Vehicle> victims = toTurnLeftOnto.getVictims(v,oldLaneLocation);
+
+                                for (int i = 0; i < victims.size(); i++) {
+                                    Vehicle victim = victims.get(i);
+
+                                    v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                                    v.getDamageStatus().calculateGenerated(v, victim);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+                                }
+
+                                System.out.println("Collision occurred");
                             }
                         }
                     }
@@ -342,7 +427,9 @@ public class Turn {
                 }
 
             } else {
-                if (toTurnLeftOnto.isEmpty(new Point(0, 0))) {
+                if (toTurnLeftOnto.canAdd(v, 0)) {
+                    s.removeVehicle(v);
+                    v.removeSegment();
                     toTurnLeftOnto.addVehicle(m, v, 0);
                     v.getReputation().correspondingLaneViolation();
                     if (oldLaneLocation != 0) {
@@ -355,10 +442,18 @@ public class Turn {
                         v.getReputation().correspondingLaneViolation();
 
                     }
-                    v.getDamageStatus().calculatedSuffered(v, toTurnLeftOnto.getVehicle(new Point(0, 0)));
-                    v.getDamageStatus().calculateGenerated(v, toTurnLeftOnto.getVehicle(new Point(0, 0)));
-                    toTurnLeftOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, 0)),v);
-                    toTurnLeftOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnLeftOnto.getVehicle(new Point(0, 0)),v);
+                    ArrayList<Vehicle> victims = toTurnLeftOnto.getVictims(v,0);
+
+                    for (int i = 0; i < victims.size(); i++) {
+                        Vehicle victim = victims.get(i);
+
+                        v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                        v.getDamageStatus().calculateGenerated(v, victim);
+                        victim.getDamageStatus().calculatedSuffered(victim,v);
+                        victim.getDamageStatus().calculatedSuffered(victim,v);
+                    }
+
+                    System.out.println("Collision occurred");
                 }
 
             }
@@ -407,34 +502,53 @@ public class Turn {
         if (getRightTurns(m, s) != null) {
             Segment toTurnRightOnto = getRightTurns(m, s);
             int oldLaneLocation = s.laneLocation(v);
-            s.removeVehicle(v);
-            v.removeSegment();
+
 
             if (toTurnRightOnto.laneCount() > 1) {
                 if (s.compatible(toTurnRightOnto.laneCount())) {
 
                     if (oldLaneLocation != s.laneCount() - 1) {
-                        if(toTurnRightOnto.isEmpty(new Point(0, oldLaneLocation))) {
+                        if(toTurnRightOnto.canAdd(v, oldLaneLocation)) {
+                            s.removeVehicle(v);
+                            v.removeSegment();
                             toTurnRightOnto.addVehicle(m, v, oldLaneLocation);
                             v.getReputation().correspondingLaneViolation();
                         } else{
-                            v.getReputation().correspondingLaneViolation();
-                            v.getDamageStatus().calculatedSuffered(v, toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)));
-                            v.getDamageStatus().calculateGenerated(v, toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)));
-                            toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)),v);
-                            toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, oldLaneLocation)),v);
+
+                            ArrayList<Vehicle> victims = toTurnRightOnto.getVictims(v,oldLaneLocation);
+
+                            for (int i = 0; i < victims.size(); i++) {
+                                Vehicle victim = victims.get(i);
+
+                                v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                                v.getDamageStatus().calculateGenerated(v, victim);
+                                victim.getDamageStatus().calculatedSuffered(victim,v);
+                                victim.getDamageStatus().calculatedSuffered(victim,v);
+
+                            }
+
+                            System.out.println("Collision occurred");
                         }
                     } else {
-                        if(toTurnRightOnto.isEmpty(new Point(0, oldLaneLocation))) {
-                            toTurnRightOnto.addVehicle(m, v, 0);
-
+                        if(toTurnRightOnto.canAdd(v, toTurnRightOnto.laneCount()-1)) {
+                            s.removeVehicle(v);
+                            v.removeSegment();
+                            toTurnRightOnto.addVehicle(m, v, toTurnRightOnto.laneCount()-1);
                         } else{
 
-                            v.getDamageStatus().calculatedSuffered(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
-                            v.getDamageStatus().calculateGenerated(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
-                            toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
-                            toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
+                            ArrayList<Vehicle> victims = toTurnRightOnto.getVictims(v,toTurnRightOnto.laneCount()-1);
 
+                            for (int i = 0; i < victims.size(); i++) {
+                                Vehicle victim = victims.get(i);
+
+                                v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                                v.getDamageStatus().calculateGenerated(v, victim);
+                                victim.getDamageStatus().calculatedSuffered(victim,v);
+                                victim.getDamageStatus().calculatedSuffered(victim,v);
+
+                            }
+
+                            System.out.println("Collision occurred");
                         }
                     }
 
@@ -444,25 +558,46 @@ public class Turn {
                     if (s.laneCount() == 3 && toTurnRightOnto.laneCount() == 2) {
 
                         if (oldLaneLocation == 0 || oldLaneLocation == 1) {
-                            if(toTurnRightOnto.isEmpty(new Point(0, 0))) {
+                            if(toTurnRightOnto.canAdd(v, 0)) {
+                                s.removeVehicle(v);
+                                v.removeSegment();
                                 toTurnRightOnto.addVehicle(m, v, 0);
                                 v.getReputation().correspondingLaneViolation();
                             } else{
-                                v.getReputation().correspondingLaneViolation();
-                                v.getDamageStatus().calculatedSuffered(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
-                                v.getDamageStatus().calculateGenerated(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
-                                toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
-                                toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
+                                ArrayList<Vehicle> victims = toTurnRightOnto.getVictims(v,0);
+
+                                for (int i = 0; i < victims.size(); i++) {
+                                    Vehicle victim = victims.get(i);
+
+                                    v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                                    v.getDamageStatus().calculateGenerated(v, victim);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+
+                                }
+
+                                System.out.println("Collision occurred");
                             }
 
                         } else {
-                            if(toTurnRightOnto.isEmpty(new Point(0, 0))) {
-                                toTurnRightOnto.addVehicle(m, v, 0);
+                            if(toTurnRightOnto.canAdd(v, toTurnRightOnto.laneCount()-1)) {
+                                s.removeVehicle(v);
+                                v.removeSegment();
+                                toTurnRightOnto.addVehicle(m, v, toTurnRightOnto.laneCount()-1);
                             } else{
-                                v.getDamageStatus().calculatedSuffered(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
-                                v.getDamageStatus().calculateGenerated(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
-                                toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
-                                toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)),v);
+                                ArrayList<Vehicle> victims = toTurnRightOnto.getVictims(v,toTurnRightOnto.laneCount()-1);
+
+                                for (int i = 0; i < victims.size(); i++) {
+                                    Vehicle victim = victims.get(i);
+
+                                    v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                                    v.getDamageStatus().calculateGenerated(v, victim);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+                                    victim.getDamageStatus().calculatedSuffered(victim,v);
+
+                                }
+
+                                System.out.println("Collision occurred");
 
                             }
                         }
@@ -472,7 +607,9 @@ public class Turn {
                 }
 
             } else {
-                if (toTurnRightOnto.isEmpty(new Point(0, 0))) {
+                if (toTurnRightOnto.canAdd(v, 0)) {
+                    s.removeVehicle(v);
+                    v.removeSegment();
                     toTurnRightOnto.addVehicle(m, v, 0);
                     if (oldLaneLocation != 0) {
                         v.getReputation().correspondingLaneViolation();
@@ -482,11 +619,19 @@ public class Turn {
                         v.getReputation().correspondingLaneViolation();
 
                     }
-                    v.getDamageStatus().calculatedSuffered(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
-                    v.getDamageStatus().calculateGenerated(v, toTurnRightOnto.getVehicle(new Point(0, 0)));
-                    toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)), v);
-                    toTurnRightOnto.getVehicle(new Point(0, 0)).getDamageStatus().calculatedSuffered(toTurnRightOnto.getVehicle(new Point(0, 0)), v);
 
+                    ArrayList<Vehicle> victims = toTurnRightOnto.getVictims(v,0);
+
+                    for (int i = 0; i < victims.size(); i++) {
+                        Vehicle victim = victims.get(i);
+
+                        v.getDamageStatus().calculatedSuffered(v, victim);  //// fix
+                        v.getDamageStatus().calculateGenerated(v, victim);
+                        victim.getDamageStatus().calculatedSuffered(victim,v);
+                        victim.getDamageStatus().calculatedSuffered(victim,v);
+
+                    }
+                    System.out.println("Collision occurred");
 
                 }
             }
@@ -564,22 +709,22 @@ public class Turn {
 
    //////////////////////////////////////////////////////////////////////////////////////////////////
             if(v.getSegment().laneCount() == 1) {
-                System.out.println(v + "Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". This segment has only 1 lane on segment " + toUTurnOnto.getSegmentLocation());
+                System.out.println(v + " Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". This segment has only 1 lane on segment " + toUTurnOnto.getSegmentLocation());
             }
             else if (v.getSegment().laneCount() == 2){
                 if(v.getSegment().laneLocation(v) == 0) {
-                    System.out.println(v + "Performed U-Turn at intersection "  + toUTurnOnto.getSegmentLocation().x  +  ". Vehicle is now on the left lane on segment " + toUTurnOnto.getSegmentLocation());
+                    System.out.println(v + " Performed U-Turn at intersection "  + toUTurnOnto.getSegmentLocation().x  +  ". Vehicle is now on the left lane on segment " + toUTurnOnto.getSegmentLocation());
                 } else {
-                    System.out.println(v + "Performed U-Turn at intersection "  + toUTurnOnto.getSegmentLocation().x  +     ". Vehicle is now on the right lane on segment " + toUTurnOnto.getSegmentLocation());
+                    System.out.println(v + " Performed U-Turn at intersection "  + toUTurnOnto.getSegmentLocation().x  +     ". Vehicle is now on the right lane on segment " + toUTurnOnto.getSegmentLocation());
                 }
             }
             else if (v.getSegment().laneCount() == 3){
                 if(v.getSegment().laneLocation(v) == 0) {
-                    System.out.println(v + "Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the left lane on segment " + toUTurnOnto.getSegmentLocation());
+                    System.out.println(v + " Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the left lane on segment " + toUTurnOnto.getSegmentLocation());
                 } else if(v.getSegment().laneLocation(v) == 1){
-                    System.out.println(v + "Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the middle lane on segment " + toUTurnOnto.getSegmentLocation());
+                    System.out.println(v + " Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the middle lane on segment " + toUTurnOnto.getSegmentLocation());
                 } else if(v.getSegment().laneLocation(v) == 2){
-                    System.out.println(v + "Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the right lane on segment " + toUTurnOnto.getSegmentLocation());
+                    System.out.println(v + " Performed U-Turn at intersection " + toUTurnOnto.getSegmentLocation().x  + ". Vehicle is now on the right lane on segment " + toUTurnOnto.getSegmentLocation());
 
                 }
 
