@@ -8,9 +8,16 @@ public class Game {
     ArrayList<Vehicle> vehicles = new ArrayList<>();
     Random random = new Random();
     Map m = new Map(8);
+    private Game instance = null;
 
+    public Game getInstance() {
+        if (instance == null) {
+            instance = new Game();
+        }
+        return instance;
+    }
 
-    Game() {
+    private Game() {
 
 //m.erase();
 //saveMap();
