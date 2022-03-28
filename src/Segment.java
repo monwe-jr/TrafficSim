@@ -61,6 +61,10 @@ public class Segment implements Serializable {
         segmentLanes.removeVehicle(v);
     }
 
+    public boolean canMove(Vehicle v){
+        return segmentLanes.canMove(v);
+    }
+
     public void moveVehicle(Vehicle v) {
         segmentLanes.moveVehicle(v);
     }
@@ -81,9 +85,7 @@ public class Segment implements Serializable {
 
     }
 
-    public boolean isEmpty(Point p) {
-        return segmentLanes.isEmpty(p);
-    }
+
 
 
     public boolean canSwitchLeft(Vehicle v) {
@@ -381,13 +383,21 @@ public class Segment implements Serializable {
         }
 
 
+        private boolean canMove(Vehicle v){
+            if(lanes[v.getVehicleLocation().x +1][v.getVehicleLocation().y] ==null){
+                return true;
+            }
+            return false;
+        }
+
+
         /**
          * Moves the vehicle one index up
          *
          * @param v the vehicle to be moved
          */
         private void moveVehicle(Vehicle v) {
-            Point location = getIndex(v);
+            Point location = v.getVehicleLocation();
 
 
             if (!atEnd(v)) {
@@ -405,34 +415,33 @@ public class Segment implements Serializable {
             }
 
 
-
         }
 
 
-        /**
-         * gets the location of a vehicle in the lanes array
-         */
-        public Point getIndex(Vehicle v) {
-
-            if (onSegment.contains(v)) {
-                for (int i = segmentLength-1; i >=0 ; i--) {
-                    for (int j = 0; j < laneCount; j++) {
-                        if (lanes[i][j] == v) {
-                            return new Point(i, j);
-
-                        }
-                        break;
-                    }
-
-                }
-            } else {
-
-                System.out.println(v + " is not on segment!");
-
-            }
-            return null;
-
-        }
+//        /**
+//         * gets the location of a vehicle in the lanes array
+//         */
+//        public Point getIndex(Vehicle v) {
+//
+//            if (onSegment.contains(v)) {
+//                for (int i = segmentLength-1; i >=0 ; i--) {
+//                    for (int j = 0; j < laneCount; j++) {
+//                        if (lanes[i][j] == v) {
+//                            return new Point(i, j);
+//
+//                        }
+//                        break;
+//                    }
+//
+//                }
+//            } else {
+//
+//                System.out.println(v + " is not on segment!");
+//
+//            }
+//            return null;
+//
+//        }
 
 
         /**
@@ -702,6 +711,7 @@ public class Segment implements Serializable {
                     }
 
                 }
+
             }
         }
 

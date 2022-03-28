@@ -23,8 +23,8 @@ public class Game {
 //saveMap();
 //        m.addSegment(new Segment(new Point(0,2), Direction.East,2,10));
 //        m.addSegment(new Segment(new Point(1,4),Direction.West,2,10) );
-//        m.addSegment(new Segment(new Point(2,1), Direction.North,3,10));
-//        m.addSegment(new Segment(new Point(4,0), Direction.South,3,10));
+//        m.addSegment(new Segment(new Point(2,1), Direction.North,2,10));
+//        m.addSegment(new Segment(new Point(4,0), Direction.South,2,10));
 //saveMap();
         loadMap();
 
@@ -45,8 +45,8 @@ public class Game {
 //        }
 
 
-        addAI(3);
-        for (int j = 0; j < 10; j++) {
+        addAI(7);
+        for (int j = 0; j < 1; j++) {
             moveAI();
         }
 
@@ -96,7 +96,7 @@ public class Game {
                 Segment s = mapSegments.get((int) (Math.random() * mapSegments.size()));
 
 
-//                    if (choice == 0) {
+                    if (choice == 0) {
                 Vehicle v = new Car(new Color(r, g, b), false);
                 vehicles.add(v);
 
@@ -110,40 +110,40 @@ public class Game {
                         }
                     }
                 }
-//
-//                    } else if (choice == 1) {
-//                        Vehicle v = new Bus(new Color(r, g, b), false);
-//                        vehicles.add(v);
-//
-//
-//                        if(s.canInsertOnSegment(v)) {
-//                            s.insertVehicle(v);
-//                        } else {
-//                            for (int j = 0; j < mapSegments.size(); j++) {
-//                                if(mapSegments.get(j).canInsertOnSegment(v)){
-//                                    mapSegments.get(j).insertVehicle(v);
-//                                    break;
-//                                }
-//                            }
-//                        }
-//
-//                    } else if (choice == 2) {
-//                        Vehicle v = new Truck(new Color(r, g, b), false);
-//                        vehicles.add(v);
-//
-//
-//                        if(s.canInsertOnSegment(v)) {
-//                            s.insertVehicle(v);
-//                        } else {
-//                            for (int j = 0; j < mapSegments.size(); j++) {
-//                                if(mapSegments.get(j).canInsertOnSegment(v)){
-//                                    mapSegments.get(j).insertVehicle(v);
-//                                    break;
-//                                }
-//                            }
-//                        }
-//
-//                    }
+
+                    } else if (choice == 1) {
+                        Vehicle v = new Bus(new Color(r, g, b), false);
+                        vehicles.add(v);
+
+
+                        if(s.canInsertOnSegment(v)) {
+                            s.insertVehicle(v);
+                        } else {
+                            for (int j = 0; j < mapSegments.size(); j++) {
+                                if(mapSegments.get(j).canInsertOnSegment(v)){
+                                    mapSegments.get(j).insertVehicle(v);
+                                    break;
+                                }
+                            }
+                        }
+
+                    } else if (choice == 2) {
+                        Vehicle v = new Truck(new Color(r, g, b), false);
+                        vehicles.add(v);
+
+
+                        if(s.canInsertOnSegment(v)) {
+                            s.insertVehicle(v);
+                        } else {
+                            for (int j = 0; j < mapSegments.size(); j++) {
+                                if(mapSegments.get(j).canInsertOnSegment(v)){
+                                    mapSegments.get(j).insertVehicle(v);
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
 
 
             }
@@ -187,23 +187,33 @@ public class Game {
                                 if (v.getSegment().canSwitchRight(v)) {
                                     v.getSegment().switchRight(v);
                                 } else {
-                                    v.move();
+                                    if (v.getSegment().canMove(v)) {
+                                        v.move();
+                                    }
                                 }
                             } else {
-                                v.move();
+                                if (v.getSegment().canMove(v)) {
+                                    v.move();
+                                }
                             }
                         } else if (Direction.equals(Direction.leftDirection(current), target)) {
                             if (v.getSegment().laneLocation(v) > 0) {
                                 if (v.getSegment().canSwitchLeft(v)) {
                                     v.getSegment().switchLeft(v);
                                 } else {
-                                    v.move();
+                                    if (v.getSegment().canMove(v)) {
+                                        v.move();
+                                    }
                                 }
                             } else {
-                                v.move();
+                                if (v.getSegment().canMove(v)) {
+                                    v.move();
+                                }
                             }
                         } else {
-                            v.move();
+                            if (v.getSegment().canMove(v)) {
+                                v.move();
+                            }
                         }
                     } else {
 
