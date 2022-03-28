@@ -27,7 +27,7 @@ public class DamageStatus {
     public void updateStatus(double d) {
         if (currentStatus - d > 0) {
             currentStatus -= d;
-            sufferedDamageHistory.add(currentStatus);
+            sufferedDamageHistory.add(d);
         } else {
             destroyed = true;
             type.getSegment().removeVehicle(type);
@@ -42,8 +42,6 @@ public class DamageStatus {
     }
 
 
-
-
     public boolean isDestroyed() {
         if (destroyed) {
             return true;
@@ -54,377 +52,289 @@ public class DamageStatus {
     }
 
 
-    public void frontCollision( Vehicle victim) {
-        calculatedSufferedFront(victim,true);
-        calculateGeneratedFront(victim,true);
-        calculatedSufferedBack(victim,false);
-        calculateGeneratedBack(victim,false);
+    public void frontCollision(Vehicle victim) {
+        calculatedSufferedFront(victim);
+        calculateGeneratedFront(victim);
+        calculatedSufferedBack(victim);
+        calculateGeneratedBack(victim);
 
-        currentReputation.calculateReputation(sufferedDamageHistory,generatedDamageHistory);
+        currentReputation.calculateReputation(sufferedDamageHistory, generatedDamageHistory);
         victim.getReputation().calculateReputation(victim.getDamageStatus().getSufferedDamageHistory(), victim.getDamageStatus().getGeneratedDamageHistory());
+        currentReputation.atFaultViolation();
 
     }
 
 
     public void sideCollision(ArrayList<Vehicle> victims) {
+        for (int i = 0; i < victims.size(); i++) {
+            calculateSufferedSide(victims.get(i), true);
+            calculateGeneratedSide(victims.get(i), true);
+            calculateSufferedSide(victims.get(i), false);
+            calculateGeneratedSide(victims.get(i), false);
 
-            for (int i = 0; i < victims.size(); i++) {
-                calculateSufferedSide(victims.get(i),true);
-                calculateGeneratedSide(victims.get(i),true);
-                calculateSufferedSide(victims.get(i),false);
-                calculateGeneratedSide(victims.get(i),false);
+            currentReputation.calculateReputation(sufferedDamageHistory, generatedDamageHistory);
+            victims.get(i).getReputation().calculateReputation(victims.get(i).getDamageStatus().getSufferedDamageHistory(), victims.get(i).getDamageStatus().getGeneratedDamageHistory());
+        }
 
-                currentReputation.calculateReputation(sufferedDamageHistory,generatedDamageHistory);
-                victims.get(i).getReputation().calculateReputation(victims.get(i).getDamageStatus().getSufferedDamageHistory(), victims.get(i).getDamageStatus().getGeneratedDamageHistory());
+        currentReputation.atFaultViolation();
+    }
+
+
+    private void calculatedSufferedFront(Vehicle victim) {
+        double total = 0.0;
+
+        if (type instanceof Truck) {
+            if (type instanceof Car) {
+                total += 15;
             }
+
+            if (type instanceof Truck) {
+                total += 25;
+            }
+
+            if (type instanceof Bus) {
+                total += 20;
+            }
+
+
+            if (type.getSize() > victim.size) {
+                total += 15.5;
+            } else {
+                total += 20.5;
+            }
+
+
+            if (type.getWeight() > victim.getWeight()) {
+                total += 8.5;
+            } else {
+                total += 10.5;
+            }
+
+        } else if (type instanceof Bus) {
+            if (type instanceof Car) {
+                total += 5;
+            }
+
+            if (type instanceof Truck) {
+                total += 15;
+            }
+
+            if (type instanceof Bus) {
+                total += 10;
+            }
+
+
+            if (type.getSize() > victim.size) {
+                total += 15.5;
+            } else {
+                total += 20.5;
+            }
+
+
+            if (type.getWeight() > victim.getWeight()) {
+                total += 8.5;
+            } else {
+                total += 10.5;
+            }
+
+        } else if (type instanceof Car) {
+
+            if (type instanceof Car) {
+                total += 15;
+            }
+
+            if (type instanceof Truck) {
+                total += 25;
+            }
+
+            if (type instanceof Bus) {
+                total += 20;
+            }
+
+
+            if (type.getSize() > victim.size) {
+                total += 15.5;
+            } else {
+                total += 20.5;
+            }
+
+
+            if (type.getWeight() > victim.getWeight()) {
+                total += 8.5;
+            } else {
+                total += 10.5;
+            }
+        }
+
+
+        updateStatus(total);
 
     }
 
 
-
-
-
-
-    private void calculatedSufferedFront(Vehicle victim, boolean isAtFault) {
+    private void calculateGeneratedFront(Vehicle victim) {
         double total = 0.0;
 
-        if (isAtFault) {
+
+        if (victim instanceof Truck) {
+
             if (type instanceof Car) {
-                total += 30;
+                total += 5;
             }
 
             if (type instanceof Truck) {
-                total += 20;
+                total += 10;
             }
 
             if (type instanceof Bus) {
-                total += 15;
+                total += 8;
             }
 
 
-            if (type.getWeight() < victim.getWeight()) {
-                total += 10.5;
+            if (type.getSize() > victim.getSize()) {
+                total += 15.5;
             } else {
-                total += 5.5;
+                total += 10.5;
             }
 
-            if (type.getMaxSpeed() < victim.getMaxSpeed()) {
-                total += 10.5;
-            } else {
+            if (type.getWeight() > victim.getWeight()) {
                 total += 25.5;
-
+            } else {
+                total += 20.5;
             }
 
-            updateStatus(total);
 
-        } else {
+        } else if (victim instanceof Bus) {
+
+            if (type instanceof Car) {
+                total += 5;
+            }
+
+            if (type instanceof Truck) {
+                total += 10;
+            }
+
+            if (type instanceof Bus) {
+                total += 8;
+            }
+
+            if (type.getSize() > victim.getSize()) {
+                total += 20.5;
+            } else {
+                total += 15.5;
+            }
+
+            if (type.getWeight() > victim.getWeight()) {
+                total += 30.5;
+            } else {
+                total += 20.5;
+            }
+
+            total += 20;
+
+        } else if (victim instanceof Car) {
+
+            if (type instanceof Car) {
+                total += 5;
+            }
+
+            if (type instanceof Truck) {
+                total += 10;
+            }
+
+            if (type instanceof Bus) {
+                total += 8;
+            }
+
+            if (type.getSize() > victim.getSize()) {
+                total += 20.5;
+            } else {
+                total += 15.5;
+            }
+
+            if (type.getWeight() > victim.getWeight()) {
+                total += 25.5;
+            } else {
+                total += 20.5;
+            }
+
+            total += 10;
+        }
+
+        generatedDamageHistory.add(total);
+
+
+    }
+
+
+    private void calculatedSufferedBack(Vehicle victim) {
+        double total = 0.0;
+
+        if (type instanceof Truck) {
             if (victim instanceof Car) {
-                total += 30;
+                total += 20;
             }
 
             if (victim instanceof Truck) {
+                total += 10;
+            }
+
+            if (victim instanceof Bus) {
+                total += 15;
+            }
+        } else if (type instanceof Bus) {
+            if (victim instanceof Car) {
                 total += 20;
+            }
+
+            if (victim instanceof Truck) {
+                total += 10;
             }
 
             if (victim instanceof Bus) {
                 total += 15;
             }
 
-
-            if (victim.getWeight() < type.getWeight()) {
-                total += 10.5;
-            } else {
-                total += 5.5;
-            }
-
-            if (victim.getMaxSpeed() < type.getMaxSpeed()) {
-                total += 10.5;
-            } else {
-                total += 25.5;
-
-            }
-
-            victim.getDamageStatus().updateStatus(total);
-
-        }
-
-    }
-
-
-    private void calculateGeneratedFront( Vehicle victim, boolean isAtFault) {
-        double total = 0.0;
-
-        if (isAtFault) {
-            if(type instanceof Truck){
-                if (type.getSize() > victim.getSize()) {
-                    total += 20.5;
-                } else {
-                    total += 15.5;
-                }
-
-                if (type.getWeight() > victim.getWeight()) {
-                    total += 30.5;
-                } else {
-                    total += 20.5;
-                }
-
-                if (type.getMaxSpeed() > victim.getMaxSpeed()) {
-                    total += 35.5;
-                } else {
-                    total += 25.5;
-                }
-            }else if(type instanceof Bus){
-                if (type.getSize() > victim.getSize()) {
-                    total += 15.5;
-                } else {
-                    total += 10.5;
-                }
-
-                if (type.getWeight() > victim.getWeight()) {
-                    total += 25.5;
-                } else {
-                    total += 20.5;
-                }
-
-                if (type.getMaxSpeed() > victim.getMaxSpeed()) {
-                    total += 30.5;
-                } else {
-                    total += 15.5;
-                }
-
-            } else if(type instanceof Car) {
-                if (type.getSize() > victim.getSize()) {
-                    total += 10.5;
-                } else {
-                    total += 5.5;
-                }
-
-                if (type.getWeight() > victim.getWeight()) {
-                    total += 15.5;
-                } else {
-                    total += 10.5;
-                }
-
-                if (type.getMaxSpeed() > victim.getMaxSpeed()) {
-                    total += 20.5;
-                } else {
-                    total += 15.5;
-                }
-            }
-
-            generatedDamageHistory.add(total);
-
-        } else {
-            if(victim instanceof Truck){
-                if (victim.getSize() > type.getSize()) {
-                    total += 20.5;
-                } else {
-                    total += 15.5;
-                }
-
-                if (victim.getWeight() > type.getWeight()) {
-                    total += 30.5;
-                } else {
-                    total += 20.5;
-                }
-
-                if (victim.getMaxSpeed() > type.getMaxSpeed()) {
-                    total += 35.5;
-                } else {
-                    total += 25.5;
-                }
-            }else if(victim instanceof Bus){
-                if (victim.getSize() > type.getSize()) {
-                    total += 15.5;
-                } else {
-                    total += 10.5;
-                }
-
-                if (victim.getWeight() > type.getWeight()) {
-                    total += 25.5;
-                } else {
-                    total += 20.5;
-                }
-
-                if (victim.getMaxSpeed() > type.getMaxSpeed()) {
-                    total += 30.5;
-                } else {
-                    total += 15.5;
-                }
-
-            } else if(victim instanceof Car) {
-                if (victim.getSize() > type.getSize()) {
-                    total += 10.5;
-                } else {
-                    total += 5.5;
-                }
-
-                if (victim.getWeight() > type.getWeight()) {
-                    total += 15.5;
-                } else {
-                    total += 10.5;
-                }
-
-                if (victim.getMaxSpeed() > type.getMaxSpeed()) {
-                    total += 20.5;
-                } else {
-                    total += 15.5;
-                }
-            }
-
-            victim.getDamageStatus().getGeneratedDamageHistory().add(total);
-        }
-    }
-
-
-
-    private void calculatedSufferedBack( Vehicle victim, boolean isAtFault) {
-        double total = 0.0;
-
-        if (isAtFault) {
-            if (type instanceof Car) {
-                total += 5;
-            }
-
-            if (type instanceof Truck) {
-                total += 5;
-            }
-
-            if (type instanceof Bus) {
-                total += 30;
-            }
-
-            if (type.getSize() < victim.getSize()) {
-                total += 10.5;
-            } else {
-                total += 5.5;
-            }
-
-            if (type.getWeight() < victim.getWeight()) {
-                total += 20.5;
-            } else {
-                total += 15.5;
-            }
-
-            if (type.getMaxSpeed() < victim.getMaxSpeed()) {
-                total += 25.5;
-            } else {
-                total += 5.5;
-
-            }
-
-            updateStatus(total);
-
-        } else {
+        } else if (type instanceof Car) {
             if (victim instanceof Car) {
-                total += 5;
+                total += 20;
             }
 
             if (victim instanceof Truck) {
-                total += 5;
+                total += 10;
             }
 
             if (victim instanceof Bus) {
-                total += 30;
+                total += 15;
             }
-
-
-            if (victim.getSize() < type.getSize()) {
-                total += 10.5;
-            } else {
-                total += 5.5;
-            }
-
-            if (victim.getWeight() < type.getWeight()) {
-                total += 20.5;
-            } else {
-                total += 15.5;
-            }
-
-            if (victim.getMaxSpeed() < type.getMaxSpeed()) {
-                total += 25.5;
-            } else {
-                total += 5.5;
-
-            }
-
-            victim.getDamageStatus().updateStatus(total);
 
         }
+
+
+        if (victim.getSize() > type.getSize()) {
+            total += 7.5;
+        } else {
+            total += 10.5;
+        }
+
+        if (victim.getWeight() > type.getWeight()) {
+            total += 15.5;
+        } else {
+            total += 20.5;
+        }
+
+
+        victim.getDamageStatus().updateStatus(total);
 
 
     }
 
 
-    private void calculateGeneratedBack(Vehicle victim, boolean isAtFault) {
+    private void calculateGeneratedBack(Vehicle victim) {
         double total = 0.0;
 
-        if (isAtFault) {
+        victim.getDamageStatus().getGeneratedDamageHistory().add(total);
 
-            if(type instanceof Truck){
-                if (type.getSize() > victim.getSize()) {
-                    total += 20.5;
-                } else {
-                    total += 15.5;
-                }
-
-                if (type.getWeight() > victim.getWeight()) {
-                    total += 35.5;
-                } else {
-                    total += 25.5;
-                }
-
-                if (type.getMaxSpeed() > victim.getMaxSpeed()) {
-                    total += 40.5;
-                } else {
-                    total += 30.5;
-
-                }
-            } else if(type instanceof Bus){
-                if (type.getSize() > victim.getSize()) {
-                    total += 10.5;
-                } else {
-                    total += 5.5;
-                }
-
-                if (type.getWeight() > victim.getWeight()) {
-                    total += 30.5;
-                } else {
-                    total += 15.5;
-                }
-
-                if (type.getMaxSpeed() > victim.getMaxSpeed()) {
-                    total += 35.5;
-                } else {
-                    total += 25.5;
-
-                }
-            } else if(type instanceof Car) {
-                if (type.getSize() > victim.getSize()) {
-                    total += 10.5;
-                } else {
-                    total += 5.5;
-                }
-
-                if (type.getWeight() > victim.getWeight()) {
-                    total += 20.5;
-                } else {
-                    total += 10.5;
-                }
-
-                if (type.getMaxSpeed() > victim.getMaxSpeed()) {
-                    total += 25.5;
-                } else {
-                    total += 15.5;
-
-                }
-            }
-
-            generatedDamageHistory.add(total);
-
-        } else {
-            victim.getDamageStatus().getGeneratedDamageHistory().add(total);
-        }
     }
 
 
@@ -432,14 +342,14 @@ public class DamageStatus {
         double total = 0.0;
 
         if (isAtFault) {
-            if( type instanceof Truck){
+            if (type instanceof Truck) {
                 if (type.getSize() < victim.getSize()) {
                     total += 20.5;
                 } else {
                     total += 15.5;
                 }
 
-            } else if(type instanceof Bus){
+            } else if (type instanceof Bus) {
                 if (type.getSize() < victim.getSize()) {
                     total += 25.0;
                 } else {
@@ -447,7 +357,7 @@ public class DamageStatus {
                 }
 
 
-            } else if(type instanceof  Car) {
+            } else if (type instanceof Car) {
                 if (type.getSize() < victim.getSize()) {
                     total += 40.5;
                 } else {
@@ -455,10 +365,10 @@ public class DamageStatus {
                 }
             }
 
-           updateStatus(total);
+            updateStatus(total);
 
         } else {
-            if( victim instanceof Truck){
+            if (victim instanceof Truck) {
                 if (victim.getSize() < type.getSize()) {
                     total += 25.5;
                 } else {
@@ -466,7 +376,7 @@ public class DamageStatus {
                 }
 
 
-            } else if(victim instanceof Bus){
+            } else if (victim instanceof Bus) {
                 if (victim.getSize() < type.getSize()) {
                     total += 20.0;
                 } else {
@@ -474,13 +384,12 @@ public class DamageStatus {
                 }
 
 
-            } else if(victim instanceof Car) {
+            } else if (victim instanceof Car) {
                 if (victim.getSize() < type.getSize()) {
                     total += 40.5;
                 } else {
                     total += 25.5;
                 }
-
 
 
             }
@@ -490,7 +399,7 @@ public class DamageStatus {
     }
 
 
-    private void calculateGeneratedSide( Vehicle victim, boolean isAtFault) {
+    private void calculateGeneratedSide(Vehicle victim, boolean isAtFault) {
         double total = 0.0;
 
 

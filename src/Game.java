@@ -21,10 +21,21 @@ public class Game {
 
 //m.erase();
 //saveMap();
-//        m.addSegment(new Segment(new Point(0,2), Direction.East,2,10));
-//        m.addSegment(new Segment(new Point(1,4),Direction.West,2,10) );
-//        m.addSegment(new Segment(new Point(2,1), Direction.North,2,10));
-//        m.addSegment(new Segment(new Point(4,0), Direction.South,2,10));
+//        m.addSegment(new Segment(new Point(0,4), Direction.North,3,6));
+//        m.addSegment(new Segment(new Point(0,2), Direction.East,2,6));
+//        m.addSegment(new Segment(new Point(0,6), Direction.West,2,6));
+//        m.addSegment(new Segment(new Point(0,7), Direction.South,2,6));
+//        m.addSegment(new Segment(new Point(1,4),Direction.West,2,4) );
+//        m.addSegment(new Segment(new Point(1,2), Direction.South,3,6));
+//        m.addSegment(new Segment(new Point(2,1), Direction.North,3,6));
+//        m.addSegment(new Segment(new Point(2,0), Direction.West,2,5));
+//        m.addSegment(new Segment(new Point(3,2), Direction.North,1,4));
+//        m.addSegment(new Segment(new Point(4,1), Direction.East,2,5));
+//        m.addSegment(new Segment(new Point(4,0), Direction.South,3,4));
+//        m.addSegment(new Segment(new Point(5,7), Direction.East,2,6));
+//        m.addSegment(new Segment(new Point(6,0), Direction.East,2,6));
+//        m.addSegment(new Segment(new Point(7,3), Direction.East,3,6));
+//        m.addSegment(new Segment(new Point(7,5), Direction.West,3,6));
 //saveMap();
         loadMap();
 
@@ -45,8 +56,8 @@ public class Game {
 //        }
 
 
-        addAI(7);
-        for (int j = 0; j < 1; j++) {
+        addAI(12);
+        for (int j = 0; j < 2; j++) {
             moveAI();
         }
 
@@ -147,6 +158,9 @@ public class Game {
 
 
             }
+
+            System.out.println(".................................................................................................................................................................................................................................");
+
         } else {
             System.out.println("Not enough space for " + amount + " bots. The limit is " + m.AIlimit() + "!");
         }

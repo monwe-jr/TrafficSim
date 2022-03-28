@@ -176,10 +176,12 @@ public class Turn {
                         toGoStraightOn.addVehicle(m, v, oldLaneLocation);
                         wentStraight = true;
 
+                        v.getReputation().successfulGamble();
+
                     } else {
-//                        Vehicle victim = toGoStraightOn.getFrontVictims(v, oldLaneLocation, true);
-//                        v.getDamageStatus().frontCollision(victim);
-//                        System.out.println(v + " Collision occurred When going straight on " + toGoStraightOn.getSegmentLocation());
+
+                        v.getDamageStatus().frontCollision(toGoStraightOn.getFrontVictims(v, oldLaneLocation, true));
+                        System.out.println(v + " Collision occurred When going straight on " + toGoStraightOn.getSegmentLocation());
 
                     }
 
@@ -195,10 +197,12 @@ public class Turn {
                                 toGoStraightOn.addVehicle(m, v, 1);
                                 wentStraight = true;
 
+                                v.getReputation().successfulGamble();
+
                             } else {
-//                                Vehicle victim = toGoStraightOn.getFrontVictims(v, 1, true);
-//                                v.getDamageStatus().frontCollision(victim);
-//                                System.out.println(v + " Collision occurred When going straight on " + toGoStraightOn.getSegmentLocation());
+
+                                v.getDamageStatus().frontCollision(toGoStraightOn.getFrontVictims(v, 1, true));
+                                System.out.println(v + " Collision occurred When going straight on " + toGoStraightOn.getSegmentLocation());
 
                             }
 
@@ -213,10 +217,12 @@ public class Turn {
                                 toGoStraightOn.addVehicle(m, v, 0);
                                 wentStraight = true;
 
+                                v.getReputation().successfulGamble();
+
                             } else {
-//                                Vehicle victim = toGoStraightOn.getFrontVictims(v, 0, true);
-//                                v.getDamageStatus().frontCollision(victim);
-//                                System.out.println(v + " Collision occurred When going straight on " + toGoStraightOn.getSegmentLocation());
+
+                                v.getDamageStatus().frontCollision(toGoStraightOn.getFrontVictims(v, 0, true));
+                                System.out.println(v + " Collision occurred When going straight on " + toGoStraightOn.getSegmentLocation());
 
                             }
                         }
@@ -233,10 +239,13 @@ public class Turn {
                     toGoStraightOn.addVehicle(m, v, 0);
                     wentStraight = true;
 
+                    v.getReputation().successfulGamble();
+
                 } else {
-//                    Vehicle victim = toGoStraightOn.getFrontVictims(v, 0, true);
-//                    v.getDamageStatus().frontCollision(victim);
-//                    System.out.println(v + " Collision occurred When going straight on " + toGoStraightOn.getSegmentLocation());
+
+                    v.getDamageStatus().frontCollision(toGoStraightOn.getFrontVictims(v, 0, true));
+                    System.out.println(v + " Collision occurred When going straight on " + toGoStraightOn.getSegmentLocation());
+
                 }
 
                 if (oldLaneLocation != 0) {
@@ -297,11 +306,12 @@ public class Turn {
                         toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
                         turned = true;
 
+                        v.getReputation().successfulGamble();
+
                     } else {
 
-//                        Vehicle victim = toTurnLeftOnto.getFrontVictims(v, oldLaneLocation, true);
-//                        v.getDamageStatus().frontCollision(victim);
-//                        System.out.println(v + " Collision occurred When turning left " + toTurnLeftOnto.getSegmentLocation());
+                        v.getDamageStatus().frontCollision(toTurnLeftOnto.getFrontVictims(v, oldLaneLocation, true));
+                        System.out.println(v + " Collision occurred When turning left " + toTurnLeftOnto.getSegmentLocation());
 
                     }
 
@@ -319,10 +329,13 @@ public class Turn {
                                 toTurnLeftOnto.addVehicle(m, v, 1);
                                 turned = true;
 
+                                v.getReputation().successfulGamble();
+
                             } else {
-//                                Vehicle victim = toTurnLeftOnto.getFrontVictims(v, 1, true);
-//                                v.getDamageStatus().frontCollision(victim);
-//                                System.out.println(v + " Collision occurred When turning left " + toTurnLeftOnto.getSegmentLocation());
+
+                                v.getDamageStatus().frontCollision(toTurnLeftOnto.getFrontVictims(v, 1, true));
+                                System.out.println(v + " Collision occurred When turning left " + toTurnLeftOnto.getSegmentLocation());
+
                             }
 
                             v.getReputation().correspondingLaneViolation();
@@ -335,11 +348,12 @@ public class Turn {
                                 toTurnLeftOnto.addVehicle(m, v, 0);
                                 turned = true;
 
+                                v.getReputation().successfulGamble();
+
                             } else {
 
-//                                Vehicle victim = toTurnLeftOnto.getFrontVictims(v, 0, true);
-//                                v.getDamageStatus().frontCollision(victim);
-//                                System.out.println(v + " Collision occurred When turning left " + toTurnLeftOnto.getSegmentLocation());
+                                v.getDamageStatus().frontCollision(toTurnLeftOnto.getFrontVictims(v, 0, true));
+                                System.out.println(v + " Collision occurred When turning left " + toTurnLeftOnto.getSegmentLocation());
 
                             }
                         }
@@ -356,10 +370,13 @@ public class Turn {
                     v.getReputation().correspondingLaneViolation();
                     turned = true;
 
+                    v.getReputation().successfulGamble();
+
                 } else {
-//                    Vehicle victim = toTurnLeftOnto.getFrontVictims(v, 0, true);
-//                    v.getDamageStatus().frontCollision(victim);
-//                    System.out.println(v + " Collision occurred When turning left " + toTurnLeftOnto.getSegmentLocation());
+
+                    v.getDamageStatus().frontCollision(toTurnLeftOnto.getFrontVictims(v, 0, true));
+                    System.out.println(v + " Collision occurred When turning left " + toTurnLeftOnto.getSegmentLocation());
+
                 }
 
                 if (oldLaneLocation != 0) {
@@ -421,10 +438,13 @@ public class Turn {
                         toTurnRightOnto.addVehicle(m, v, oldLaneLocation);
                         turned = true;
 
+                        v.getReputation().successfulGamble();
+
                     } else {
-//                        Vehicle victim = toTurnRightOnto.getFrontVictims(v, oldLaneLocation, true);
-//                        v.getDamageStatus().frontCollision(victim);
-//                        System.out.println(v + " Collision occurred When turning right " + toTurnRightOnto.getSegmentLocation());
+
+                        v.getDamageStatus().frontCollision(toTurnRightOnto.getFrontVictims(v, oldLaneLocation, true));
+                        System.out.println(v + " Collision occurred When turning right " + toTurnRightOnto.getSegmentLocation());
+
                     }
 
 
@@ -443,10 +463,13 @@ public class Turn {
                                 toTurnRightOnto.addVehicle(m, v, 0);
                                 turned = true;
 
+                                v.getReputation().successfulGamble();
+
                             } else {
-//                                Vehicle victim = toTurnRightOnto.getFrontVictims(v, 0, true);
-//                                v.getDamageStatus().frontCollision(victim);
-//                                System.out.println(v + " Collision occurred When turning right " + toTurnRightOnto.getSegmentLocation());
+
+                                v.getDamageStatus().frontCollision(toTurnRightOnto.getFrontVictims(v, 0, true));
+                                System.out.println(v + " Collision occurred When turning right " + toTurnRightOnto.getSegmentLocation());
+
                             }
 
                             v.getReputation().correspondingLaneViolation();
@@ -458,11 +481,12 @@ public class Turn {
                                 toTurnRightOnto.addVehicle(m, v, toTurnRightOnto.laneCount() - 1);
                                 turned = true;
 
+                                v.getReputation().successfulGamble();
+
                             } else {
 
-//                                Vehicle victim = toTurnRightOnto.getFrontVictims(v, toTurnRightOnto.laneCount() - 1, true);
-//                                v.getDamageStatus().frontCollision(victim);
-//                                System.out.println(v + " Collision occurred When turning right " + toTurnRightOnto.getSegmentLocation());
+                                v.getDamageStatus().frontCollision(toTurnRightOnto.getFrontVictims(v, toTurnRightOnto.laneCount() - 1, true));
+                                System.out.println(v + " Collision occurred When turning right " + toTurnRightOnto.getSegmentLocation());
 
                             }
                         }
@@ -478,10 +502,12 @@ public class Turn {
                     toTurnRightOnto.addVehicle(m, v, 0);
                     turned = true;
 
+                    v.getReputation().successfulGamble();
+
                 } else {
-//                    Vehicle victim = toTurnRightOnto.getFrontVictims(v, 0, true);
-//                    v.getDamageStatus().frontCollision(victim);
-//                    System.out.println(v + " Collision occurred When turning right " + toTurnRightOnto.getSegmentLocation());
+
+                    v.getDamageStatus().frontCollision(toTurnRightOnto.getFrontVictims(v, 0, true));
+                    System.out.println(v + " Collision occurred When turning right " + toTurnRightOnto.getSegmentLocation());
 
                 }
 
@@ -543,10 +569,13 @@ public class Turn {
                         toUTurnOnto.addVehicle(m, v, oldLaneLocation);
                         turned = true;
 
+                        v.getReputation().successfulGamble();
+
                     } else {
-//                        Vehicle victim = toUTurnOnto.getFrontVictims(v, oldLaneLocation, true);
-//                        v.getDamageStatus().frontCollision(victim);
-//                        System.out.println(v + " Collision occurred When U-turning " + toUTurnOnto.getSegmentLocation());
+
+                        v.getDamageStatus().frontCollision(toUTurnOnto.getFrontVictims(v, oldLaneLocation, true));
+                        System.out.println(v + " Collision occurred When U-turning " + toUTurnOnto.getSegmentLocation());
+
                     }
 
                 } else {
@@ -559,11 +588,12 @@ public class Turn {
                                 toUTurnOnto.addVehicle(m, v, 1);
                                 turned = true;
 
+                                v.getReputation().successfulGamble();
+
                             } else {
 
-//                                Vehicle victim = toUTurnOnto.getFrontVictims(v, 1, true);
-//                                v.getDamageStatus().frontCollision(victim);
-//                                System.out.println(v + " Collision occurred When U-turning " + toUTurnOnto.getSegmentLocation());
+                                v.getDamageStatus().frontCollision(toUTurnOnto.getFrontVictims(v, 1, true));
+                                System.out.println(v + " Collision occurred When U-turning " + toUTurnOnto.getSegmentLocation());
 
                             }
 
@@ -574,11 +604,12 @@ public class Turn {
                                 toUTurnOnto.addVehicle(m, v, 0);
                                 turned = true;
 
+                                v.getReputation().successfulGamble();
+
                             } else {
-//
-//                                Vehicle victim = toUTurnOnto.getFrontVictims(v, 0, true);
-//                                v.getDamageStatus().frontCollision(victim);
-//                                System.out.println(v + " Collision occurred When U-turning " + toUTurnOnto.getSegmentLocation());
+
+                                v.getDamageStatus().frontCollision(toUTurnOnto.getFrontVictims(v, 0, true));
+                                System.out.println(v + " Collision occurred When U-turning " + toUTurnOnto.getSegmentLocation());
 
                             }
                         }
@@ -595,10 +626,11 @@ public class Turn {
                     toUTurnOnto.addVehicle(m, v, 0);
                     turned = true;
 
+                    v.getReputation().successfulGamble();
+
                 } else {
-//                    Vehicle victim = toUTurnOnto.getFrontVictims(v, 0, true);
-//                    v.getDamageStatus().frontCollision(victim);
-//                    System.out.println(v + " Collision occurred When U-turning " + toUTurnOnto.getSegmentLocation());
+                    v.getDamageStatus().frontCollision(toUTurnOnto.getFrontVictims(v, 0, true));
+                    System.out.println(v + " Collision occurred When U-turning " + toUTurnOnto.getSegmentLocation());
                 }
 
             }

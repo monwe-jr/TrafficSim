@@ -54,12 +54,16 @@ public class Reputation {
         changeNiceness(25.0);
     }
 
+    public void atFaultViolation(){
+        changeNiceness(20.5);
+    }
+
 
  public void calculateReputation(ArrayList<Double> suffered,ArrayList<Double> generated){
         if(repCounter == 0){
             for (int i = 0; i < suffered.size(); i++) {
                 if(suffered.get(i) < generated.get(i)){
-                   changeNiceness(-20);
+                   changeNiceness(-15);
                 }
             }
 
@@ -68,7 +72,7 @@ public class Reputation {
             for (int i = 0; i < suffered.size(); i++) {
                 if(i>repCounter){
                     if(suffered.get(i) < generated.get(i)){
-                        changeNiceness(-20);
+                        changeNiceness(-15);
                     }
                 }
             }
