@@ -96,6 +96,7 @@ public class Game {
 
     private void addAI(int amount) {
         ArrayList<Segment> mapSegments = m.getSegments();
+        VehicleFactory vF = new VehicleFactory();
 
         if (amount <= m.AIlimit()) {
             for (int i = 0; i < amount; i++) {
@@ -105,10 +106,15 @@ public class Game {
                 int choice = random.nextInt(3);
                 Collections.shuffle(mapSegments);
                 Segment s = mapSegments.get((int) (Math.random() * mapSegments.size()));
+                Vehicle v;
 
-
-                    if (choice == 0) {
-                Vehicle v = new Car(new Color(r, g, b), false);
+                if (choice == 0) {
+                    v = vF.getVehicle(VehicleFactory.vehicleType.Car, new Color(r,g,b), false);
+                } else if (choice == 1) {
+                    v = vF.getVehicle(VehicleFactory.vehicleType.Bus, new Color(r,g,b), false);
+                } else {
+                    v = vF.getVehicle(VehicleFactory.vehicleType.Truck, new Color(r,g,b), false);
+                }
                 vehicles.add(v);
 
                 if (s.canInsertOnSegment(v)) {
@@ -121,41 +127,6 @@ public class Game {
                         }
                     }
                 }
-
-                    } else if (choice == 1) {
-                        Vehicle v = new Bus(new Color(r, g, b), false);
-                        vehicles.add(v);
-
-
-                        if(s.canInsertOnSegment(v)) {
-                            s.insertVehicle(v);
-                        } else {
-                            for (int j = 0; j < mapSegments.size(); j++) {
-                                if(mapSegments.get(j).canInsertOnSegment(v)){
-                                    mapSegments.get(j).insertVehicle(v);
-                                    break;
-                                }
-                            }
-                        }
-
-                    } else if (choice == 2) {
-                        Vehicle v = new Truck(new Color(r, g, b), false);
-                        vehicles.add(v);
-
-
-                        if(s.canInsertOnSegment(v)) {
-                            s.insertVehicle(v);
-                        } else {
-                            for (int j = 0; j < mapSegments.size(); j++) {
-                                if(mapSegments.get(j).canInsertOnSegment(v)){
-                                    mapSegments.get(j).insertVehicle(v);
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-
 
             }
 
