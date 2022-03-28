@@ -1,20 +1,17 @@
 import java.awt.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 public abstract class Vehicle implements Serializable {
     private Color c;
     private boolean drivable; //distinguishes humans from AI
-    protected Double size;
+    protected int size;
     protected Double weight;
     protected Double maxSpeed;
     private Reputation reputation;
     private DamageStatus damageStatus;
     protected Segment currentSegment;
     protected Segment target;
-    protected int length;
     protected Point vehicleLocation; //lane location on segment s
 
     /**
@@ -23,14 +20,14 @@ public abstract class Vehicle implements Serializable {
      * @param color The color of the vehicle.
      * @param drive True if player vehicle false otherwise.
      */
-    public Vehicle(Color color, boolean drive, Segment s) {
+    public Vehicle(Color color, boolean drive) {
         this.c = color;
         this.drivable = drive;
-        this.currentSegment = s;
         reputation = new Reputation();
-        setSegment(s);
         reputation = new Reputation();
-        damageStatus = new DamageStatus(reputation);
+        damageStatus = new DamageStatus(reputation, Vehicle.this);
+
+
 
     }
 
@@ -42,6 +39,10 @@ public abstract class Vehicle implements Serializable {
     public void move(){
         currentSegment.moveVehicle(vehicleLocation);
     }
+
+
+
+
 
 
     /**
@@ -77,7 +78,7 @@ public abstract class Vehicle implements Serializable {
      * Returns the size of the vehicle.
      * @return Double size
      */
-    public Double getSize(){
+    public int getSize(){
         return  size;
     }
 
@@ -97,13 +98,7 @@ public abstract class Vehicle implements Serializable {
         return maxSpeed;
     }
 
-    /**
-     * Length of vehicle
-     * @return
-     */
-    public int getLength(){
-        return length;
-    }
+
 
 
 
@@ -120,12 +115,7 @@ public abstract class Vehicle implements Serializable {
      * @param p new location
      */
     public void setVehicleLocation(Point p){
-        if(!damageStatus.isDestroyed()) {
             vehicleLocation = p;
-        } else{
-            vehicleLocation = null;
-        }
-
     }
 
 

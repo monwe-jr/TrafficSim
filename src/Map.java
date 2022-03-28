@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Map implements Serializable {
     private int interCount;
+    private int limit = 0;
 
     private ArrayList<ArrayList<Segment>> map = new ArrayList<>();
     private ArrayList<Segment> onMap = new ArrayList<>();
@@ -13,6 +14,14 @@ public class Map implements Serializable {
         this.interCount = intersections;
         generate(intersections);
 
+    }
+
+    public int AIlimit(){
+        if(limit == 0){
+            return 0;
+        }else {
+            return limit - 1;
+        }
     }
 
 
@@ -30,6 +39,7 @@ public class Map implements Serializable {
             int x = s.getSegmentLocation().x;
             map.get(x).add(s);
             onMap.add(s);
+            limit += s.laneCount();
         }
 
     }

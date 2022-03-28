@@ -4,7 +4,8 @@ public class Reputation {
     final private double MIN = 0;
     final private double MAX = 100;
     private double niceness;
-    ArrayList<Double> reputationHistory;
+    private ArrayList<Double> reputationHistory;
+    private int repCounter = 0;
 
     /**
      * Default constructor, starts with the minimum value for niceness
@@ -30,10 +31,13 @@ public class Reputation {
     void changeNiceness(double amount) {
         if(niceness + amount < MIN) {
             niceness = MIN;
+            reputationHistory.add(niceness);
         } else if(niceness + amount > MAX) {
             niceness = MAX;
+            reputationHistory.add(niceness);
         } else {
             niceness = niceness + amount;
+            reputationHistory.add(niceness);
         }
     }
 
@@ -42,11 +46,37 @@ public class Reputation {
      * If a player does not make a turn or go straight using the corresponding lane, this method iis called
      */
     public void correspondingLaneViolation(){
-        changeNiceness(10.0);
+        changeNiceness(-10.0);
     }
 
 
+    public void successfulGamble(){
+        changeNiceness(25.0);
+    }
 
+
+ public void calculateReputation(ArrayList<Double> suffered,ArrayList<Double> generated){
+        if(repCounter == 0){
+            for (int i = 0; i < suffered.size(); i++) {
+                if(suffered.get(i) < generated.get(i)){
+                   changeNiceness(-20);
+                }
+            }
+
+        }else {
+
+            for (int i = 0; i < suffered.size(); i++) {
+                if(i>repCounter){
+                    if(suffered.get(i) < generated.get(i)){
+                        changeNiceness(-20);
+                    }
+                }
+            }
+
+        }
+     repCounter = suffered.size()-1;
+
+ }
 
 
 
