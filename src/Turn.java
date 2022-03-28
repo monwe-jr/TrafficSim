@@ -246,10 +246,10 @@ public class Turn {
 
             if (wentStraight) {
                 if (v.getSegment().laneCount() == 1) {
-                    System.out.println(v + " is going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". This segment has only one lane on segment " + toGoStraightOn.getSegmentLocation());
+                    System.out.println(v + " is going straight at intersection " + toGoStraightOn.getSegmentLocation().y + ". This segment has only one lane on segment " + toGoStraightOn.getSegmentLocation());
                 } else if (v.getSegment().laneCount() == 2) {
                     if (v.getSegment().laneLocation(v) == 0) {
-                        System.out.println(v + " is going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the left lane on segment " + toGoStraightOn.getSegmentLocation());
+                        System.out.println(v + " is going straight at intersection " + toGoStraightOn.getSegmentLocation().y + ". Vehicle is on the left lane on segment " + toGoStraightOn.getSegmentLocation());
                     } else {
                         System.out.println(v + " is going straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Vehicle is on the right lane on segment " + toGoStraightOn.getSegmentLocation());
                     }

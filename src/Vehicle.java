@@ -37,7 +37,7 @@ public abstract class Vehicle implements Serializable {
 
 
     public void move(){
-        currentSegment.moveVehicle(vehicleLocation);
+        currentSegment.moveVehicle(Vehicle.this);
     }
 
 

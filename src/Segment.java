@@ -1,7 +1,8 @@
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Collections;
+
 
 
 public class Segment implements Serializable {
@@ -11,7 +12,7 @@ public class Segment implements Serializable {
     private ArrayList<Integer> intersections = new ArrayList<>(); //intersections connected by the segment
     private ArrayList<Vehicle> onSegment = new ArrayList<>(); //vehicles on the segment
     private Lane segmentLanes;
-    private Random num = new Random();
+
 
 
     Segment(Point intersections, Direction d, int laneCount, int segLength) {
@@ -60,8 +61,8 @@ public class Segment implements Serializable {
         segmentLanes.removeVehicle(v);
     }
 
-    public void moveVehicle(Point p) {
-        segmentLanes.moveVehicle(p);
+    public void moveVehicle(Vehicle v) {
+        segmentLanes.moveVehicle(v);
     }
 
 
@@ -216,7 +217,8 @@ public class Segment implements Serializable {
                }
            }
 
-               return candidates.get(num.nextInt(candidates.size()));
+           Collections.shuffle(candidates);
+           return candidates.get((int) (Math.random() * candidates.size()));
 
        }
 
@@ -231,6 +233,8 @@ public class Segment implements Serializable {
                    v.setSegment(Segment.this);
                    lanes[p.x][p.y] = v;
 
+                   System.out.println(v + " Has been inserted into segment " + location + ". " );
+
                }
                else if (v instanceof Bus){
                    v.setVehicleLocation(p);
@@ -241,6 +245,8 @@ public class Segment implements Serializable {
                        lanes[i][p.y] = v;
                    }
 
+                   System.out.println(v + "Has been inserted into segment " + location + ". " );
+
                }
                else if(v instanceof Truck){
                    v.setVehicleLocation(p);
@@ -250,6 +256,8 @@ public class Segment implements Serializable {
                    for (int i = p.x; i > p.x-v.getSize(); i--) {
                        lanes[i][p.y] = v;
                    }
+
+                   System.out.println(v + "Has been inserted into segment " + location + ". " );
 
            }
 
@@ -376,26 +384,26 @@ public class Segment implements Serializable {
         /**
          * Moves the vehicle one index up
          *
-         * @param p the segment position of the vehicle
+         * @param v the vehicle to be moved
          */
-        private void moveVehicle(Point p) {
-            Point location = p;
-            Vehicle toMove = lanes[location.x][location.y];
+        private void moveVehicle(Vehicle v) {
+            Point location = getIndex(v);
 
 
-            if (!atEnd(toMove)) {
+            if (!atEnd(v)) {
                 Point target = new Point(location.x + 1, location.y);
-                toMove.setVehicleLocation(target);
-                lanes[toMove.getVehicleLocation().x][toMove.vehicleLocation.y] = toMove;
-                lanes[toMove.getVehicleLocation().x - (toMove.getSize())][toMove.vehicleLocation.y] = null;
+                v.setVehicleLocation(target);
+                lanes[v.getVehicleLocation().x][v.vehicleLocation.y] = v;
+                lanes[v.getVehicleLocation().x - (v.getSize())][v.vehicleLocation.y] = null;
 
 
-                if (!atEnd(toMove)) {
-                    System.out.println(toMove + " is " + (segmentLength - toMove.getVehicleLocation().x - 1) + " miles away from intersection " + toMove.getSegment().getSegmentLocation().y + ".");
+                if (!atEnd(v)) {
+                    System.out.println(v + " moved on segment " + Segment.this.location + " and is "  + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y + ".");
                 } else {
-                    System.out.println(toMove + " has arrived at intersection " + toMove.getSegment().getSegmentLocation().y);
+                    System.out.println(v + " has arrived at intersection " + v.getSegment().getSegmentLocation().y);
                 }
             }
+
 
 
         }
@@ -407,12 +415,13 @@ public class Segment implements Serializable {
         public Point getIndex(Vehicle v) {
 
             if (onSegment.contains(v)) {
-                for (int i = 0; i < segmentLength; i++) {
+                for (int i = segmentLength-1; i >=0 ; i--) {
                     for (int j = 0; j < laneCount; j++) {
                         if (lanes[i][j] == v) {
                             return new Point(i, j);
 
                         }
+                        break;
                     }
 
                 }
@@ -607,17 +616,31 @@ public class Segment implements Serializable {
 
 
             if (switchedLeft) {
+
                 if (laneCount == 2) {
                     if (laneLocation(v) == 0) {
-                        System.out.println(v + " moved from the right lane to the left lane on segment " + location + ".");
+                        if((segmentLength - v.getVehicleLocation().x - 1)>0) {
+                            System.out.println(v + " moved from the right lane to the left lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y);
+                        } else{
+                            System.out.println(v + " moved from the right lane to the left lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
+                        }
                     }
                 } else if (laneCount == 3) {
                     if (laneLocation(v) == 1) {
-                        System.out.println(v + " Vehicle moved from the right lane to the middle lane on segment " + location + ".");
+                        if((segmentLength - v.getVehicleLocation().x - 1)>0) {
+                            System.out.println(v + " moved from the right lane to the middle lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y);
+                        } else{
+                            System.out.println(v + " moved from the right lane to the middle lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
+                        }
                     } else {
-                        System.out.println(v + " Vehicle moved from the middle lane to the left lane on segment " + location + ".");
+                        if((segmentLength - v.getVehicleLocation().x - 1)>0) {
+                            System.out.println(v + " moved from the middle lane to the left lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y);
+                        }else{
+                            System.out.println(v + " moved from the middle lane to the left lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
+                        }
                     }
                 }
+
             }
 
         }
@@ -657,13 +680,25 @@ public class Segment implements Serializable {
             if (switchedRight) {
                 if (laneCount == 2) {
                     if (laneLocation(v) == 1) {
-                        System.out.println(v + " Vehicle moved from the left lane to the right lane on segment " + location + ".");
+                        if((segmentLength - v.getVehicleLocation().x - 1) > 0) {
+                            System.out.println(v + " moved from the left lane to the right lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " away from intersection " + Segment.this.location.y);
+                        } else {
+                            System.out.println(v + " moved from the left lane to the right lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
+                        }
                     }
                 } else if (laneCount == 3) {
                     if (laneLocation(v) == 1) {
-                        System.out.println(v + " Vehicle moved from the left lane to the middle lane on segment " + location + ".");
+                        if((segmentLength - v.getVehicleLocation().x - 1) > 0) {
+                            System.out.println(v + " moved from the left lane to the middle lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " away from intersection " + Segment.this.location.y);
+                        } else {
+                            System.out.println(v + " moved from the left lane to the middle lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
+                        }
                     } else {
-                        System.out.println(v + " Vehicle moved from the middle lane to the right lane on segment " + location + ".");
+                        if((segmentLength - v.getVehicleLocation().x - 1) > 0) {
+                            System.out.println(v + " moved from the middle lane to the right lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " away from intersection " + Segment.this.location.y);
+                        } else {
+                            System.out.println(v + " moved from the middle lane to the right lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
+                        }
                     }
 
                 }

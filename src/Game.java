@@ -21,10 +21,10 @@ public class Game {
 
 //m.erase();
 //saveMap();
-//        m.addSegment(new Segment(new Point(0,2), Direction.East,2,4));
-//        m.addSegment(new Segment(new Point(1,4),Direction.West,2,4) );
-//        m.addSegment(new Segment(new Point(2,1), Direction.North,3,4));
-//        m.addSegment(new Segment(new Point(4,0), Direction.South,3,4));
+//        m.addSegment(new Segment(new Point(0,2), Direction.East,2,10));
+//        m.addSegment(new Segment(new Point(1,4),Direction.West,2,10) );
+//        m.addSegment(new Segment(new Point(2,1), Direction.North,3,10));
+//        m.addSegment(new Segment(new Point(4,0), Direction.South,3,10));
 //saveMap();
         loadMap();
 
@@ -45,8 +45,8 @@ public class Game {
 //        }
 
 
-        addAI(9);
-        for (int j = 0; j < 3; j++) {
+        addAI(3);
+        for (int j = 0; j < 10; j++) {
             moveAI();
         }
 
@@ -92,23 +92,24 @@ public class Game {
                 float g = random.nextFloat();
                 float b = random.nextFloat();
                 int choice = random.nextInt(3);
-                Segment s = mapSegments.get(random.nextInt(mapSegments.size()));
+                Collections.shuffle(mapSegments);
+                Segment s = mapSegments.get((int) (Math.random() * mapSegments.size()));
 
 
 //                    if (choice == 0) {
-                        Vehicle v = new Car(new Color(r, g, b), false);
-                        vehicles.add(v);
+                Vehicle v = new Car(new Color(r, g, b), false);
+                vehicles.add(v);
 
-                        if(s.canInsertOnSegment(v)) {
-                            s.insertVehicle(v);
-                        } else {
-                            for (int j = 0; j < mapSegments.size(); j++) {
-                                if(mapSegments.get(j).canInsertOnSegment(v)){
-                                    mapSegments.get(j).insertVehicle(v);
-                                    break;
-                                }
-                            }
+                if (s.canInsertOnSegment(v)) {
+                    s.insertVehicle(v);
+                } else {
+                    for (int j = 0; j < mapSegments.size(); j++) {
+                        if (mapSegments.get(j).canInsertOnSegment(v)) {
+                            mapSegments.get(j).insertVehicle(v);
+                            break;
                         }
+                    }
+                }
 //
 //                    } else if (choice == 1) {
 //                        Vehicle v = new Bus(new Color(r, g, b), false);
@@ -152,13 +153,12 @@ public class Game {
     }
 
 
-
     /**
      * Moves all AI vehicles every time it is called
      */
     private void moveAI() {
         for (Vehicle v : vehicles) {
-            if (!v.isDrivable() || !v.getDamageStatus().isDestroyed()) {
+            if (!v.isDrivable() && !v.getDamageStatus().isDestroyed()) {
                 if (!Turn.canTurn(m, v.getSegment()) && Turn.getStraight(m, v.getSegment()) == null) {
                     if (!v.getSegment().atEnd(v)) {
                         v.move();
@@ -209,12 +209,12 @@ public class Game {
 
                         if (Direction.equals(Direction.rightDirection(current), target)) {
 
-                                Turn.rightTurn(m, v.getSegment(), v);
-                                v.target = null;
+                            Turn.rightTurn(m, v.getSegment(), v);
+                            v.target = null;
                         } else if (Direction.equals(Direction.leftDirection(current), target)) {
 
-                                Turn.leftTurn(m, v.getSegment(), v);
-                                v.target = null;
+                            Turn.leftTurn(m, v.getSegment(), v);
+                            v.target = null;
                         } else {
                             Turn.goStraight(m, v.getSegment(), v);
                             v.target = null;
