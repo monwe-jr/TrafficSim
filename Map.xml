@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<map xmlns:xsi="http://www.w3.org/2001/XMLSchema"
+     xsi:schemaLocation="file://Map.xsd"
+     interCount="" limit="" >
+
+    <ArrayOfArrayOfSegment>
+        <ArrayOfSegment>
+            <Segment>
+                <direction></direction>
+                <location>
+                    <x></x>
+                    <y></y>
+                </location>
+                <laneCount></laneCount>
+                <segLength></segLength>
+            </Segment>
+        </ArrayOfSegment>
+    </ArrayOfArrayOfSegment>
+</map>
