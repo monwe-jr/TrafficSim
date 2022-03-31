@@ -3,24 +3,9 @@
     <xs:element name="map">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="ArrayOfArrayOfSegment"/>
-            </xs:sequence>
-            <xs:attribute name="interCount" use="required" type="xs:nonNegativeInteger"/>
-            <xs:attribute name="limit" use="required" type="xs:nonNegativeInteger" default="0"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="ArrayOfArrayOfSegment">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="ArrayOfSegment"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="ArrayOfSegment">
-        <xs:complexType>
-            <xs:sequence>
                 <xs:element maxOccurs="unbounded" ref="Segment"/>
             </xs:sequence>
+            <xs:attribute name="interCount" use="required" type="xs:nonNegativeInteger"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="Segment">
