@@ -9,8 +9,8 @@ public class Game {
     private ArrayList<Vehicle> vehicles = new ArrayList<>();
     private Map m = new Map(8);
     private static Game instance = null;
-    private Players player = new Players(m);
-    private AI AI = new AI(m);
+    private Players player;
+    private AI AI;
 
 
     public static Game getInstance() {
@@ -23,22 +23,24 @@ public class Game {
     private Game() {
 
 
-        m.addSegment(new Segment(new Point(0, 4), Direction.North, 3, 6));
-        m.addSegment(new Segment(new Point(0, 2), Direction.East, 3, 6));
-        m.addSegment(new Segment(new Point(0, 6), Direction.West, 3, 6));
-        m.addSegment(new Segment(new Point(0, 7), Direction.South, 3, 6));
-        m.addSegment(new Segment(new Point(1, 4), Direction.West, 2, 4));
-        m.addSegment(new Segment(new Point(1, 2), Direction.South, 3, 6));
-        m.addSegment(new Segment(new Point(2, 1), Direction.North, 3, 6));
-        m.addSegment(new Segment(new Point(2, 0), Direction.West, 2, 5));
-        m.addSegment(new Segment(new Point(3, 2), Direction.North, 1, 4));
-        m.addSegment(new Segment(new Point(4, 1), Direction.East, 2, 5));
-        m.addSegment(new Segment(new Point(4, 0), Direction.South, 3, 4));
-        m.addSegment(new Segment(new Point(5, 7), Direction.East, 3, 6));
-        m.addSegment(new Segment(new Point(6, 0), Direction.East, 2, 6));
-        m.addSegment(new Segment(new Point(7, 3), Direction.East, 3, 6));
-        m.addSegment(new Segment(new Point(7, 5), Direction.West, 3, 6));
-
+//        m.addSegment(new Segment(new Point(0, 4), Direction.North, 3, 6));
+//        m.addSegment(new Segment(new Point(0, 2), Direction.East, 3, 6));
+//        m.addSegment(new Segment(new Point(0, 6), Direction.West, 3, 6));
+//        m.addSegment(new Segment(new Point(0, 7), Direction.South, 3, 6));
+//        m.addSegment(new Segment(new Point(1, 4), Direction.West, 2, 4));
+//        m.addSegment(new Segment(new Point(1, 2), Direction.South, 3, 6));
+//        m.addSegment(new Segment(new Point(2, 1), Direction.North, 3, 6));
+//        m.addSegment(new Segment(new Point(2, 0), Direction.West, 2, 5));
+//        m.addSegment(new Segment(new Point(3, 2), Direction.North, 1, 4));
+//        m.addSegment(new Segment(new Point(4, 1), Direction.East, 2, 5));
+//        m.addSegment(new Segment(new Point(4, 0), Direction.South, 3, 4));
+//        m.addSegment(new Segment(new Point(5, 7), Direction.East, 3, 6));
+//        m.addSegment(new Segment(new Point(6, 0), Direction.East, 2, 6));
+//        m.addSegment(new Segment(new Point(7, 3), Direction.East, 3, 6));
+//        m.addSegment(new Segment(new Point(7, 5), Direction.West, 3, 6));
+        m = XMLManager.readFile();
+        player = new Players(m);
+        AI = new AI(m); 
 
         prompt();
 
