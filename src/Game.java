@@ -40,7 +40,7 @@ public class Game {
 //        m.addSegment(new Segment(new Point(7, 5), Direction.West, 3, 6));
         m = XMLManager.readFile();
         player = new Players(m);
-        AI = new AI(m); 
+        AI = new AI(m);
 
         prompt();
 
