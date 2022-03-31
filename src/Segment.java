@@ -480,9 +480,9 @@ public class Segment implements Serializable {
 
                 if (canTurnLeft) {
                     if (canGoStraight || canTurnRight) {
-                        System.out.println("You can turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
+                        System.out.println("You can turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
                     } else {
-                        System.out.println("You can only turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
+                        System.out.println("You can only turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
                     }
 
 
@@ -526,9 +526,9 @@ public class Segment implements Serializable {
 
                 if (canTurnRight) {
                     if (canGoStraight || canTurnLeft) {
-                        System.out.println("You can turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
+                        System.out.println("You can turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
                     } else {
-                        System.out.println("You can only turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
+                        System.out.println("You can only turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
 
                     }
 
@@ -573,9 +573,9 @@ public class Segment implements Serializable {
 
                 if (canGoStraight) {
                     if (canTurnLeft || canTurnRight) {
-                        System.out.println("You can go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
+                        System.out.println("You can go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
                     } else {
-                        System.out.println("You can only go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
+                        System.out.println("You can only go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
 
                     }
 

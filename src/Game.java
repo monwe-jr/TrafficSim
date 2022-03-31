@@ -76,6 +76,7 @@ public class Game {
                     if (c.equals("w")) {
                         System.out.println();
                         v.move();
+                        System.out.println();
                         AI.moveAI(firstMove,v);
                         System.out.println();
                     } else if (c.equals("s")) {
@@ -131,7 +132,8 @@ public class Game {
                         } else {
                             System.out.println();
                             System.out.println("You cannot go straight at this intersection!");
-                            ///////////////
+                            AI.moveAI(firstMove,v);
+                            System.out.println();
                             continue;
 
                         }
@@ -151,7 +153,8 @@ public class Game {
                             System.out.println();
                             System.out.println("You cannot turn right at this intersection!");
                             System.out.println();
-                            ///////////////
+                            AI.moveAI(firstMove,v);
+                            System.out.println();
                             continue;
 
                         }
@@ -167,6 +170,8 @@ public class Game {
                         } else {
                             System.out.println();
                             System.out.println("You cannot turn right at this intersection!");
+                            System.out.println();
+                            AI.moveAI(firstMove,v);
                             System.out.println();
                             continue;
                         }
