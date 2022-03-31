@@ -13,43 +13,39 @@ public abstract class Vehicle implements Serializable {
     protected Segment currentSegment;
     protected Segment target;
     protected Point vehicleLocation; //lane location on segment s
+    protected Map map;
 
     /**
      * Creates a Vehicle with a specified color and indicator for player vehicle.
      * NOTE: Abstract class maybe shouldn't have a constructor?
+     *
      * @param color The color of the vehicle.
      * @param drive True if player vehicle false otherwise.
      */
     public Vehicle(Color color, boolean drive) {
         this.c = color;
         this.drivable = drive;
-        reputation = new Reputation();
-        reputation = new Reputation();
+        reputation = new Reputation(drive);
         damageStatus = new DamageStatus(reputation, Vehicle.this);
-
-
 
     }
 
+    public Vehicle(Map m) {
+        this.map = m;
+    }
 
 
-
-
-
-    public void move(){
+    public void move() {
         currentSegment.moveVehicle(Vehicle.this);
     }
 
 
-
-
-
-
     /**
      * Declares a new segment location
+     *
      * @param s
      */
-    public void setSegment(Segment s){
+    public void setSegment(Segment s) {
         currentSegment = s;
     }
 
@@ -57,7 +53,7 @@ public abstract class Vehicle implements Serializable {
     /**
      * removes a segment from the occupied arraylist after it has been used by the vehicle
      */
-    public void removeSegment(){
+    public void removeSegment() {
         currentSegment = null;
 
     }
@@ -65,45 +61,40 @@ public abstract class Vehicle implements Serializable {
 
     /**
      * Returns the segment the vehicle object is currently on
+     *
      * @return
      */
-    public Segment getSegment(){
+    public Segment getSegment() {
         return currentSegment;
     }
 
 
-    public Reputation getReputation(){return reputation;}
+    public Reputation getReputation() {
+        return reputation;
+    }
 
     /**
      * Returns the size of the vehicle.
+     *
      * @return Double size
      */
-    public int getSize(){
-        return  size;
+    public int getSize() {
+        return size;
     }
 
     /**
      * Returns the weight of the vehicle.
+     *
      * @return Double weight
      */
-    public Double getWeight(){
+    public Double getWeight() {
         return weight;
     }
-
-    /**
-     * Returns the Max Speed of the vehicle.
-     * @return Double max speed
-     */
-    public Double getMaxSpeed(){
-        return maxSpeed;
-    }
-
-
-
 
 
     /**
      * Returns damage status object
+     *
      * @return damage status
      */
     public DamageStatus getDamageStatus() {
@@ -112,18 +103,20 @@ public abstract class Vehicle implements Serializable {
 
     /**
      * Changes vehicle's location on segment s
+     *
      * @param p new location
      */
-    public void setVehicleLocation(Point p){
-            vehicleLocation = p;
+    public void setVehicleLocation(Point p) {
+        vehicleLocation = p;
     }
 
 
     /**
      * Returns the current segment location of vehicle object
+     *
      * @return vehicle location
      */
-    public Point getVehicleLocation(){
+    public Point getVehicleLocation() {
         return vehicleLocation;
 
     }

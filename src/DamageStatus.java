@@ -28,16 +28,24 @@ public class DamageStatus {
         if (currentStatus - d > 0) {
             currentStatus -= d;
             sufferedDamageHistory.add(d);
+
+            if(type.isDrivable()) {
+                System.out.println("Your health is now " + currentStatus + "!");
+            }
+
         } else {
             destroyed = true;
             type.getSegment().removeVehicle(type);
             type.removeSegment();
             type.setVehicleLocation(null);
 
-            System.out.println(type + " Has been destroyed!");
+            if(type.isDrivable()) {
+                System.out.println("Your vehicle has been destroyed!");
+                System.out.println("Game over!");
+            }
+
         }
 
-        System.out.println(type + " health is " + currentStatus);
 
     }
 
@@ -66,6 +74,23 @@ public class DamageStatus {
 
 
     public void sideCollision(ArrayList<Vehicle> victims) {
+        boolean car = false;
+        boolean bus = false;
+        boolean truck = false;
+
+
+        for (int i = 0; i < victims.size(); i++) {
+            if (victims.get(i) instanceof Car) {
+                car = true;
+            } else if (victims.get(i) instanceof Bus) {
+                bus = true;
+            } else {
+                truck = true;
+            }
+
+        }
+
+
         for (int i = 0; i < victims.size(); i++) {
             calculateSufferedSide(victims.get(i), true);
             calculateGeneratedSide(victims.get(i), true);
@@ -76,6 +101,37 @@ public class DamageStatus {
             victims.get(i).getReputation().calculateReputation(victims.get(i).getDamageStatus().getSufferedDamageHistory(), victims.get(i).getDamageStatus().getGeneratedDamageHistory());
         }
 
+
+        if (victims.size() == 1) {
+            if (car) {
+                System.out.println("You collided with a car!");
+            } else if (bus) {
+                System.out.println("You collided with a bus!");
+            } else {
+                System.out.println("You collided witha truck!");
+            }
+        } else if (victims.size() == 2) {
+            if (car && !bus && !truck) {
+                System.out.println("You collided with 2 cars!");
+            } else if (!car && bus && !truck) {
+                System.out.println("You collided with 2 buses!");
+            } else if (!car && !bus && truck) {
+                System.out.println("You collided with 2 trucks!");
+            } else if (car && bus && !truck) {
+                System.out.println("You collided with a car and a bus!");
+            } else if (!car && bus && truck) {
+                System.out.println("You collided with a bus and a truck!");
+            } else {
+                System.out.println("You collided with a car and a truck!");
+            }
+
+        } else {
+            System.out.println("You collided with 3 cars!");
+
+        }
+
+
+
         currentReputation.atFaultViolation();
     }
 
@@ -84,16 +140,31 @@ public class DamageStatus {
         double total = 0.0;
 
         if (type instanceof Truck) {
-            if (type instanceof Car) {
+            if (victim instanceof Car) {
                 total += 15;
+
+                if(type.isDrivable()){
+                    System.out.println("You rear ended a car!");
+                }
+
             }
 
-            if (type instanceof Truck) {
+            if (victim instanceof Truck) {
                 total += 25;
+
+                if(type.isDrivable()){
+                    System.out.println("You rear ended a truck!");
+                }
+
             }
 
-            if (type instanceof Bus) {
+            if (victim instanceof Bus) {
                 total += 20;
+
+                if(type.isDrivable()){
+                    System.out.println("You rear ended a bus!");
+                }
+
             }
 
 
@@ -111,16 +182,31 @@ public class DamageStatus {
             }
 
         } else if (type instanceof Bus) {
-            if (type instanceof Car) {
+            if (victim instanceof Car) {
                 total += 5;
+
+                if(type.isDrivable()){
+                    System.out.println("You rear ended a car!");
+                }
+
             }
 
-            if (type instanceof Truck) {
+            if (victim instanceof Truck) {
                 total += 15;
+
+                if(type.isDrivable()){
+                    System.out.println("You rear ended a truck!");
+                }
+
             }
 
-            if (type instanceof Bus) {
+            if (victim instanceof Bus) {
                 total += 10;
+
+                if(type.isDrivable()){
+                    System.out.println("You rear ended a bus!");
+                }
+
             }
 
 
@@ -139,16 +225,32 @@ public class DamageStatus {
 
         } else if (type instanceof Car) {
 
-            if (type instanceof Car) {
+            if (victim instanceof Car) {
                 total += 15;
+
+                if(type.isDrivable()){
+                    System.out.println("You rear ended a car!");
+                }
+
             }
 
-            if (type instanceof Truck) {
+            if (victim instanceof Truck) {
                 total += 25;
+
+                if(type.isDrivable()){
+                    System.out.println("You rear ended a truck!");
+                }
+
+
             }
 
-            if (type instanceof Bus) {
+            if (victim instanceof Bus) {
                 total += 20;
+
+                if(type.isDrivable()){
+                    System.out.println("You rear ended a bus!");
+                }
+
             }
 
 
@@ -339,6 +441,8 @@ public class DamageStatus {
 
 
     private void calculateSufferedSide(Vehicle victim, boolean isAtFault) {
+
+
         double total = 0.0;
 
         if (isAtFault) {

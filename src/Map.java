@@ -16,7 +16,7 @@ public class Map implements Serializable {
 
     }
 
-    public int AIlimit(){
+    public int AILimit(){
         if(limit == 0){
             return 0;
         }else {
@@ -34,6 +34,7 @@ public class Map implements Serializable {
     }
 
 
+
     public void addSegment(Segment s) {
         if (s.getSegmentLocation().x < interCount && s.getSegmentLocation().y < interCount) {
             int x = s.getSegmentLocation().x;
@@ -48,6 +49,7 @@ public class Map implements Serializable {
     public ArrayList<Segment> getSegments() {
         return onMap;
     }
+
 
 
     public void erase() {

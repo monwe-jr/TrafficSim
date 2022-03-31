@@ -6,11 +6,13 @@ public class Reputation {
     private double niceness;
     private ArrayList<Double> reputationHistory;
     private int repCounter = 0;
+    private boolean driveable;
 
     /**
      * Default constructor, starts with the minimum value for niceness
      */
-    Reputation() {
+    Reputation(Boolean drive) {
+        this.driveable = drive;
         niceness = MIN;
         reputationHistory = new ArrayList();
     }
@@ -39,6 +41,11 @@ public class Reputation {
             niceness = niceness + amount;
             reputationHistory.add(niceness);
         }
+
+       if(driveable) {
+           System.out.println("Your current reputation is " + niceness);
+       }
+
     }
 
 
@@ -46,15 +53,30 @@ public class Reputation {
      * If a player does not make a turn or go straight using the corresponding lane, this method iis called
      */
     public void correspondingLaneViolation(){
+
+        if(driveable) {
+            System.out.println("Turn using the corresponding lanes next time!");
+        }
+
         changeNiceness(-10.0);
     }
 
 
     public void successfulGamble(){
+
+        if(driveable) {
+            System.out.println("Successful gamble!");
+        }
+
         changeNiceness(25.0);
     }
 
     public void atFaultViolation(){
+
+        if(driveable){
+            System.out.println("Pay attention to the road!");
+        }
+
         changeNiceness(20.5);
     }
 
@@ -78,7 +100,10 @@ public class Reputation {
             }
 
         }
+
      repCounter = suffered.size()-1;
+
+     System.out.println("You caused severe damage tot he victim!");
 
  }
 

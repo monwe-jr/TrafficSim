@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.io.Serializable;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -20,14 +21,21 @@ public class Segment implements Serializable {
         addIntersections(intersections);
     }
 
+
     public int laneCount() {
         return segmentLanes.getLaneCount();
     }
 
+    public boolean inFrontOfPlayer(Vehicle v) {
+        return segmentLanes.inFront(v);
 
-    public int segmentLength() {
-        return segmentLanes.getSegmentLength();
     }
+
+
+    public void callListener(Map m, Vehicle v) {
+        segmentLanes.getListener(m, v);
+    }
+
 
     public void insertVehicle(Vehicle v) {
         segmentLanes.insertVehicle(v);
@@ -50,7 +58,7 @@ public class Segment implements Serializable {
 
 
     public Vehicle getFrontVictims(Vehicle atFault, int lane, boolean atIntersection) {
-        return segmentLanes.getFrontVictims(atFault, lane, atIntersection);
+        return segmentLanes.getFrontOccupant(atFault, lane, atIntersection);
     }
 
 
@@ -202,6 +210,428 @@ public class Segment implements Serializable {
         }
 
 
+        private void getListener(Map m, Vehicle v) {
+            Point location = v.getVehicleLocation();
+            Segment leftTurn = null;
+            Segment rightTurn = null;
+            Segment straight = null;
+            boolean canSwitchLeft = canSwitchLeft(v);
+            boolean canSwitchRight = canSwitchRight(v);
+            boolean canMove = v.getSegment().canMove(v);
+            boolean canTurnLeft = false;
+            boolean canTurnRight = false;
+            boolean isDeadEnd = false;
+            boolean canGoStraight = false;
+
+            if (Turn.canTurn(m, Segment.this)) {
+                ArrayList<Segment> turns = Turn.getTurns(m, Segment.this);
+
+                if (turns.size() > 1) {
+                    for (int i = 0; i < turns.size(); i++) {
+                        if (turns.get(i).getDirection() == Direction.leftDirection(Segment.this.getDirection())) {
+                            canTurnLeft = true;
+                            leftTurn = turns.get(i);
+                        } else {
+                            canTurnRight = true;
+                            rightTurn = turns.get(i);
+
+                        }
+
+                    }
+
+                } else {
+
+                    if (turns.get(0).getDirection() == Direction.leftDirection(Segment.this.getDirection())) {
+                        canTurnLeft = true;
+                        leftTurn = turns.get(0);
+                    } else {
+                        canTurnRight = true;
+                        rightTurn = turns.get(0);
+
+                    }
+
+                }
+
+
+            } else {
+                if (Turn.getStraight(m, Segment.this) == null && Intersection.isDeadEnd(m, Segment.this.getSegmentLocation().y)) {
+                    isDeadEnd = true;
+                }
+
+            }
+
+
+            if (Turn.getStraight(m, Segment.this) != null) {
+                canGoStraight = true;
+                straight = Turn.getStraight(m, Segment.this);
+            }
+
+
+            System.out.println();
+            System.out.println("Listener Feedback:");
+            System.out.println("Segment: currently on the segment that connects intersect " + Segment.this.getSegmentLocation().x + " to intersection " + Segment.this.getSegmentLocation().y + ". This segment is has " + laneCount + " lanes and is " + segmentLength + " miles long.");
+
+            if (laneCount == 1) {
+                System.out.println("Lane Location: You are on the only lane on this segment.");
+            } else if (laneCount == 2) {
+                if (v.getVehicleLocation().y == 0) {
+                    System.out.println("Lane Location: left most lane");
+                } else {
+                    System.out.println("Lane Location: right most lane");
+                }
+
+            } else {
+                if (v.getVehicleLocation().y == 0) {
+                    System.out.println("Lane Location: left most lane");
+                } else if (v.getVehicleLocation().y == 1) {
+                    System.out.println("Lane Location: middle lane");
+                } else {
+                    System.out.println("Lane Location: right most lane");
+                }
+
+            }
+
+
+            if (!atEnd(v)) {
+                System.out.println("You are " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.getSegmentLocation().y + ".");
+            } else {
+                System.out.println("You have arrived at intersection " + Segment.this.getSegmentLocation().y);
+            }
+            if (!atEnd(v)) {
+
+
+                if (canMove) {
+                    System.out.println("There is currently no vehicle in front of you.");
+                } else {
+
+                    Vehicle o = getVehicle(new Point(location.x + 1, location.y));
+
+                    if (o instanceof Car) {
+                        System.out.println("There is a car in front of you.");
+                    } else if (o instanceof Bus) {
+                        System.out.println("There is a bus in front of you.");
+                    } else {
+                        System.out.println("There is a truck in front of you.");
+                    }
+                }
+
+                if (canSwitchLeft) {
+
+                    if (laneCount == 2) {
+                        System.out.println("You can switch to the left most lane.");
+                    } else {
+                        if (v.getVehicleLocation().y == laneCount - 1) {
+                            System.out.println("You can switch to the middle lane on your left");
+                        }
+                    }
+
+
+                } else {
+                    ArrayList<Vehicle> occupants = getSideOccupants(v, true, false);
+
+                    ///////////////////////////////////////////////////////////////////////////////
+                    if (!occupants.isEmpty()) {
+                        boolean car = false;
+                        boolean bus = false;
+                        boolean truck = false;
+
+
+                        for (int i = 0; i < occupants.size(); i++) {
+                            if (occupants.get(i) instanceof Car) {
+                                car = true;
+                            } else if (occupants.get(i) instanceof Bus) {
+                                bus = true;
+                            } else {
+                                truck = true;
+                            }
+
+                        }
+
+
+                        if (occupants.size() == 1) {
+                            if (car) {
+                                System.out.println("Your left lane is occupied by a  car.");
+                            } else if (bus) {
+                                System.out.println("Your left lane is occupied by a bus.");
+                            } else {
+                                System.out.println("Your left lane is occupied by a truck.");
+                            }
+                        } else if (occupants.size() == 2) {
+                            if (car && !bus && !truck) {
+                                System.out.println("Your left lane is occupied by 2 cars.");
+                            } else if (!car && bus && !truck) {
+                                System.out.println("Your left lane is occupied by 2 buses.");
+                            } else if (!car && !bus && truck) {
+                                System.out.println("Your left lane is occupied by 2 trucks.");
+                            } else if (car && bus && !truck) {
+                                System.out.println("Your left lane is occupied by a car and a bus.");
+                            } else if (!car && bus && truck) {
+                                System.out.println("Your left lane is occupied by a bus and a truck.");
+                            } else {
+                                System.out.println("Your left lane is occupied by a car and a truck.");
+                            }
+
+                        } else {
+                            System.out.println("Your left lane is occupied by 3 cars.");
+
+                        }
+
+
+                    }
+
+                    ///////////////////////////////////////////////////////////////////////////////
+
+                }
+
+
+                if (canSwitchRight) {
+
+
+                    if (laneCount == 2) {
+                        System.out.println("You can switch to the right most lane");
+                    } else {
+                        if (v.getVehicleLocation().y == 0)
+                            System.out.println("You can switch to the middle lane on your right");
+                    }
+
+
+                } else {
+                    ArrayList<Vehicle> occupants = getSideOccupants(v, false, true);
+
+
+
+                    ///////////////////////////////////////////////////////////////////////////////
+                    if (!occupants.isEmpty()) {
+                        boolean car = false;
+                        boolean bus = false;
+                        boolean truck = false;
+
+
+                        for (int i = 0; i < occupants.size(); i++) {
+                            if (occupants.get(i) instanceof Car) {
+                                car = true;
+                            } else if (occupants.get(i) instanceof Bus) {
+                                bus = true;
+                            } else {
+                                truck = true;
+                            }
+
+                        }
+
+
+                        if (occupants.size() == 1) {
+                            if (car) {
+                                System.out.println("Your right lane is occupied by a car.");
+                            } else if (bus) {
+                                System.out.println("Your right lane is occupied by a bus.");
+                            } else {
+                                System.out.println("Your right lane is occupied by a truck.");
+                            }
+                        } else if (occupants.size() == 2) {
+                            if (car && !bus && !truck) {
+                                System.out.println("Your right lane is occupied by 2 cars.");
+                            } else if (!car && bus && !truck) {
+                                System.out.println("Your right lane is occupied by 2 buses.");
+                            } else if (!car && !bus && truck) {
+                                System.out.println("Your right lane is occupied by 2 trucks.");
+                            } else if (car && bus && !truck) {
+                                System.out.println("Your right lane is occupied by a car and a bus.");
+                            } else if (!car && bus && truck) {
+                                System.out.println("Your right lane is occupied by a bus and a truck.");
+                            } else {
+                                System.out.println("Your right lane is occupied by a car and a truck.");
+                            }
+
+                        } else {
+                            System.out.println("Your left lane is occupied by 3 cars.");
+
+                        }
+                    }
+
+                    ///////////////////////////////////////////////////////////////////////////////
+                }
+
+                if (laneCount == 1) {
+                    System.out.println("This segment only has 1 lane. You cannot switch lanes in either direction.");
+                }
+
+
+            } else {
+
+                if (canTurnLeft) {
+                    if (canGoStraight || canTurnRight) {
+                        System.out.println("You can turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + ".");
+                    } else {
+                        System.out.println("You can only turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + ".");
+                    }
+
+
+
+
+                    if(leftTurn.laneCount() > 1) {
+                        if (compatible(leftTurn.laneCount())) {
+                            if (leftTurn.canAdd(v, v.getVehicleLocation().y)) {
+                                System.out.println("You can turn left without expereincing any collisons.");
+                            } else {
+                                System.out.println("The lane you want to turn onto is not clear!");
+                            }
+                        } else {
+                            if (laneCount == 3 && leftTurn.laneCount() == 2) {
+                                if(v.getVehicleLocation().y == 1 || v.getVehicleLocation().y == 2  ){
+                                        if(leftTurn.canAdd(v,1)){
+                                            System.out.println("You can turn left without experiencing any collisons.");
+                                        } else{
+                                            System.out.println("The lane you want to turn onto is not clear!");
+                                        }
+
+                                } else {
+                                    if(leftTurn.canAdd(v,0)){
+                                        System.out.println("You can turn left without experiencing any collisons.");
+                                    }else{
+                                        System.out.println("The lane you want to turn onto is not clear!");
+                                    }
+
+                                }
+                            }
+                        }
+                    } else{
+                        if(leftTurn.canAdd(v,0)){
+                            System.out.println("You can turn left without experiencing any collisons.");
+                        } else{
+                            System.out.println("The lane you want to turn onto is not clear!");
+                        }
+
+                    }
+
+
+
+
+
+                }
+
+                if (canTurnRight) {
+                    if (canGoStraight || canTurnLeft) {
+                        System.out.println("You can turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + ".");
+                    } else {
+                        System.out.println("You can only turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + ".");
+
+                    }
+
+
+
+                    if(rightTurn.laneCount() > 1) {
+                        if (compatible(rightTurn.laneCount())) {
+                            if (rightTurn.canAdd(v, v.getVehicleLocation().y)) {
+                                System.out.println("You can turn left without experiencing any collisons.");
+                            } else {
+                                System.out.println("The lane you want to turn onto is not clear!");
+                            }
+                        } else {
+                            if (laneCount == 3 && rightTurn.laneCount() == 2) {
+                                if(v.getVehicleLocation().y == 0 || v.getVehicleLocation().y == 1){
+                                    if(rightTurn.canAdd(v,0)){
+                                        System.out.println("You can turn left without experiencing any collisons.");
+                                    } else{
+                                        System.out.println("The lane you want to turn onto is not clear!");
+                                    }
+
+                                } else {
+                                    if(rightTurn.canAdd(v,rightTurn.laneCount()-1)){
+                                        System.out.println("You can turn left without experiencing any collisons.");
+                                    }else{
+                                        System.out.println("The lane you want to turn onto is not clear!");
+                                    }
+
+                                }
+                            }
+                        }
+                    } else{
+                        if(rightTurn.canAdd(v,0)){
+                            System.out.println("You can turn left without experiencing any collisons.");
+                        } else{
+                            System.out.println("The lane you want to turn onto is not clear!");
+                        }
+
+                    }
+
+
+
+
+                }
+
+                if (canGoStraight) {
+                    if (canTurnLeft || canTurnRight) {
+                        System.out.println("You can go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + ".");
+                    } else {
+                        System.out.println("You can only go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + ".");
+
+                    }
+
+
+
+
+                    if(straight.laneCount() > 1) {
+                        if (compatible(straight.laneCount())) {
+                            if (straight.canAdd(v, v.getVehicleLocation().y)) {
+                                System.out.println("You can turn left without experiencing any collisons.");
+                            } else {
+                                System.out.println("The lane you want to turn onto is not clear!");
+                            }
+                        } else {
+                            if (laneCount == 3 && straight.laneCount() == 2) {
+                                if(v.getVehicleLocation().y == 1 || v.getVehicleLocation().y == 2){
+                                    if(straight.canAdd(v,1)){
+                                        System.out.println("You can turn left without experiencing any collisons.");
+                                    } else{
+                                        System.out.println("The lane you want to turn onto is not clear!");
+                                    }
+
+                                } else {
+                                    if(straight.canAdd(v,0)){
+                                        System.out.println("You can turn left without experiencing any collisons.");
+                                    }else{
+                                        System.out.println("The lane you want to turn onto is not clear!");
+                                    }
+
+                                }
+                            }
+                        }
+                    } else{
+                        if(straight.canAdd(v,0)){
+                            System.out.println("You can turn left without experiencing any collisons.");
+                        } else{
+                            System.out.println("The lane you want to turn onto is not clear!");
+                        }
+
+                    }
+
+
+
+
+
+                }
+
+                if (isDeadEnd) {
+                    System.out.println("Intersection " + Segment.this.getSegmentLocation().y + " is a deadEnd. You can only UTurn!");
+                }
+
+            }
+
+        }
+
+        private boolean inFront(Vehicle v) {
+            Point location = new Point((v.getVehicleLocation().x - v.getSize()), v.getVehicleLocation().y);
+
+            if (lanes[location.x][location.y] != null) {
+                if (getVehicle(location).isDrivable()) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
         private Point getPoint(Vehicle v) {
             ArrayList<Point> candidates = new ArrayList<>();
 
@@ -229,6 +659,14 @@ public class Segment implements Serializable {
                 v.setSegment(Segment.this);
                 lanes[p.x][p.y] = v;
 
+                if (v.isDrivable()) {
+                    if (!atEnd(v)) {
+                        System.out.println("Your car has been added to the segment connecting intersection " + location.x + " to intersection " + location.y + ". You are " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + location.y + ".");
+                    } else {
+                        System.out.println("Your car has been added to the segment connecting intersection " + location.x + " to intersection " + location.y + ". You are at the end of the segment and have arrived at intersection " + location.y + ".");
+                    }
+                }
+
                 System.out.println(v + " Has been inserted into segment " + location + ". ");
 
             } else if (v instanceof Bus) {
@@ -240,6 +678,14 @@ public class Segment implements Serializable {
                     lanes[i][p.y] = v;
                 }
 
+                if (v.isDrivable()) {
+                    if (!atEnd(v)) {
+                        System.out.println("Your bus has been added to the segment connecting intersection " + location.x + " to intersection " + location.y + ". You are " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + location.y + ".");
+                    } else {
+                        System.out.println("Your bus has been added to the segment connecting intersection " + location.x + " to intersection " + location.y + ". You are at the end of the segment and have arrived at intersection " + location.y + ".");
+                    }
+                }
+
                 System.out.println(v + " Has been inserted into segment " + location + ". ");
 
             } else if (v instanceof Truck) {
@@ -249,6 +695,15 @@ public class Segment implements Serializable {
 
                 for (int i = p.x; i > p.x - v.getSize(); i--) {
                     lanes[i][p.y] = v;
+                }
+
+
+                if (v.isDrivable()) {
+                    if (!atEnd(v)) {
+                        System.out.println("Your truck has been added to the segment connecting intersection " + location.x + " to intersection " + location.y + ". You are " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + location.y + ".");
+                    } else {
+                        System.out.println("Your truck has been added to the segment connecting intersection " + location.x + " to intersection " + location.y + ". You are at the end of the segment and have arrived at intersection " + location.y + ".");
+                    }
                 }
 
                 System.out.println(v + " Has been inserted into segment " + location + ". ");
@@ -316,8 +771,6 @@ public class Segment implements Serializable {
                     lanes[v.getVehicleLocation().x][v.getVehicleLocation().y] = v;
 
 
-                } else {
-                    System.out.println("Lane is occupied");
                 }
 
 
@@ -331,10 +784,7 @@ public class Segment implements Serializable {
                         lanes[i][v.getVehicleLocation().y] = v;
                     }
 
-                } else {
-                    System.out.println("Lane is occupied");
                 }
-
 
             } else if (v instanceof Truck) {
                 if (canAdd(v, lane)) {
@@ -345,11 +795,7 @@ public class Segment implements Serializable {
                     for (int i = v.getSize() - 1; i >= 0; i--) {
                         lanes[i][v.getVehicleLocation().y] = v;
                     }
-
-                } else {
-                    System.out.println("Lane is occupied");
                 }
-
             }
         }
 
@@ -375,9 +821,12 @@ public class Segment implements Serializable {
 
 
         private boolean canMove(Vehicle v) {
-            if (lanes[v.getVehicleLocation().x + 1][v.getVehicleLocation().y] == null) {
-                return true;
+            if (!atEnd(v)) {
+                if (lanes[v.getVehicleLocation().x + 1][v.getVehicleLocation().y] == null) {
+                    return true;
+                }
             }
+
             return false;
         }
 
@@ -397,15 +846,17 @@ public class Segment implements Serializable {
                     lanes[v.getVehicleLocation().x][v.vehicleLocation.y] = v;
                     lanes[v.getVehicleLocation().x - (v.getSize())][v.vehicleLocation.y] = null;
 
-
-                    if (!atEnd(v)) {
-                        System.out.println(v + " moved on segment " + Segment.this.location + " and is " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y + ".");
-                    } else {
-                        System.out.println(v + " has arrived at intersection " + v.getSegment().getSegmentLocation().y);
+                    if (v.isDrivable()) {
+                        if (!atEnd(v)) {
+                            System.out.println("Your vehicle moved one mile. You are now " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y + ".");
+                        } else {
+                            System.out.println("Your vehicle has arrived at intersection " + Segment.this.location.y + ".");
+                        }
                     }
+
                 }
             } else {
-                v.getDamageStatus().frontCollision(getFrontVictims(v,location.y,false));
+                v.getDamageStatus().frontCollision(getFrontVictims(v, location.y, false));
 
             }
 
@@ -454,20 +905,20 @@ public class Segment implements Serializable {
         }
 
 
-        /**
-         * Checks if an index is empty
-         *
-         * @param p the point to be checked
-         * @return
-         */
-        private boolean isEmpty(Point p) {
-
-            if (lanes[p.x][p.y] == null) {
-                return true;
-            }
-
-            return false;
-        }
+//        /**
+//         * Checks if an index is empty
+//         *
+//         * @param p the point to be checked
+//         * @return
+//         */
+//        private boolean isEmpty(Point p) {
+//
+//            if (lanes[p.x][p.y] == null) {
+//                return true;
+//            }
+//
+//            return false;
+//        }
 
 
         private boolean canAdd(Vehicle v, int lane) {
@@ -610,40 +1061,59 @@ public class Segment implements Serializable {
                 switchedLeft = true;
 
             } else {
+
+
                 if (location.x + 1 <= segmentLength - 1 && location.y - 1 >= 0) {
-                    v.getDamageStatus().sideCollision(getSideVictims(v, location.y - 1));
+                    v.getDamageStatus().sideCollision(getSideOccupants(v, true, false));
                 }
+
 
             }
 
 
             if (switchedLeft) {
-
-                if (laneCount == 2) {
-                    if (laneLocation(v) == 0) {
-                        if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
-                            System.out.println(v + " moved from the right lane to the left lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y);
-                        } else {
-                            System.out.println(v + " moved from the right lane to the left lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
+                if (v.isDrivable()) {
+                    if (laneCount == 2) {
+                        if (laneLocation(v) == 0) {
+                            if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
+                                System.out.println("You moved from the right lane to the left lane. You are " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y + ".");
+                            } else {
+                                System.out.println("You moved from the right lane to the left lane. You have arrived at intersection " + Segment.this.location.y + ".");
+                            }
                         }
-                    }
-                } else if (laneCount == 3) {
-                    if (laneLocation(v) == 1) {
-                        if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
-                            System.out.println(v + " moved from the right lane to the middle lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y);
+                    } else if (laneCount == 3) {
+                        if (laneLocation(v) == 1) {
+                            if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
+                                System.out.println("You moved from the right lane to the middle lane. You are " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y + ".");
+                            } else {
+                                System.out.println("You moved from the right lane to the middle lane. You have arrived at intersection " + Segment.this.location.y + ".");
+                            }
                         } else {
-                            System.out.println(v + " moved from the right lane to the middle lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
-                        }
-                    } else {
-                        if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
-                            System.out.println(v + " moved from the middle lane to the left lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y);
-                        } else {
-                            System.out.println(v + " moved from the middle lane to the left lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
+                            if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
+                                System.out.println("You moved from the middle lane to the left lane. You are" + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.location.y + ".");
+                            } else {
+                                System.out.println("You moved from the middle lane to the left lane. You have arrived at intersection " + Segment.this.location.y + ".");
+                            }
                         }
                     }
                 }
 
             }
+
+
+            if (inFrontOfPlayer(v)) {
+                if (v instanceof Car) {
+                    System.out.println("There is a car in front of you.");
+
+                } else if (v instanceof Bus) {
+                    System.out.println("There is bus in front of you.");
+
+                } else {
+                    System.out.println("There is a truck in front of you.");
+
+                }
+            }
+
 
         }
 
@@ -672,38 +1142,57 @@ public class Segment implements Serializable {
 
 
             } else {
+
+
                 if (location.x + 1 <= segmentLength - 1 && location.y + 1 <= laneCount) {
-                    v.getDamageStatus().sideCollision(getSideVictims(v, location.y + 1));
+                    v.getDamageStatus().sideCollision(getSideOccupants(v, false, true));
                 }
+
 
             }
 
             if (switchedRight) {
-                if (laneCount == 2) {
-                    if (laneLocation(v) == 1) {
-                        if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
-                            System.out.println(v + " moved from the left lane to the right lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " away from intersection " + Segment.this.location.y);
-                        } else {
-                            System.out.println(v + " moved from the left lane to the right lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
+                if (v.isDrivable()) {
+                    if (laneCount == 2) {
+                        if (laneLocation(v) == 1) {
+                            if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
+                                System.out.println("You moved from the left lane to the right lane. You are " + (segmentLength - v.getVehicleLocation().x - 1) + " away from intersection " + Segment.this.location.y + ".");
+                            } else {
+                                System.out.println("You moved from the left lane to the right lane. You have arrived at intersection " + Segment.this.location.y + ".");
+                            }
                         }
-                    }
-                } else if (laneCount == 3) {
-                    if (laneLocation(v) == 1) {
-                        if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
-                            System.out.println(v + " moved from the left lane to the middle lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " away from intersection " + Segment.this.location.y);
+                    } else if (laneCount == 3) {
+                        if (laneLocation(v) == 1) {
+                            if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
+                                System.out.println("You moved from the left lane to the middle lane. You are " + (segmentLength - v.getVehicleLocation().x - 1) + " away from intersection " + Segment.this.location.y + ".");
+                            } else {
+                                System.out.println("You moved from the left lane to the middle lane. You have arrived at intersection " + Segment.this.location.y + ".");
+                            }
                         } else {
-                            System.out.println(v + " moved from the left lane to the middle lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
+                            if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
+                                System.out.println("You moved from the middle lane to the right lane. You is " + (segmentLength - v.getVehicleLocation().x - 1) + " away from intersection " + Segment.this.location.y + ".");
+                            } else {
+                                System.out.println("You moved from the middle lane to the right lane. You have arrived at intersection " + Segment.this.location.y + ".");
+                            }
                         }
-                    } else {
-                        if ((segmentLength - v.getVehicleLocation().x - 1) > 0) {
-                            System.out.println(v + " moved from the middle lane to the right lane on segment " + Segment.this.location + ". " + v + " is " + (segmentLength - v.getVehicleLocation().x - 1) + " away from intersection " + Segment.this.location.y);
-                        } else {
-                            System.out.println(v + " moved from the middle lane to the right lane on segment " + Segment.this.location + ". " + v + " has arrived at intersection " + Segment.this.location.y);
-                        }
+
                     }
 
                 }
+            }
 
+
+            if (inFrontOfPlayer(v)) {
+                if (v instanceof Car) {
+                    System.out.println("There is a car in front of you.");
+
+                } else if (v instanceof Bus) {
+                    System.out.println("There is bus in front of you.");
+
+                } else {
+                    System.out.println("There is a truck in front of you.");
+
+                }
             }
         }
 
@@ -729,7 +1218,7 @@ public class Segment implements Serializable {
         }
 
 
-        private Vehicle getFrontVictims(Vehicle atFault, int lane, boolean atIntersect) {
+        private Vehicle getFrontOccupant(Vehicle atFault, int lane, boolean atIntersect) {
             if (atFault instanceof Truck) {
                 if (atIntersect) {
                     if (lanes[0][lane] != null) {
@@ -763,17 +1252,41 @@ public class Segment implements Serializable {
             return null;
         }
 
+        private ArrayList<Vehicle> getSideOccupants(Vehicle v, boolean left, boolean right) {
+            ArrayList<Vehicle> occupants = new ArrayList<>();
+            Point location = v.getVehicleLocation();
 
-        private ArrayList<Vehicle> getSideVictims(Vehicle atFault, int lane) {
-            ArrayList<Vehicle> victims = new ArrayList<>();
 
-            for (int i = atFault.getVehicleLocation().x + 1; i >= i - (atFault.getSize() - 1); i--) {
-                if (lanes[i][lane] != null && !victims.contains(lanes[i][lane])) {
-                    victims.add(getVehicle(new Point(i, lane)));
+            if (left) {
+                if (location.x + 1 <= segmentLength - 1 && location.y > 0) {
+
+                    Point leftV = new Point(location.x + 1, location.y - 1);
+
+                    for (int i = leftV.x; i > leftV.x - v.getSize(); i--) {
+                        if (lanes[i][leftV.y] != null && !occupants.contains(lanes[i][leftV.y])) {
+                            occupants.add(getVehicle(new Point(i, leftV.y)));
+                        }
+                    }
+
+
                 }
+            } else {
+                if (location.x + 1 <= segmentLength - 1 && location.y < laneCount - 1) {
+
+                    Point rightV = new Point(location.x + 1, location.y + 1);
+
+                    for (int i = rightV.x; i > rightV.x - v.getSize(); i--) {
+                        if (lanes[i][rightV.y] != null && !occupants.contains(lanes[i][rightV.y])) {
+                            occupants.add(getVehicle(new Point(i, rightV.y)));
+                        }
+                    }
+
+
+                }
+
             }
 
-            return victims;
+            return occupants;
 
         }
 
@@ -782,16 +1295,13 @@ public class Segment implements Serializable {
             return laneCount;
         }
 
-
-        private int getSegmentLength() {
-            return segmentLength;
-        }
+//
+//        private int getSegmentLength() {
+//            return segmentLength;
+//        }
 
 
     }
-
-
-    //TODO Change sout to only happen when driveable is true for full game
 
 
 }
