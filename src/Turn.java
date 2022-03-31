@@ -295,24 +295,26 @@ public class Turn {
             }
 
             if (wentStraight) {
-                if (v.getSegment().laneCount() == 1) {
-                    System.out.println("You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Your vehicle is now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". This segment has only 1 lane.");
-                } else if (v.getSegment().laneCount() == 2) {
-                    if (v.getSegment().laneLocation(v) == 0) {
-                        System.out.println("You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". You are now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". Your vehicle is on the left lane on segment.");
-                    } else {
-                        System.out.println("You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". You are now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". Your vehicle is on the right lane on segment.");
-                    }
+                if(v.isDrivable()) {
+                    if (v.getSegment().laneCount() == 1) {
+                        System.out.println("You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". Your vehicle is now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". This segment has only 1 lane.");
+                    } else if (v.getSegment().laneCount() == 2) {
+                        if (v.getSegment().laneLocation(v) == 0) {
+                            System.out.println("You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". You are now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". Your vehicle is on the left lane on segment.");
+                        } else {
+                            System.out.println("You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". You are now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". Your vehicle is on the right lane on segment.");
+                        }
 
-                } else if (v.getSegment().laneCount() == 3) {
-                    if (v.getSegment().laneLocation(v) == 0) {
-                        System.out.println("You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". You are now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". Your vehicle is on the left lane on segment " + toGoStraightOn.getSegmentLocation());
-                    } else if (v.getSegment().laneLocation(v) == 1) {
-                        System.out.println("You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". You are now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". Your vehicle is on the middle lane on segment " + toGoStraightOn.getSegmentLocation());
-                    } else if (v.getSegment().laneLocation(v) == 2) {
-                        System.out.println(" You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". You are now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". Your vehicle is on the right lane on segment " + toGoStraightOn.getSegmentLocation());
-                    }
+                    } else if (v.getSegment().laneCount() == 3) {
+                        if (v.getSegment().laneLocation(v) == 0) {
+                            System.out.println("You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". You are now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". Your vehicle is on the left lane on segment " + toGoStraightOn.getSegmentLocation());
+                        } else if (v.getSegment().laneLocation(v) == 1) {
+                            System.out.println("You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". You are now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". Your vehicle is on the middle lane on segment " + toGoStraightOn.getSegmentLocation());
+                        } else if (v.getSegment().laneLocation(v) == 2) {
+                            System.out.println("You went straight at intersection " + toGoStraightOn.getSegmentLocation().x + ". You are now on the segment that connects intersection " + toGoStraightOn.getSegmentLocation().x + " to intersection " + toGoStraightOn.getSegmentLocation().y + ". Your vehicle is on the right lane on segment " + toGoStraightOn.getSegmentLocation());
+                        }
 
+                    }
                 }
             }
 

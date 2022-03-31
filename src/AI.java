@@ -65,7 +65,7 @@ public class AI extends Vehicle {
     /**
      * Moves all AI vehicles every time it is called
      */
-    public void moveAI(boolean firstMove) {
+    public void moveAI(boolean firstMove, Vehicle player) {
         for (Vehicle v : AIVehicles) {
             if (!v.isDrivable() && !v.getDamageStatus().isDestroyed()) {
                 if (!Turn.canTurn(map, v.getSegment()) && Turn.getStraight(map, v.getSegment()) == null) {
@@ -95,6 +95,19 @@ public class AI extends Vehicle {
                             if (v.getSegment().laneLocation(v) < v.getSegment().laneCount() - 1) {
                                 if (v.getSegment().canSwitchRight(v)) {
                                     v.getSegment().switchRight(v);
+
+                                    if(player.getSegment().vehicleAhead(player)){
+                                        if(player.getSegment().getVehicleAhead(player) == v){
+                                            if(v instanceof Car) {
+                                                System.out.println("There is a car " + (player.getVehicleLocation().x - (v.getVehicleLocation().x + 1)) + " miles ahead of you.");
+                                            } else if(v instanceof  Bus) {
+                                                System.out.println("There is a bus " + (player.getVehicleLocation().x - (v.getVehicleLocation().x + 1)) + " miles ahead of you.");
+                                            }else{
+                                                System.out.println("There is a truck " + (player.getVehicleLocation().x - (v.getVehicleLocation().x + 1)) + " miles ahead of you.");
+                                            }
+                                        }
+                                    }
+
                                 } else {
 
                                     if (v.getSegment().canMove(v)) {
@@ -139,6 +152,19 @@ public class AI extends Vehicle {
                             if (v.getSegment().laneLocation(v) > 0) {
                                 if (v.getSegment().canSwitchLeft(v)) {
                                     v.getSegment().switchLeft(v);
+
+                                    if(player.getSegment().vehicleAhead(player)){
+                                        if(player.getSegment().getVehicleAhead(player) == v){
+                                            if(v instanceof Car) {
+                                                System.out.println("There is a car " + (player.getVehicleLocation().x - (v.getVehicleLocation().x + 1)) + " miles ahead of you.");
+                                            } else if(v instanceof  Bus) {
+                                                System.out.println("There is a bus " + (player.getVehicleLocation().x - (v.getVehicleLocation().x + 1)) + " miles ahead of you.");
+                                            }else{
+                                                System.out.println("There is a truck " + (player.getVehicleLocation().x - (v.getVehicleLocation().x + 1)) + " miles ahead of you.");
+                                            }
+                                        }
+                                    }
+
                                 } else {
 
                                     if (v.getSegment().canMove(v)) {

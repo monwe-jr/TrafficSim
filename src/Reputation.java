@@ -7,13 +7,14 @@ public class Reputation {
     private ArrayList<Double> reputationHistory;
     private int repCounter = 0;
     private boolean driveable;
+    boolean destroyed;
 
     /**
      * Default constructor, starts with the minimum value for niceness
      */
     Reputation(Boolean drive) {
         this.driveable = drive;
-        niceness = MIN;
+        niceness = MAX;
         reputationHistory = new ArrayList();
     }
 
@@ -42,10 +43,15 @@ public class Reputation {
             reputationHistory.add(niceness);
         }
 
-       if(driveable) {
+       if(driveable && !destroyed) {
            System.out.println("Your current reputation is " + niceness);
        }
 
+    }
+
+
+    public void destroyed(){
+        destroyed = true;
     }
 
 
@@ -54,7 +60,7 @@ public class Reputation {
      */
     public void correspondingLaneViolation(){
 
-        if(driveable) {
+        if(driveable ) {
             System.out.println("Turn using the corresponding lanes next time!");
         }
 
@@ -74,10 +80,14 @@ public class Reputation {
     public void atFaultViolation(){
 
         if(driveable){
-            System.out.println("Pay attention to the road!");
+            if(!destroyed) {
+                System.out.println("Pay attention to the road!");
+            }else{
+                System.out.println("Tip: If you aren't aware of your surroundings, call listener by pressing 'l' .Pay attention to the road next time!");
+            }
         }
 
-        changeNiceness(20.5);
+        changeNiceness(-20.5);
     }
 
 
@@ -103,7 +113,9 @@ public class Reputation {
 
      repCounter = suffered.size()-1;
 
-     System.out.println("You caused severe damage tot he victim!");
+        if(driveable && !destroyed) {
+            System.out.println("You caused severe damage to the victim!");
+        }
 
  }
 

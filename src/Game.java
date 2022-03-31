@@ -10,6 +10,7 @@ public class Game {
     private Map m = new Map(8);
     private static Game instance = null;
     private Players player = new Players(m);
+    private AI AI = new AI(m);
 
 
     public static Game getInstance() {
@@ -49,101 +50,156 @@ public class Game {
         Scanner input = new Scanner(System.in);
         boolean firstMove = true;
         Vehicle v = player.getPlayers();
-        boolean end = v.getDamageStatus().isDestroyed();
+
+        if(!v.getSegment().atEnd(v)) {
+            System.out.println("Enter 'w' to move forward.");
+            System.out.println("Enter 's' to wait.");
+            System.out.println("Enter 'a' to switch lanes to the left.");
+            System.out.println("Enter 'd' to switch lanes to the right.");
+            System.out.println("Enter 'l' to activate listener.");
+            System.out.println("Enter 'end' to end the game.");
+            System.out.println();
+        }
 
 
-        while (!end) {
-            if (!v.getSegment().atEnd(v)) {
-                System.out.println("Enter 'w' to move forward.");
-                System.out.println("Enter 's' to wait.");
-                System.out.println("Enter 'a' to switch lanes to the left.");
-                System.out.println("Enter 'd' to switch lanes to the right.");
-                System.out.println("Enter 'l' to activate listener.");
-                System.out.println("Enter 'end' to end the game.");
-                System.out.println();
-                String c = input.nextLine();
+        while (!v.getDamageStatus().isDestroyed()) {
+            if (!v.getDamageStatus().isDestroyed()) {
+                if (!v.getSegment().atEnd(v)) {
+                    String c = input.nextLine();
 
-                while (!c.equals("w") && !c.equals("s") && !c.equals("a") && !c.equals("d") && !c.equals("l") && !c.equals("end")) {
-                    System.out.println("Please pick a valid choice!");
-                    c = input.nextLine();
-                }
-
-
-                if (c.equals("w")) {
-                    v.move();
-                } else if (c.equals("s")) {
-                    return;
-                } else if (c.equals("a")) {
-                    v.getSegment().switchLeft(v);
-                } else if (c.equals("d")) {
-                    v.getSegment().switchRight(v);
-                } else if (c.equals("l")) {
-                    v.getSegment().callListener(m, v);
-                } else {
-                    end = true;
-                }
-
-
-            } else {
-                v.getSegment().callListener(m, v);
-                System.out.println("Enter 'w' to move forward.");
-                System.out.println("Enter 's' to wait.");
-                System.out.println("Enter 'a' to switch lanes to the left.");
-                System.out.println("Enter 'd' to switch lanes to the right.");
-                System.out.println("Enter 'l' to activate listener.");
-                System.out.println("Enter 'end' to end the game.");
-                System.out.println();
-                String c = input.nextLine();
-
-                while (!c.equals("w") && !c.equals("s") && !c.equals("a") && !c.equals("d") && !c.equals("l") && !c.equals("end")) {
-                    System.out.println("Please pick a valid choice!");
-                    c = input.nextLine();
-                }
-
-                if (c.equals("w")) {
-
-                   if(Turn.canGoStraight(m,v.getSegment())){
-
-                   }else{
-                       System.out.println("You cannot go straight at this intersection!");
-                   }
-
-                } else if (c.equals("s")) {
-                    return;
-                } else if (c.equals("a")) {
-
-                    if(Turn.canLeftTurn(m,v.getSegment())){
-                        Turn.leftTurn(m,v.getSegment(),v,firstMove);
-                    }else{
-                        System.out.println("You cannot turn right at this intersection!");
+                    while (!c.equals("w") && !c.equals("s") && !c.equals("a") && !c.equals("d") && !c.equals("l") && !c.equals("end")) {
+                        System.out.println("Please pick a valid choice!");
+                        c = input.nextLine();
                     }
 
-                } else if (c.equals("d")) {
 
-                    if(Turn.canRightTurn(m,v.getSegment())){
-                        Turn.rightTurn(m,v.getSegment(),v,firstMove);
-                    }else{
-                        System.out.println("You cannot turn right at this intersection!");
+                    if (c.equals("w")) {
+                        System.out.println();
+                        v.move();
+                        AI.moveAI(firstMove,v);
+                        System.out.println();
+                    } else if (c.equals("s")) {
+                        ///////////////
+                        continue;
+                    } else if (c.equals("a")) {
+                        System.out.println();
+                        v.getSegment().switchLeft(v);
+                        System.out.println();
+                        AI.moveAI(firstMove,v);
+                        System.out.println();
+                    } else if (c.equals("d")) {
+                        System.out.println();
+                        v.getSegment().switchRight(v);
+                        System.out.println();
+                        AI.moveAI(firstMove,v);
+                        System.out.println();
+                    } else if (c.equals("l")) {
+                        v.getSegment().callListener(m, v);
+                        System.out.println();
+                    } else {
+                        return;
                     }
 
-                } else if (c.equals("l")) {
-                    v.getSegment().callListener(m, v);
+
                 } else {
-                    end = true;
+                    if(Intersection.isDeadEnd(m,v.getSegment().getSegmentLocation().y)){
+                        Turn.uTurn(m,v.getSegment(),v);
+                    }
+
+
+                    System.out.println("Enter 'w' to go straight.");
+                    System.out.println("Enter 's' to wait.");
+                    System.out.println("Enter 'a' to turn left.");
+                    System.out.println("Enter 'd' to turn right.");
+                    System.out.println("Enter 'l' to activate listener.");
+                    System.out.println("Enter 'end' to end the game.");
+                    System.out.println();
+                    String c = input.nextLine();
+
+                    while (!c.equals("w") && !c.equals("s") && !c.equals("a") && !c.equals("d") && !c.equals("l") && !c.equals("end")) {
+                        System.out.println("Please pick a valid choice!");
+                        c = input.nextLine();
+                    }
+
+                    if (c.equals("w")) {
+                        if (Turn.canGoStraight(m, v.getSegment())) {
+                            System.out.println();
+                            Turn.goStraight(m, v.getSegment(), v, firstMove);
+                            System.out.println();
+                            AI.moveAI(firstMove,v);
+                            System.out.println();
+                        } else {
+                            System.out.println();
+                            System.out.println("You cannot go straight at this intersection!");
+                            ///////////////
+                            continue;
+
+                        }
+
+
+                    } else if (c.equals("s")) {
+                        ///////////////
+                        continue;
+                    } else if (c.equals("a")) {
+
+                        if (Turn.canLeftTurn(m, v.getSegment())) {
+                            Turn.leftTurn(m, v.getSegment(), v, firstMove);
+                            System.out.println();
+                            AI.moveAI(firstMove,v);
+                            System.out.println();
+                        } else {
+                            System.out.println();
+                            System.out.println("You cannot turn right at this intersection!");
+                            System.out.println();
+                            ///////////////
+                            continue;
+
+                        }
+
+                    } else if (c.equals("d")) {
+
+                        if (Turn.canRightTurn(m, v.getSegment())) {
+                            Turn.rightTurn(m, v.getSegment(), v, firstMove);
+                            System.out.println();
+                            AI.moveAI(firstMove,v);
+                            System.out.println();
+
+                        } else {
+                            System.out.println();
+                            System.out.println("You cannot turn right at this intersection!");
+                            System.out.println();
+                            continue;
+                        }
+
+                    } else if (c.equals("l")) {
+                        v.getSegment().callListener(m, v);
+                        System.out.println();
+                    } else {
+                       return;
+                    }
+
+
+
+
+                    System.out.println("Enter 'w' to move forward.");
+                    System.out.println("Enter 's' to wait.");
+                    System.out.println("Enter 'a' to switch lanes to the left.");
+                    System.out.println("Enter 'd' to switch lanes to the right.");
+                    System.out.println("Enter 'l' to activate listener.");
+                    System.out.println("Enter 'end' to end the game.");
+                    System.out.println();
+
                 }
 
+                firstMove = false;
 
             }
-
-            firstMove = false;
-
         }
 
     }
 
 
     private void prompt() {
-        AI AI = new AI(m);
         Scanner input = new Scanner(System.in);
 
         System.out.println("You can have up to " + m.AILimit() + " AI vehicles on the map. How many AI vehicles do you want to add on the map?");

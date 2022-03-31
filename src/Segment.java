@@ -27,10 +27,16 @@ public class Segment implements Serializable {
     }
 
     public boolean inFrontOfPlayer(Vehicle v) {
-        return segmentLanes.inFront(v);
-
+        return segmentLanes.inFrontOfPlayer(v);
     }
 
+    public boolean vehicleAhead(Vehicle v){
+        return segmentLanes.vehicleAhead(v);
+    }
+
+    public Vehicle getVehicleAhead(Vehicle v){
+        return segmentLanes.getVehicleAhead(v);
+    }
 
     public void callListener(Map m, Vehicle v) {
         segmentLanes.getListener(m, v);
@@ -269,21 +275,21 @@ public class Segment implements Serializable {
 
             System.out.println();
             System.out.println("Listener Feedback:");
-            System.out.println("Segment: currently on the segment that connects intersect " + Segment.this.getSegmentLocation().x + " to intersection " + Segment.this.getSegmentLocation().y + ". This segment is has " + laneCount + " lanes and is " + segmentLength + " miles long.");
+            System.out.println("Segment: currently on the segment that connects intersect " + Segment.this.getSegmentLocation().x + " to intersection " + Segment.this.getSegmentLocation().y + ". This segment has " + laneCount + " lanes and is " + segmentLength + " miles long.");
 
             if (laneCount == 1) {
                 System.out.println("Lane Location: You are on the only lane on this segment.");
             } else if (laneCount == 2) {
-                if (v.getVehicleLocation().y == 0) {
+                if (location.y == 0) {
                     System.out.println("Lane Location: left most lane");
                 } else {
                     System.out.println("Lane Location: right most lane");
                 }
 
             } else {
-                if (v.getVehicleLocation().y == 0) {
+                if (location.y == 0) {
                     System.out.println("Lane Location: left most lane");
-                } else if (v.getVehicleLocation().y == 1) {
+                } else if (location.y == 1) {
                     System.out.println("Lane Location: middle lane");
                 } else {
                     System.out.println("Lane Location: right most lane");
@@ -293,25 +299,42 @@ public class Segment implements Serializable {
 
 
             if (!atEnd(v)) {
-                System.out.println("You are " + (segmentLength - v.getVehicleLocation().x - 1) + " miles away from intersection " + Segment.this.getSegmentLocation().y + ".");
+                if(!vehicleAhead(v)){
+                    System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + Segment.this.getSegmentLocation().y + ". There is no vehicle ahead of you.");
+                }else{
+                    if(canMove) {
+                        if (vehicleAhead(v)) {
+                            Vehicle ahead = getVehicleAhead(v);
+                            if (ahead instanceof Car) {
+                                System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + Segment.this.getSegmentLocation().y + ". There is a car " + (ahead.getVehicleLocation().x - (location.x + 1)) + " miles ahead of you!");
+                            } else if (ahead instanceof Bus) {
+                                System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + Segment.this.getSegmentLocation().y + ". There is a bus " + (ahead.getVehicleLocation().x - (location.x + 1)) + " miles ahead of you!");
+                            } else {
+                                System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + Segment.this.getSegmentLocation().y + ". There is a truck " + (ahead.getVehicleLocation().x - (location.x + 1)) + " miles ahead of you!");
+                            }
+                        }
+                    }
+                }
             } else {
                 System.out.println("You have arrived at intersection " + Segment.this.getSegmentLocation().y);
             }
-            if (!atEnd(v)) {
+
 
 
                 if (canMove) {
                     System.out.println("There is currently no vehicle in front of you.");
                 } else {
 
-                    Vehicle o = getVehicle(new Point(location.x + 1, location.y));
+                    if(!atEnd(v)) {
+                        Vehicle o = getVehicle(new Point(location.x + 1, location.y));
 
-                    if (o instanceof Car) {
-                        System.out.println("There is a car in front of you.");
-                    } else if (o instanceof Bus) {
-                        System.out.println("There is a bus in front of you.");
-                    } else {
-                        System.out.println("There is a truck in front of you.");
+                        if (o instanceof Car) {
+                            System.out.println("There is a car in front of you.");
+                        } else if (o instanceof Bus) {
+                            System.out.println("There is a bus in front of you.");
+                        } else {
+                            System.out.println("There is a truck in front of you.");
+                        }
                     }
                 }
 
@@ -320,7 +343,7 @@ public class Segment implements Serializable {
                     if (laneCount == 2) {
                         System.out.println("You can switch to the left most lane.");
                     } else {
-                        if (v.getVehicleLocation().y == laneCount - 1) {
+                        if (location.y == laneCount - 1) {
                             System.out.println("You can switch to the middle lane on your left");
                         }
                     }
@@ -390,14 +413,13 @@ public class Segment implements Serializable {
                     if (laneCount == 2) {
                         System.out.println("You can switch to the right most lane");
                     } else {
-                        if (v.getVehicleLocation().y == 0)
+                        if (location.y == 0)
                             System.out.println("You can switch to the middle lane on your right");
                     }
 
 
                 } else {
                     ArrayList<Vehicle> occupants = getSideOccupants(v, false, true);
-
 
 
                     ///////////////////////////////////////////////////////////////////////////////
@@ -456,157 +478,142 @@ public class Segment implements Serializable {
                 }
 
 
-            } else {
-
                 if (canTurnLeft) {
                     if (canGoStraight || canTurnRight) {
-                        System.out.println("You can turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + ".");
+                        System.out.println("You can turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
                     } else {
-                        System.out.println("You can only turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + ".");
+                        System.out.println("You can only turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
                     }
 
 
-
-
-                    if(leftTurn.laneCount() > 1) {
+                    if (leftTurn.laneCount() > 1) {
                         if (compatible(leftTurn.laneCount())) {
-                            if (leftTurn.canAdd(v, v.getVehicleLocation().y)) {
+                            if (leftTurn.canAdd(v, location.y)) {
                                 System.out.println("You can turn left without expereincing any collisons.");
                             } else {
                                 System.out.println("The lane you want to turn onto is not clear!");
                             }
                         } else {
                             if (laneCount == 3 && leftTurn.laneCount() == 2) {
-                                if(v.getVehicleLocation().y == 1 || v.getVehicleLocation().y == 2  ){
-                                        if(leftTurn.canAdd(v,1)){
-                                            System.out.println("You can turn left without experiencing any collisons.");
-                                        } else{
-                                            System.out.println("The lane you want to turn onto is not clear!");
-                                        }
+                                if (location.y == 1 || location.y == 2) {
+                                    if (leftTurn.canAdd(v, 1)) {
+                                        System.out.println("You can turn left without experiencing any collisons.");
+                                    } else {
+                                        System.out.println("The lane you want to turn onto is not clear!");
+                                    }
 
                                 } else {
-                                    if(leftTurn.canAdd(v,0)){
+                                    if (leftTurn.canAdd(v, 0)) {
                                         System.out.println("You can turn left without experiencing any collisons.");
-                                    }else{
+                                    } else {
                                         System.out.println("The lane you want to turn onto is not clear!");
                                     }
 
                                 }
                             }
                         }
-                    } else{
-                        if(leftTurn.canAdd(v,0)){
+                    } else {
+                        if (leftTurn.canAdd(v, 0)) {
                             System.out.println("You can turn left without experiencing any collisons.");
-                        } else{
+                        } else {
                             System.out.println("The lane you want to turn onto is not clear!");
                         }
 
                     }
-
-
-
 
 
                 }
 
                 if (canTurnRight) {
                     if (canGoStraight || canTurnLeft) {
-                        System.out.println("You can turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + ".");
+                        System.out.println("You can turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
                     } else {
-                        System.out.println("You can only turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + ".");
+                        System.out.println("You can only turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
 
                     }
 
 
-
-                    if(rightTurn.laneCount() > 1) {
+                    if (rightTurn.laneCount() > 1) {
                         if (compatible(rightTurn.laneCount())) {
-                            if (rightTurn.canAdd(v, v.getVehicleLocation().y)) {
-                                System.out.println("You can turn left without experiencing any collisons.");
+                            if (rightTurn.canAdd(v, location.y)) {
+                                System.out.println("You can turn right without experiencing any collisons.");
                             } else {
                                 System.out.println("The lane you want to turn onto is not clear!");
                             }
                         } else {
                             if (laneCount == 3 && rightTurn.laneCount() == 2) {
-                                if(v.getVehicleLocation().y == 0 || v.getVehicleLocation().y == 1){
-                                    if(rightTurn.canAdd(v,0)){
-                                        System.out.println("You can turn left without experiencing any collisons.");
-                                    } else{
+                                if (location.y == 0 || location.y == 1) {
+                                    if (rightTurn.canAdd(v, 0)) {
+                                        System.out.println("You can turn right without experiencing any collisons.");
+                                    } else {
                                         System.out.println("The lane you want to turn onto is not clear!");
                                     }
 
                                 } else {
-                                    if(rightTurn.canAdd(v,rightTurn.laneCount()-1)){
-                                        System.out.println("You can turn left without experiencing any collisons.");
-                                    }else{
+                                    if (rightTurn.canAdd(v, rightTurn.laneCount() - 1)) {
+                                        System.out.println("You can turn rigth without experiencing any collisons.");
+                                    } else {
                                         System.out.println("The lane you want to turn onto is not clear!");
                                     }
 
                                 }
                             }
                         }
-                    } else{
-                        if(rightTurn.canAdd(v,0)){
-                            System.out.println("You can turn left without experiencing any collisons.");
-                        } else{
+                    } else {
+                        if (rightTurn.canAdd(v, 0)) {
+                            System.out.println("You can turn rigth without experiencing any collisons.");
+                        } else {
                             System.out.println("The lane you want to turn onto is not clear!");
                         }
 
                     }
-
-
 
 
                 }
 
                 if (canGoStraight) {
                     if (canTurnLeft || canTurnRight) {
-                        System.out.println("You can go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + ".");
+                        System.out.println("You can go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
                     } else {
-                        System.out.println("You can only go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + ".");
+                        System.out.println("You can only go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + " when you arive at intersection " + location.y + ".");
 
                     }
 
 
-
-
-                    if(straight.laneCount() > 1) {
+                    if (straight.laneCount() > 1) {
                         if (compatible(straight.laneCount())) {
-                            if (straight.canAdd(v, v.getVehicleLocation().y)) {
-                                System.out.println("You can turn left without experiencing any collisons.");
+                            if (straight.canAdd(v, location.y)) {
+                                System.out.println("You can go straigth without experiencing any collisons.");
                             } else {
                                 System.out.println("The lane you want to turn onto is not clear!");
                             }
                         } else {
                             if (laneCount == 3 && straight.laneCount() == 2) {
-                                if(v.getVehicleLocation().y == 1 || v.getVehicleLocation().y == 2){
-                                    if(straight.canAdd(v,1)){
-                                        System.out.println("You can turn left without experiencing any collisons.");
-                                    } else{
+                                if (location.y == 1 || location.y == 2) {
+                                    if (straight.canAdd(v, 1)) {
+                                        System.out.println("You can go straigth without experiencing any collisons.");
+                                    } else {
                                         System.out.println("The lane you want to turn onto is not clear!");
                                     }
 
                                 } else {
-                                    if(straight.canAdd(v,0)){
-                                        System.out.println("You can turn left without experiencing any collisons.");
-                                    }else{
+                                    if (straight.canAdd(v, 0)) {
+                                        System.out.println("You can go straigth without experiencing any collisons.");
+                                    } else {
                                         System.out.println("The lane you want to turn onto is not clear!");
                                     }
 
                                 }
                             }
                         }
-                    } else{
-                        if(straight.canAdd(v,0)){
-                            System.out.println("You can turn left without experiencing any collisons.");
-                        } else{
+                    } else {
+                        if (straight.canAdd(v, 0)) {
+                            System.out.println("You can go straigth without experiencing any collisons.");
+                        } else {
                             System.out.println("The lane you want to turn onto is not clear!");
                         }
 
                     }
-
-
-
 
 
                 }
@@ -615,20 +622,46 @@ public class Segment implements Serializable {
                     System.out.println("Intersection " + Segment.this.getSegmentLocation().y + " is a deadEnd. You can only UTurn!");
                 }
 
-            }
-
         }
 
-        private boolean inFront(Vehicle v) {
-            Point location = new Point((v.getVehicleLocation().x - v.getSize()), v.getVehicleLocation().y);
+        private boolean inFrontOfPlayer(Vehicle v) {
+            if((v.getVehicleLocation().x - 1) >= 0) {
+                Point location = new Point(v.getVehicleLocation().x - 1, v.getVehicleLocation().y);
 
-            if (lanes[location.x][location.y] != null) {
-                if (getVehicle(location).isDrivable()) {
+                if (lanes[location.x][location.y] != null) {
+                    if (getVehicle(location).isDrivable()) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+
+        private boolean vehicleAhead(Vehicle v) {
+            Point location = new Point(v.getVehicleLocation().x+1,v.getVehicleLocation().y);
+
+            for (int i = location.x; i < segmentLength; i++) {
+                if (lanes[i][location.y] != null) {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        private Vehicle getVehicleAhead(Vehicle v) {
+            Point location = new Point(v.getVehicleLocation().x +1,v.getVehicleLocation().y);
+
+                for (int i = location.x; i < segmentLength; i++) {
+                    if (lanes[i][location.y] !=null){
+                        return lanes[i][location.y];
+
+                    }
+                }
+
+            return null;
         }
 
 

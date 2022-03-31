@@ -35,6 +35,7 @@ public class DamageStatus {
 
         } else {
             destroyed = true;
+            currentReputation.destroyed();
             type.getSegment().removeVehicle(type);
             type.removeSegment();
             type.setVehicleLocation(null);
@@ -69,6 +70,8 @@ public class DamageStatus {
         currentReputation.calculateReputation(sufferedDamageHistory, generatedDamageHistory);
         victim.getReputation().calculateReputation(victim.getDamageStatus().getSufferedDamageHistory(), victim.getDamageStatus().getGeneratedDamageHistory());
         currentReputation.atFaultViolation();
+
+
 
     }
 
