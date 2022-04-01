@@ -81,7 +81,7 @@ public class Reputation {
 
         if(driveable){
             if(!destroyed) {
-                System.out.println("Pay attention to the road!");
+                System.out.println("Your reputation has been affected for being at fault. Pay attention to the road!");
             }else{
                 System.out.println("Tip: If you aren't aware of your surroundings, call listener by pressing 'l' .Pay attention to the road next time!");
             }
@@ -91,7 +91,7 @@ public class Reputation {
     }
 
 
- public void calculateReputation(ArrayList<Double> suffered,ArrayList<Double> generated){
+ public void calculateReputation(ArrayList<Double> suffered,ArrayList<Double> generated, boolean atFault){
         if(repCounter == 0){
             for (int i = 0; i < suffered.size(); i++) {
                 if(suffered.get(i) < generated.get(i)){
@@ -113,7 +113,7 @@ public class Reputation {
 
      repCounter = suffered.size()-1;
 
-        if(driveable && !destroyed) {
+        if(driveable && !destroyed && atFault) {
             System.out.println("You caused severe damage to the victim!");
         }
 

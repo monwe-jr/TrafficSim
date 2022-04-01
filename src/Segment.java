@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.io.Serializable;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,16 +8,14 @@ public class Segment implements Serializable {
 
     final Direction direction;
     final Point location;  // this road segment is between intersection x and intersection y
-    private ArrayList<Integer> intersections = new ArrayList<>(); //intersections connected by the segment
-    private ArrayList<Vehicle> onSegment = new ArrayList<>(); //vehicles on the segment
-    private Lane segmentLanes;
+    private final ArrayList<Vehicle> onSegment = new ArrayList<>(); //vehicles on the segment
+    private final Lane segmentLanes;
 
 
     Segment(Point intersections, Direction d, int laneCount, int segLength) {
         this.direction = d;
         this.location = intersections;
         segmentLanes = new Lane(laneCount, segLength);
-        addIntersections(intersections);
     }
 
 
@@ -30,11 +27,11 @@ public class Segment implements Serializable {
         return segmentLanes.inFrontOfPlayer(v);
     }
 
-    public boolean vehicleAhead(Vehicle v){
+    public boolean vehicleAhead(Vehicle v) {
         return segmentLanes.vehicleAhead(v);
     }
 
-    public Vehicle getVehicleAhead(Vehicle v){
+    public Vehicle getVehicleAhead(Vehicle v) {
         return segmentLanes.getVehicleAhead(v);
     }
 
@@ -56,8 +53,8 @@ public class Segment implements Serializable {
     }
 
 
-    public void addVehicle(Map m, Vehicle v, int lane) {
-        segmentLanes.addVehicle(m, v, lane);
+    public void addVehicle( Vehicle v, int lane) {
+        segmentLanes.addVehicle( v, lane);
 
 
     }
@@ -113,15 +110,11 @@ public class Segment implements Serializable {
         segmentLanes.switchLeft(v);
     }
 
-    public Vehicle getVehicle(Point p) {
-        return segmentLanes.getVehicle(p);
-    }
-
 
     /**
      * Returns the direction of a segment
      *
-     * @return
+     * @return a direction enum
      */
     public Direction getDirection() {
         return direction;
@@ -130,63 +123,24 @@ public class Segment implements Serializable {
     /**
      * Returns segment location
      *
-     * @return
+     * @return segment location
      */
     public Point getSegmentLocation() {
         return location;
     }
 
-    /**
-     * Adds intersections of segment
-     *
-     * @param p
-     */
-    private void addIntersections(Point p) {
-        intersections.add(p.x);
-        intersections.add(p.y);
-    }
-
 
     /**
-     * Returns true if segment object is oneway
+     * Returns a list of vehicles at the end of a segment
      *
-     * @param m the Map that contains the segment
-     * @return
-     */
-    public boolean oneWay(Map m) {
-        Point toFind = new Point(location.y, location.x);
-
-        for (int i = 0; i < m.getMap().get(location.y).size(); i++) {
-            if (m.getMap().get(location.y).get(i).getSegmentLocation().equals(toFind)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-
-    /**
-     * Returns an arraylist of intersections connected to segment object
-     *
-     * @return
-     */
-    public ArrayList<Integer> getIntersections() {
-        return intersections;
-    }
-
-
-    /**
-     * returns a list of vehicles at the end of a segment
-     *
-     * @return
+     * @return an array list of vehicles at the end of the segment
      */
     public ArrayList<Vehicle> getVehiclesAtEnd() {
         ArrayList<Vehicle> temp = new ArrayList<>();
 
-        for (int i = 0; i < onSegment.size(); i++) {
-            if (atEnd(onSegment.get(i))) {
-                temp.add(onSegment.get(i));
+        for (Vehicle vehicle : onSegment) {
+            if (atEnd(vehicle)) {
+                temp.add(vehicle);
             }
         }
 
@@ -195,12 +149,12 @@ public class Segment implements Serializable {
 
 
     /**
-     * Inner class that handles lane funtionality
+     * Inner class that handles lane functionality
      */
     private class Lane implements Serializable {
-        private Vehicle[][] lanes;
-        private int laneCount;
-        private int segmentLength;
+        private final Vehicle[][] lanes;
+        private final int laneCount;
+        private final int segmentLength;
 
 
         Lane(int count, int segLength) {
@@ -216,8 +170,15 @@ public class Segment implements Serializable {
         }
 
 
+        /**
+         * This method informs the player about the surroundings of their vehicle and its condition
+         *
+         * @param m map the player is currently on
+         * @param v the player's vehicle
+         */
         private void getListener(Map m, Vehicle v) {
             Point location = v.getVehicleLocation();
+            Point segmentLocation = v.getSegment().getSegmentLocation();
             Segment leftTurn = null;
             Segment rightTurn = null;
             Segment straight = null;
@@ -233,13 +194,13 @@ public class Segment implements Serializable {
                 ArrayList<Segment> turns = Turn.getTurns(m, Segment.this);
 
                 if (turns.size() > 1) {
-                    for (int i = 0; i < turns.size(); i++) {
-                        if (turns.get(i).getDirection() == Direction.leftDirection(Segment.this.getDirection())) {
+                    for (Segment turn : turns) {
+                        if (turn.getDirection() == Direction.leftDirection(Segment.this.getDirection())) {
                             canTurnLeft = true;
-                            leftTurn = turns.get(i);
+                            leftTurn = turn;
                         } else {
                             canTurnRight = true;
-                            rightTurn = turns.get(i);
+                            rightTurn = turn;
 
                         }
 
@@ -275,7 +236,9 @@ public class Segment implements Serializable {
 
             System.out.println();
             System.out.println("Listener Feedback:");
-            System.out.println("Segment: currently on the segment that connects intersect " + Segment.this.getSegmentLocation().x + " to intersection " + Segment.this.getSegmentLocation().y + ". This segment has " + laneCount + " lanes and is " + segmentLength + " miles long.");
+            System.out.println("Your current health is " + v.getDamageStatus().getHealth() + ".");
+            System.out.println("Your current reputation is " + v.getReputation().getCurrentNiceness() + ".");
+            System.out.println("Segment: currently on the segment that connects intersect " + segmentLocation.x + " to intersection " + segmentLocation.y + ". This segment has " + laneCount + " lanes and is " + segmentLength + " miles long.");
 
             if (laneCount == 1) {
                 System.out.println("Lane Location: You are on the only lane on this segment.");
@@ -299,70 +262,73 @@ public class Segment implements Serializable {
 
 
             if (!atEnd(v)) {
-                if(!vehicleAhead(v)){
-                    System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + Segment.this.getSegmentLocation().y + ". There is no vehicle ahead of you.");
-                }else{
-                    if(canMove) {
+                if (!vehicleAhead(v)) {
+                    System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + segmentLocation.y + ". There is no vehicle ahead of you.");
+                } else {
+                    if (canMove) {
                         if (vehicleAhead(v)) {
                             Vehicle ahead = getVehicleAhead(v);
                             if (ahead instanceof Car) {
-                                System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + Segment.this.getSegmentLocation().y + ". There is a car " + (ahead.getVehicleLocation().x - (location.x + 1)) + " miles ahead of you!");
+                                System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + segmentLocation.y + ". There is a car " + (ahead.getVehicleLocation().x - (location.x + 1)) + " miles ahead of you!");
                             } else if (ahead instanceof Bus) {
-                                System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + Segment.this.getSegmentLocation().y + ". There is a bus " + (ahead.getVehicleLocation().x - (location.x + 1)) + " miles ahead of you!");
+                                System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + segmentLocation.y + ". There is a bus " + (ahead.getVehicleLocation().x - (location.x + 1)) + " miles ahead of you!");
                             } else {
-                                System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + Segment.this.getSegmentLocation().y + ". There is a truck " + (ahead.getVehicleLocation().x - (location.x + 1)) + " miles ahead of you!");
+                                System.out.println("You are " + (segmentLength - location.x - 1) + " miles away from intersection " + segmentLocation.y + ". There is a truck " + (ahead.getVehicleLocation().x - (location.x + 1)) + " miles ahead of you!");
                             }
                         }
                     }
                 }
             } else {
-                System.out.println("You have arrived at intersection " + Segment.this.getSegmentLocation().y);
+                System.out.println("You have arrived at intersection " + segmentLocation.y);
             }
 
 
+            if (canMove) {
+                System.out.println("There is currently no vehicle in front of you.");
+            } else {
 
-                if (canMove) {
-                    System.out.println("There is currently no vehicle in front of you.");
+                if (!atEnd(v)) {
+                    Vehicle o = getVehicle(new Point(location.x + 1, location.y));
+
+                    if (o instanceof Car) {
+                        System.out.println("There is a car in front of you.");
+                    } else if (o instanceof Bus) {
+                        System.out.println("There is a bus in front of you.");
+                    } else {
+                        System.out.println("There is a truck in front of you.");
+                    }
+                }
+            }
+
+            if (canSwitchLeft) {
+
+                if (laneCount == 2) {
+                    System.out.println("You can switch to the left most lane.");
                 } else {
-
-                    if(!atEnd(v)) {
-                        Vehicle o = getVehicle(new Point(location.x + 1, location.y));
-
-                        if (o instanceof Car) {
-                            System.out.println("There is a car in front of you.");
-                        } else if (o instanceof Bus) {
-                            System.out.println("There is a bus in front of you.");
-                        } else {
-                            System.out.println("There is a truck in front of you.");
-                        }
+                    if (location.y == laneCount - 1) {
+                        System.out.println("You can switch to the middle lane on your left");
                     }
                 }
 
-                if (canSwitchLeft) {
 
-                    if (laneCount == 2) {
-                        System.out.println("You can switch to the left most lane.");
-                    } else {
-                        if (location.y == laneCount - 1) {
-                            System.out.println("You can switch to the middle lane on your left");
-                        }
-                    }
+            } else {
 
-
+                if (location.y == 0) {
+                    System.out.println("You are on the left most lane. There is no lane to the left of your vehicle.");
                 } else {
                     ArrayList<Vehicle> occupants = getSideOccupants(v, true, false);
 
-                    ///////////////////////////////////////////////////////////////////////////////
+
                     if (!occupants.isEmpty()) {
                         boolean car = false;
                         boolean bus = false;
                         boolean truck = false;
 
 
-                        for (int i = 0; i < occupants.size(); i++) {
-                            if (occupants.get(i) instanceof Car) {
+                        for (Vehicle occupant : occupants) {
+                            if (occupant instanceof Car) {
                                 car = true;
-                            } else if (occupants.get(i) instanceof Bus) {
+                            } else if (occupant instanceof Bus) {
                                 bus = true;
                             } else {
                                 truck = true;
@@ -399,40 +365,39 @@ public class Segment implements Serializable {
 
                         }
 
-
                     }
+                }
 
-                    ///////////////////////////////////////////////////////////////////////////////
+            }
 
+
+            if (canSwitchRight) {
+                if (laneCount == 2) {
+                    System.out.println("You can switch to the right most lane");
+                } else {
+                    if (location.y == 0)
+                        System.out.println("You can switch to the middle lane on your right");
                 }
 
 
-                if (canSwitchRight) {
-
-
-                    if (laneCount == 2) {
-                        System.out.println("You can switch to the right most lane");
-                    } else {
-                        if (location.y == 0)
-                            System.out.println("You can switch to the middle lane on your right");
-                    }
-
+            } else {
+                if (location.y == laneCount - 1) {
+                    System.out.println("You are on the rigth most lane. There is no lane to the rigth of your vehicle.");
 
                 } else {
                     ArrayList<Vehicle> occupants = getSideOccupants(v, false, true);
 
 
-                    ///////////////////////////////////////////////////////////////////////////////
                     if (!occupants.isEmpty()) {
                         boolean car = false;
                         boolean bus = false;
                         boolean truck = false;
 
 
-                        for (int i = 0; i < occupants.size(); i++) {
-                            if (occupants.get(i) instanceof Car) {
+                        for (Vehicle occupant : occupants) {
+                            if (occupant instanceof Car) {
                                 car = true;
-                            } else if (occupants.get(i) instanceof Bus) {
+                            } else if (occupant instanceof Bus) {
                                 bus = true;
                             } else {
                                 truck = true;
@@ -470,32 +435,36 @@ public class Segment implements Serializable {
                         }
                     }
 
-                    ///////////////////////////////////////////////////////////////////////////////
                 }
 
-                if (laneCount == 1) {
-                    System.out.println("This segment only has 1 lane. You cannot switch lanes in either direction.");
+            }
+
+            if (laneCount == 1) {
+                System.out.println("This segment only has 1 lane. You cannot switch lanes in either direction.");
+            }
+
+
+            if (canTurnLeft) {
+                if (canGoStraight || canTurnRight) {
+                    System.out.println("You can turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".  This segment has " + leftTurn.laneCount() + " lanes.");
+                } else {
+                    System.out.println("You can only turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".  This segment has " + leftTurn.laneCount() + " lanes.");
                 }
 
-
-                if (canTurnLeft) {
-                    if (canGoStraight || canTurnRight) {
-                        System.out.println("You can turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
-                    } else {
-                        System.out.println("You can only turn left onto the segment that connects intersection " + leftTurn.getSegmentLocation().x + " to intersection " + leftTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
-                    }
-
-
+                if (atEnd(v)) {
                     if (leftTurn.laneCount() > 1) {
                         if (compatible(leftTurn.laneCount())) {
+
                             if (leftTurn.canAdd(v, location.y)) {
                                 System.out.println("You can turn left without expereincing any collisons.");
                             } else {
                                 System.out.println("The lane you want to turn onto is not clear!");
+
                             }
                         } else {
                             if (laneCount == 3 && leftTurn.laneCount() == 2) {
                                 if (location.y == 1 || location.y == 2) {
+
                                     if (leftTurn.canAdd(v, 1)) {
                                         System.out.println("You can turn left without experiencing any collisons.");
                                     } else {
@@ -503,6 +472,7 @@ public class Segment implements Serializable {
                                     }
 
                                 } else {
+
                                     if (leftTurn.canAdd(v, 0)) {
                                         System.out.println("You can turn left without experiencing any collisons.");
                                     } else {
@@ -513,6 +483,7 @@ public class Segment implements Serializable {
                             }
                         }
                     } else {
+
                         if (leftTurn.canAdd(v, 0)) {
                             System.out.println("You can turn left without experiencing any collisons.");
                         } else {
@@ -521,18 +492,18 @@ public class Segment implements Serializable {
 
                     }
 
+                }
+            }
+
+            if (canTurnRight) {
+                if (canGoStraight || canTurnLeft) {
+                    System.out.println("You can turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".  This segment has " + rightTurn.laneCount() + " lanes.");
+                } else {
+                    System.out.println("You can only turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".  This segment has " + rightTurn.laneCount() + " lanes.");
 
                 }
 
-                if (canTurnRight) {
-                    if (canGoStraight || canTurnLeft) {
-                        System.out.println("You can turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
-                    } else {
-                        System.out.println("You can only turn right onto the segment that connects intersection " + rightTurn.getSegmentLocation().x + " to intersection " + rightTurn.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
-
-                    }
-
-
+                if (atEnd(v)) {
                     if (rightTurn.laneCount() > 1) {
                         if (compatible(rightTurn.laneCount())) {
                             if (rightTurn.canAdd(v, location.y)) {
@@ -567,19 +538,19 @@ public class Segment implements Serializable {
                         }
 
                     }
+                }
 
+            }
+
+            if (canGoStraight) {
+                if (canTurnLeft || canTurnRight) {
+                    System.out.println("You can go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + " when you arrive at intersection " + location.y + ". This segment has " + straight.laneCount() + " lanes.");
+                } else {
+                    System.out.println("You can only go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + " when you arrive at intersection " + location.y + ". This segment has " + straight.laneCount() + " lanes.");
 
                 }
 
-                if (canGoStraight) {
-                    if (canTurnLeft || canTurnRight) {
-                        System.out.println("You can go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
-                    } else {
-                        System.out.println("You can only go straight onto the segment that connects intersection " + straight.getSegmentLocation().x + " to intersection " + straight.getSegmentLocation().y + " when you arrive at intersection " + location.y + ".");
-
-                    }
-
-
+                if (atEnd(v)) {
                     if (straight.laneCount() > 1) {
                         if (compatible(straight.laneCount())) {
                             if (straight.canAdd(v, location.y)) {
@@ -614,18 +585,25 @@ public class Segment implements Serializable {
                         }
 
                     }
-
-
                 }
 
-                if (isDeadEnd) {
-                    System.out.println("Intersection " + Segment.this.getSegmentLocation().y + " is a deadEnd. You can only UTurn!");
-                }
+            }
+
+            if (isDeadEnd) {
+                System.out.println("Intersection " + Segment.this.getSegmentLocation().y + " is a deadEnd. You can only UTurn!");
+            }
 
         }
 
+
+        /**
+         * This method returns true if there is a vehicle in front of the player
+         *
+         * @param v the vehicle in question
+         * @return true or false
+         */
         private boolean inFrontOfPlayer(Vehicle v) {
-            if((v.getVehicleLocation().x - 1) >= 0) {
+            if ((v.getVehicleLocation().x - 1) >= 0) {
                 Point location = new Point(v.getVehicleLocation().x - 1, v.getVehicleLocation().y);
 
                 if (lanes[location.x][location.y] != null) {
@@ -639,8 +617,14 @@ public class Segment implements Serializable {
         }
 
 
+        /**
+         * This method checks if there is any vehicle in the way of v
+         *
+         * @param v the vehicle in question
+         * @return true or false
+         */
         private boolean vehicleAhead(Vehicle v) {
-            Point location = new Point(v.getVehicleLocation().x+1,v.getVehicleLocation().y);
+            Point location = new Point(v.getVehicleLocation().x + 1, v.getVehicleLocation().y);
 
             for (int i = location.x; i < segmentLength; i++) {
                 if (lanes[i][location.y] != null) {
@@ -651,20 +635,33 @@ public class Segment implements Serializable {
             return false;
         }
 
+
+        /**
+         * This method returns the vehicle in the way in v
+         *
+         * @param v the vehicle in question
+         * @return a vehicle
+         */
         private Vehicle getVehicleAhead(Vehicle v) {
-            Point location = new Point(v.getVehicleLocation().x +1,v.getVehicleLocation().y);
+            Point location = new Point(v.getVehicleLocation().x + 1, v.getVehicleLocation().y);
 
-                for (int i = location.x; i < segmentLength; i++) {
-                    if (lanes[i][location.y] !=null){
-                        return lanes[i][location.y];
+            for (int i = location.x; i < segmentLength; i++) {
+                if (lanes[i][location.y] != null) {
+                    return lanes[i][location.y];
 
-                    }
                 }
+            }
 
             return null;
         }
 
 
+        /**
+         * This method returns the segment location of vehicle v
+         *
+         * @param v the vehicle in question
+         * @return coordinates of v
+         */
         private Point getPoint(Vehicle v) {
             ArrayList<Point> candidates = new ArrayList<>();
 
@@ -683,6 +680,11 @@ public class Segment implements Serializable {
         }
 
 
+        /**
+         * This method inserts Vehicle v at a random point on the segment that is valid and empty
+         *
+         * @param v the vehicle to be added
+         */
         private void insertVehicle(Vehicle v) {
             Point p = getPoint(v);
 
@@ -700,7 +702,6 @@ public class Segment implements Serializable {
                     }
                 }
 
-                System.out.println(v + " Has been inserted into segment " + location + ". ");
 
             } else if (v instanceof Bus) {
                 v.setVehicleLocation(p);
@@ -719,7 +720,6 @@ public class Segment implements Serializable {
                     }
                 }
 
-                System.out.println(v + " Has been inserted into segment " + location + ". ");
 
             } else if (v instanceof Truck) {
                 v.setVehicleLocation(p);
@@ -738,15 +738,16 @@ public class Segment implements Serializable {
                         System.out.println("Your truck has been added to the segment connecting intersection " + location.x + " to intersection " + location.y + ". You are at the end of the segment and have arrived at intersection " + location.y + ".");
                     }
                 }
-
-                System.out.println(v + " Has been inserted into segment " + location + ". ");
-
             }
-
-
         }
 
 
+        /**
+         * This method returns true if there is space for Vehicle v on the segment
+         *
+         * @param v the vehicle in question
+         * @return true or false
+         */
         private boolean canInsertOnSegment(Vehicle v) {
             for (int i = 0; i < lanes.length; i++) {
                 for (int j = 0; j < lanes[i].length; j++) {
@@ -762,6 +763,13 @@ public class Segment implements Serializable {
         }
 
 
+        /**
+         * This method returns true if a vehicle can be inserted into the segment at a Point p
+         *
+         * @param v the vehicle in question
+         * @param p the point the vehicle will be inserted at
+         * @return true or false
+         */
         private boolean canInsertAtPoint(Vehicle v, Point p) {
             if (v instanceof Car) {
                 if (lanes[p.x][p.y] == null) {
@@ -789,12 +797,12 @@ public class Segment implements Serializable {
 
 
         /**
-         * Adds a vehicle to a segment but adding it to a lane. Note that vehicles are only added at the beginning of segments
+         * This method adds a vehicle to a segment but adding it to a lane. Note that vehicles are only added at the beginning of segments
          *
-         * @param v    the vehicle we want to add
-         * @param lane
+         * @param v    the vehicle to be added
+         * @param lane the lane
          */
-        private void addVehicle(Map m, Vehicle v, int lane) {
+        private void addVehicle( Vehicle v, int lane) {
 
             if (v instanceof Car) {
                 if (canAdd(v, lane)) {
@@ -803,9 +811,7 @@ public class Segment implements Serializable {
                     v.setSegment(Segment.this);
                     lanes[v.getVehicleLocation().x][v.getVehicleLocation().y] = v;
 
-
                 }
-
 
             } else if (v instanceof Bus) {
                 if (canAdd(v, lane)) {
@@ -834,7 +840,7 @@ public class Segment implements Serializable {
 
 
         /**
-         * Removes vehicle on segment
+         * This method removes vehicle on segment
          *
          * @param v the vehicle to be removed
          */
@@ -853,6 +859,12 @@ public class Segment implements Serializable {
         }
 
 
+        /**
+         * This method returns true if there is no other vehicle in front of Vehicle V
+         *
+         * @param v the vehicle in question
+         * @return true or false
+         */
         private boolean canMove(Vehicle v) {
             if (!atEnd(v)) {
                 if (lanes[v.getVehicleLocation().x + 1][v.getVehicleLocation().y] == null) {
@@ -865,7 +877,7 @@ public class Segment implements Serializable {
 
 
         /**
-         * Moves the vehicle one index up
+         * This method moves Vehicle v 1 index (mile) up
          *
          * @param v the vehicle to be moved
          */
@@ -896,37 +908,11 @@ public class Segment implements Serializable {
         }
 
 
-//        /**
-//         * gets the location of a vehicle in the lanes array
-//         */
-//        public Point getIndex(Vehicle v) {
-//
-//            if (onSegment.contains(v)) {
-//                for (int i = segmentLength-1; i >=0 ; i--) {
-//                    for (int j = 0; j < laneCount; j++) {
-//                        if (lanes[i][j] == v) {
-//                            return new Point(i, j);
-//
-//                        }
-//                        break;
-//                    }
-//
-//                }
-//            } else {
-//
-//                System.out.println(v + " is not on segment!");
-//
-//            }
-//            return null;
-//
-//        }
-
-
         /**
-         * Checks if a vehicle is at the end of a segment
+         * This method checks if a vehicle is at the end of a segment
          *
-         * @param v Vehicle to be checked
-         * @return
+         * @param v the Vehicle to be checked
+         * @return true of false
          */
         private boolean atEnd(Vehicle v) {
 
@@ -938,22 +924,13 @@ public class Segment implements Serializable {
         }
 
 
-//        /**
-//         * Checks if an index is empty
-//         *
-//         * @param p the point to be checked
-//         * @return
-//         */
-//        private boolean isEmpty(Point p) {
-//
-//            if (lanes[p.x][p.y] == null) {
-//                return true;
-//            }
-//
-//            return false;
-//        }
-
-
+        /**
+         * This method returns true if a vehicle can be added to Lane x of this segment
+         *
+         * @param v    the vehicle to be added
+         * @param lane the lane the vehicle will be added to
+         * @return true or false
+         */
         private boolean canAdd(Vehicle v, int lane) {
 
             if (v instanceof Car) {
@@ -981,10 +958,10 @@ public class Segment implements Serializable {
 
 
         /**
-         * Returns the indexes of vehicle v
+         * This method returns the indexes of vehicle v
          *
          * @param v the vehicle with an unknown index
-         * @return
+         * @return true or false
          */
         public int laneLocation(Vehicle v) {
 
@@ -1001,10 +978,10 @@ public class Segment implements Serializable {
 
 
         /**
-         * Checks if left lane is available
+         * This method returns true if Vehicle v can switch to the left lane
          *
-         * @param v Vehicle that want's to change lane
-         * @return
+         * @param v the vehicle in question
+         * @return true or false
          */
         private boolean canSwitchLeft(Vehicle v) {
             Point location = v.getVehicleLocation();
@@ -1034,10 +1011,10 @@ public class Segment implements Serializable {
 
 
         /**
-         * Checks if right lane is available
+         * This method returns true if Vehicle v can switch to the right lane
          *
-         * @param v Vehicle that want's to change lane
-         * @return
+         * @param v the vehicle in question
+         * @return true or false
          */
         private boolean canSwitchRight(Vehicle v) {
             Point location = v.getVehicleLocation();
@@ -1072,9 +1049,9 @@ public class Segment implements Serializable {
 
 
         /**
-         * Switch to lane on the left
+         * This method switches Vehicle v to the left lane
          *
-         * @param v
+         * @param v the vehicle in question
          */
         private void switchLeft(Vehicle v) {
             boolean switchedLeft = false;
@@ -1152,9 +1129,9 @@ public class Segment implements Serializable {
 
 
         /**
-         * Switch to lane on the right
+         * This method switches Vehicle v to the right lane
          *
-         * @param v
+         * @param v the vehicle in question
          */
         private void switchRight(Vehicle v) {
             boolean switchedRight = false;
@@ -1231,9 +1208,10 @@ public class Segment implements Serializable {
 
 
         /**
-         * Checks if Lane has the same or more amount of 'lanes'
+         * Checks if a semgement is lane-compatible. Segment A is lane compatible with Segment B if a vehicle on segment A can turn or go stright without switching lanes
          *
-         * @param l lane count
+         * @param l the lanecount of the segment in question
+         * @return true or false
          */
         private boolean compatible(int l) {
 
@@ -1245,12 +1223,25 @@ public class Segment implements Serializable {
 
         }
 
-
+        /**
+         * Returns the vehicle at point P on this segment
+         *
+         * @param p the point the vehicle is at. X represents the rows of lanes and Y represnets the columns (lane)
+         * @return a vehicle
+         */
         private Vehicle getVehicle(Point p) {
             return lanes[p.x][p.y];
         }
 
 
+        /**
+         * This method returns the victim of a rear end
+         *
+         * @param atFault     the vehicle who is at fault
+         * @param lane        the lane the collision occured on
+         * @param atIntersect set to true if the collision occured when turning or going striaght at an intersection
+         * @return the vehicle that was hit in the rear
+         */
         private Vehicle getFrontOccupant(Vehicle atFault, int lane, boolean atIntersect) {
             if (atFault instanceof Truck) {
                 if (atIntersect) {
@@ -1285,6 +1276,15 @@ public class Segment implements Serializable {
             return null;
         }
 
+
+        /**
+         * Returns all the vehicles that are preventing vehicle v from switching
+         *
+         * @param v     the vehicle in question
+         * @param left  this is set to true if we are finding occupants in the left lane
+         * @param right this is set to true if we are finding occupants in the rigth lane
+         * @return an arraylist of occipants
+         */
         private ArrayList<Vehicle> getSideOccupants(Vehicle v, boolean left, boolean right) {
             ArrayList<Vehicle> occupants = new ArrayList<>();
             Point location = v.getVehicleLocation();
@@ -1303,7 +1303,7 @@ public class Segment implements Serializable {
 
 
                 }
-            } else {
+            } else if(right){
                 if (location.x + 1 <= segmentLength - 1 && location.y < laneCount - 1) {
 
                     Point rightV = new Point(location.x + 1, location.y + 1);
@@ -1318,20 +1318,18 @@ public class Segment implements Serializable {
                 }
 
             }
-
             return occupants;
-
         }
 
 
+        /**
+         * Returns the number of lanes a segment has
+         *
+         * @return lane number
+         */
         private int getLaneCount() {
             return laneCount;
         }
-
-//
-//        private int getSegmentLength() {
-//            return segmentLength;
-//        }
 
 
     }

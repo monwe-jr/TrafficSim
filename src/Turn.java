@@ -210,7 +210,7 @@ public class Turn {
                     if (toGoStraightOn.canAdd(v, oldLaneLocation)) {
                         s.removeVehicle(v);
                         v.removeSegment();
-                        toGoStraightOn.addVehicle(m, v, oldLaneLocation);
+                        toGoStraightOn.addVehicle( v, oldLaneLocation);
                         wentStraight = true;
 
                         v.getReputation().successfulGamble();
@@ -231,7 +231,7 @@ public class Turn {
                             if (toGoStraightOn.canAdd(v, 1)) {
                                 s.removeVehicle(v);
                                 v.removeSegment();
-                                toGoStraightOn.addVehicle(m, v, 1);
+                                toGoStraightOn.addVehicle(v, 1);
                                 wentStraight = true;
 
                                 v.getReputation().successfulGamble();
@@ -253,7 +253,7 @@ public class Turn {
                             if (toGoStraightOn.canAdd(v, 0)) {
                                 s.removeVehicle(v);
                                 v.removeSegment();
-                                toGoStraightOn.addVehicle(m, v, 0);
+                                toGoStraightOn.addVehicle( v, 0);
                                 wentStraight = true;
 
                                 v.getReputation().successfulGamble();
@@ -275,7 +275,7 @@ public class Turn {
                 if (toGoStraightOn.canAdd(v, 0)) {
                     s.removeVehicle(v);
                     v.removeSegment();
-                    toGoStraightOn.addVehicle(m, v, 0);
+                    toGoStraightOn.addVehicle(v, 0);
                     wentStraight = true;
 
                     v.getReputation().successfulGamble();
@@ -348,7 +348,7 @@ public class Turn {
                     if (toTurnLeftOnto.canAdd(v, oldLaneLocation)) {
                         s.removeVehicle(v);
                         v.removeSegment();
-                        toTurnLeftOnto.addVehicle(m, v, oldLaneLocation);
+                        toTurnLeftOnto.addVehicle(v, oldLaneLocation);
                         turned = true;
 
                         v.getReputation().successfulGamble();
@@ -373,7 +373,7 @@ public class Turn {
                             if (toTurnLeftOnto.canAdd(v, 1)) {
                                 s.removeVehicle(v);
                                 v.removeSegment();
-                                toTurnLeftOnto.addVehicle(m, v, 1);
+                                toTurnLeftOnto.addVehicle( v, 1);
                                 turned = true;
 
                                 v.getReputation().successfulGamble();
@@ -393,7 +393,7 @@ public class Turn {
                             if (toTurnLeftOnto.canAdd(v, 0)) {
                                 s.removeVehicle(v);
                                 v.removeSegment();
-                                toTurnLeftOnto.addVehicle(m, v, 0);
+                                toTurnLeftOnto.addVehicle( v, 0);
                                 turned = true;
 
                                 v.getReputation().successfulGamble();
@@ -414,7 +414,7 @@ public class Turn {
                 if (toTurnLeftOnto.canAdd(v, 0)) {
                     s.removeVehicle(v);
                     v.removeSegment();
-                    toTurnLeftOnto.addVehicle(m, v, 0);
+                    toTurnLeftOnto.addVehicle(v, 0);
                     turned = true;
 
                     v.getReputation().successfulGamble();
@@ -489,7 +489,7 @@ public class Turn {
                     if (toTurnRightOnto.canAdd(v, oldLaneLocation)) {
                         s.removeVehicle(v);
                         v.removeSegment();
-                        toTurnRightOnto.addVehicle(m, v, oldLaneLocation);
+                        toTurnRightOnto.addVehicle( v, oldLaneLocation);
                         turned = true;
 
                         v.getReputation().successfulGamble();
@@ -516,7 +516,7 @@ public class Turn {
                             if (toTurnRightOnto.canAdd(v, 0)) {
                                 s.removeVehicle(v);
                                 v.removeSegment();
-                                toTurnRightOnto.addVehicle(m, v, 0);
+                                toTurnRightOnto.addVehicle( v, 0);
                                 turned = true;
 
                                 v.getReputation().successfulGamble();
@@ -536,7 +536,7 @@ public class Turn {
                             if (toTurnRightOnto.canAdd(v, toTurnRightOnto.laneCount() - 1)) {
                                 s.removeVehicle(v);
                                 v.removeSegment();
-                                toTurnRightOnto.addVehicle(m, v, toTurnRightOnto.laneCount() - 1);
+                                toTurnRightOnto.addVehicle( v, toTurnRightOnto.laneCount() - 1);
                                 turned = true;
 
                                 v.getReputation().successfulGamble();
@@ -557,7 +557,7 @@ public class Turn {
                 if (toTurnRightOnto.canAdd(v, 0)) {
                     s.removeVehicle(v);
                     v.removeSegment();
-                    toTurnRightOnto.addVehicle(m, v, 0);
+                    toTurnRightOnto.addVehicle( v, 0);
                     turned = true;
 
                     v.getReputation().successfulGamble();
@@ -631,7 +631,7 @@ public class Turn {
                     if (toUTurnOnto.canAdd(v, oldLaneLocation)) {
                         s.removeVehicle(v);
                         v.removeSegment();
-                        toUTurnOnto.addVehicle(m, v, oldLaneLocation);
+                        toUTurnOnto.addVehicle( v, oldLaneLocation);
                         turned = true;
 
                         v.getReputation().successfulGamble();
@@ -649,7 +649,7 @@ public class Turn {
                             if (toUTurnOnto.canAdd(v, 1)) {
                                 s.removeVehicle(v);
                                 v.removeSegment();
-                                toUTurnOnto.addVehicle(m, v, 1);
+                                toUTurnOnto.addVehicle( v, 1);
                                 turned = true;
 
                                 v.getReputation().successfulGamble();
@@ -664,7 +664,7 @@ public class Turn {
                             if (toUTurnOnto.canAdd(v, 0)) {
                                 s.removeVehicle(v);
                                 v.removeSegment();
-                                toUTurnOnto.addVehicle(m, v, 0);
+                                toUTurnOnto.addVehicle( v, 0);
                                 turned = true;
 
                                 v.getReputation().successfulGamble();
@@ -685,7 +685,7 @@ public class Turn {
                 if (toUTurnOnto.canAdd(v, 0)) {
                     s.removeVehicle(v);
                     v.removeSegment();
-                    toUTurnOnto.addVehicle(m, v, 0);
+                    toUTurnOnto.addVehicle( v, 0);
                     turned = true;
 
                     v.getReputation().successfulGamble();
