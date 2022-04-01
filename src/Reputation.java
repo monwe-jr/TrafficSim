@@ -81,7 +81,7 @@ public class Reputation {
 
         if(driveable){
             if(!destroyed) {
-                System.out.println("Your reputation has been affected for being at fault. Pay attention to the road!");
+                System.out.println("Your reputation will be affected again because you are at fault. Pay attention to the road!");
             }else{
                 System.out.println("Tip: If you aren't aware of your surroundings, call listener by pressing 'l' .Pay attention to the road next time!");
             }

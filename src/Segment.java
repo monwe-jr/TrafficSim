@@ -236,8 +236,8 @@ public class Segment implements Serializable {
 
             System.out.println();
             System.out.println("Listener Feedback:");
-            System.out.println("Your current health is " + v.getDamageStatus().getHealth() + ".");
-            System.out.println("Your current reputation is " + v.getReputation().getCurrentNiceness() + ".");
+            System.out.println("Health: " + v.getDamageStatus().getHealth());
+            System.out.println("Reputation: " + v.getReputation().getCurrentNiceness());
             System.out.println("Segment: currently on the segment that connects intersect " + segmentLocation.x + " to intersection " + segmentLocation.y + ". This segment has " + laneCount + " lanes and is " + segmentLength + " miles long.");
 
             if (laneCount == 1) {

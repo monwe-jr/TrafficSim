@@ -77,19 +77,6 @@ public class AI extends Vehicle {
 
                             if (v.getSegment().canMove(v)) {
                                 v.move();
-                            } else {
-                                if (v.getSegment().canSwitchLeft(v)) {
-                                    if (v.target.getDirection().equals(Direction.leftDirection(v.getSegment().getDirection()))) {
-                                        v.getSegment().switchLeft(v);
-                                    }
-
-                                } else {
-                                    if (v.getSegment().canSwitchRight(v)) {
-                                        if (v.target.getDirection().equals(Direction.rightDirection(v.getSegment().getDirection()))) {
-                                            v.getSegment().switchRight(v);
-                                        }
-                                    }
-                                }
                             }
 
                         } else {
